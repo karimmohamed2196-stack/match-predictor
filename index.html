@@ -649,7 +649,7 @@ function showOb(force){if(document.getElementById("ob"))return;var ok=false,done
   document.body.appendChild(g);draw()}
 $("hp").onclick=function(){showOb(true)};
 function ld(manual){var b=$("ldb");b.className="on";function fail(){b.className="";if(manual)toast("تعذّر التحديث، تأكد من الاتصال")}
-  try{fetch("data.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){b.className="";if(j&&j.E0&&j._fix){var ch=!D._ts||j._ts!==D._ts;D=j;tabs();list();fillCust();btR();if(manual)toast(ch?"تم تحديث البيانات ✓":"البيانات محدّثة بالفعل ✓")}else if(manual)toast("لا يوجد ملف بيانات للتحديث")}).catch(fail)}catch(e){fail()}}
+  try{fetch("data.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){b.className="";if(j&&j.E0&&j._fix){if(!j._fix.length&&D._fix)j._fix=D._fix;var ch=!D._ts||j._ts!==D._ts;D=j;tabs();list();fillCust();btR();if(manual)toast(ch?"تم تحديث البيانات ✓":"البيانات محدّثة بالفعل ✓")}else if(manual)toast("لا يوجد ملف بيانات للتحديث")}).catch(fail)}catch(e){fail()}}
 window.addEventListener("scroll",function(){$("up").hidden=(window.scrollY||0)<600},{passive:true});$("up").hidden=true;$("up").onclick=function(){window.scrollTo({top:0,behavior:"smooth"})};
 (function(){var y0=null,pl=0,p=$("ptr");document.addEventListener("touchstart",function(e){y0=(window.scrollY<=0&&e.touches.length===1)?e.touches[0].clientY:null;pl=0},{passive:true});
   document.addEventListener("touchmove",function(e){if(y0===null)return;var d=e.touches[0].clientY-y0;if(d>0&&window.scrollY<=0){pl=d;p.style.opacity=Math.min(d/90,1);p.style.transform="translate(-50%,"+(Math.min(d,110)/2-30)+"px) rotate("+d*3+"deg)"}},{passive:true});

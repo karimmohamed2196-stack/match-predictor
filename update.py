@@ -113,7 +113,7 @@ def backtest(data, today, weeks=12):
 
 def fixtures(today):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
-    df = df[df["Div"].isin(LEAGUES)].dropna(subset=["Date","HomeTeam","AwayTeam"]); out = []
+    n0 = len(df); df = df[df["Div"].isin(LEAGUES)].dropna(subset=["Date","HomeTeam","AwayTeam"]); out = []; print("fixtures.csv rows:", n0, "ours:", len(df))
     for r in df.to_dict("records"):
         tm = r.get("Time") if isinstance(r.get("Time"), str) else "15:00"; d = None
         for fmt in ("%d/%m/%Y %H:%M", "%d/%m/%y %H:%M"):
@@ -123,7 +123,7 @@ def fixtures(today):
         t = d.replace(tzinfo=ZoneInfo("Europe/London")).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
         if t.date() < today.date() or t.date() > today.date()+dt.timedelta(days=14): continue
         out.append((t, [r["Div"], f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r["HomeTeam"], r["AwayTeam"]]))
-    out.sort(key=lambda x: x[0]); return [x[1] for x in out]
+    out.sort(key=lambda x: x[0]); print("fixtures kept:", len(out)); return [x[1] for x in out]
 
 def build_league(code, d, today, fix_teams):
     m = fit(d, today); start = seasons(today)[1]
@@ -157,7 +157,7 @@ def main():
         out[code], l, r = build_league(code, d, today, ft); last.update(l); res.update(r); data[code] = d; ok += 1
         print(code, "teams", len(out[code]["teams"]), "rho", out[code]["rho"])
     if not ok: sys.exit("no league updated; keeping old data.json")
-    out["_fix"] = fx; out["_last"] = last; out["_res"] = res
+    out["_fix"] = fx or old.get("_fix", []); out["_last"] = last; out["_res"] = res
     try:
         bt = backtest(data, today)
         if bt: out["_bt"] = bt
