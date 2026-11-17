@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>متوقع المباريات PRO</title>
+<style>:root{--bg:#070b1a;--card:#101831;--c2:#18223f;--bd:#243152;--tx:#eef3ff;--mut:#8e9bbd;--gold:#38bdf8;--g:#22c55e;--r:#ef4444;--n:#5b6b85;--rad:16px;--sh:0 8px 24px rgba(0,0,0,.35);color-scheme:dark}
+:root[data-theme=light]{--bg:#f3f5fa;--card:#fff;--c2:#eef1f8;--bd:#dbe1ee;--tx:#141c2e;--mut:#56627a;--gold:#0369a1;--g:#16a34a;--r:#dc2626;--n:#7b889f;--sh:0 6px 18px rgba(27,42,74,.10);color-scheme:light}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;color:var(--tx);font-family:"Segoe UI",system-ui,-apple-system,Tahoma,"Noto Naskh Arabic",sans-serif;line-height:1.5;font-variant-numeric:tabular-nums;padding:env(safe-area-inset-top) 0 calc(100px + env(safe-area-inset-bottom));background:radial-gradient(900px 420px at 50% -140px,rgba(37,99,235,.38),transparent),var(--bg);min-height:100vh}
+:root[data-theme=light] body{background:radial-gradient(900px 420px at 50% -140px,#d6e8ff,transparent),var(--bg)}
+button,.m,.tab,.ib,.fav,summary{touch-action:manipulation}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* header */
+header{max-width:640px;margin:0 auto;padding:14px 14px 4px}
+h1{display:flex;align-items:center;gap:8px;margin:0;font-size:20px;font-weight:800;letter-spacing:.2px}
+h1 em{font-style:normal;background:linear-gradient(135deg,#67e8f9,#0ea5e9);color:#031321;border-radius:7px;padding:1px 8px;font-size:11px;font-weight:800}
+#ln,#tg,#hp{height:38px;min-width:38px;display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:14px;font-weight:700;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:0 12px;color:var(--tx);cursor:pointer;transition:.15s}
+#ln{margin-inline-start:auto}#tg{margin-inline-start:0}
+#ln:active,#tg:active,#hp:active{transform:scale(.94)}
+.sub{margin:2px 0 12px;font-size:12px;color:var(--mut)}
+.tb{display:flex;gap:8px;margin-bottom:6px}
+#q{flex:1;min-width:0;font:inherit;font-size:15px;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:0 14px;height:44px;margin:0}
+#q::placeholder{color:var(--mut)}
+#q:focus{border-color:var(--gold);outline:0;box-shadow:0 0 0 3px rgba(56,189,248,.18)}
+#so{flex:none;width:auto;max-width:44%;height:44px;margin:0;padding:0 10px;font-size:13px;direction:rtl;text-align:start;border-radius:12px;background:var(--card)}
+
+/* tabs */
+#tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;margin:0 auto;max-width:640px;scrollbar-width:none;scroll-snap-type:x proximity;background:linear-gradient(var(--bg) 70%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%)}
+#tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;scroll-snap-align:center;min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--bd);background:var(--card);color:var(--mut);font:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.18s;white-space:nowrap}
+.tab:active{transform:scale(.95)}
+.tab.on{border-color:var(--gold);background:rgba(56,189,248,.12);color:var(--gold);font-weight:800;box-shadow:0 4px 14px rgba(56,189,248,.18)}
+:root[data-theme=light] .tab.on{background:#dff3ff}
+
+main{max-width:640px;margin:0 auto;padding:4px 14px 12px}
+
+/* day heading */
+.day{display:flex;align-items:center;gap:10px;margin:20px 2px 10px;font-size:13px;font-weight:800;color:var(--gold);letter-spacing:.2px}
+.day:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--bd),transparent)}
+
+/* match card */
+.m{position:relative;margin-bottom:12px;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--card) 88%,#000));box-shadow:var(--sh);transition:border-color .2s,box-shadow .2s;animation:fi .35s ease both}
+:root[data-theme=light] .m{background:var(--card)}
+.m.open{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 14px 34px rgba(56,189,248,.14)}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}}
+.fav{position:absolute;top:2px;inset-inline-start:2px;z-index:2;padding:8px 10px;font-size:22px;line-height:1;color:var(--gold);cursor:pointer;opacity:.9;transition:transform .15s}
+.fav:active{transform:scale(1.3)}
+.mt{display:grid;grid-template-columns:1fr 74px 1fr;align-items:start;gap:4px;padding:16px 8px 12px;cursor:pointer;direction:ltr}
+.tm{text-align:center;font-size:13.5px;font-weight:700;line-height:1.3;word-break:break-word}
+.lg{width:52px;height:52px;border-radius:50%;margin:0 auto 7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.12)}
+.lg img{width:42px;height:42px;object-fit:contain}
+.mid{align-self:center;text-align:center;color:var(--tx);font-size:13px;font-weight:700;margin-top:4px}
+.mid b{display:block;margin-top:6px;color:var(--gold);font-size:11px;letter-spacing:2px}
+.inj{display:block;width:max-content;max-width:100%;margin:6px auto 0;padding:2px 9px;font-size:11px;font-weight:600;color:#fca5a5;background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.25);border-radius:999px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:root[data-theme=light] .inj{color:#b91c1c;background:#fee2e2}
+
+/* probability bar */
+.pb{display:flex;height:20px;margin:0 14px 12px;border-radius:10px;overflow:hidden;gap:2px;direction:ltr}
+.pb i{display:flex;align-items:center;justify-content:center;height:100%;font-style:normal;font-size:10.5px;font-weight:800;color:#fff;min-width:0;transition:width .4s}
+
+/* odds */
+.od{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 12px 14px;direction:ltr;cursor:pointer}
+.od div{background:var(--c2);border:1px solid var(--bd);border-radius:12px;text-align:center;padding:7px 0 6px;font-size:11px;font-weight:700;color:var(--mut);transition:.15s}
+.od b{display:block;margin-top:1px;color:var(--tx);font-size:17px;font-weight:800;line-height:1.2}
+.od small{display:block;font-size:10.5px;font-weight:600;color:var(--mut)}
+.od div.pk{border-color:var(--g);background:color-mix(in srgb,var(--g) 14%,var(--c2))}
+.od div.pk b{color:var(--g)}
+.od div.pk small{color:var(--g)}
+
+/* details */
+.det{display:none;padding:14px;border-top:1px solid var(--bd);background:rgba(0,0,0,.14);cursor:default}
+:root[data-theme=light] .det{background:#f8f9fd}
+.m.open .det{display:block;animation:fi .25s ease both}
+.bar{display:flex;height:36px;margin-bottom:12px;border-radius:11px;overflow:hidden;direction:ltr;gap:2px}
+.bar div{display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;color:#fff}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;font-size:14px;border-bottom:1px dashed var(--bd)}
+.kv:last-child{border-bottom:0}
+.kv b{font-weight:700;text-align:end}
+.gt{margin:18px 0 8px;padding-inline-start:9px;border-inline-start:3px solid var(--gold);color:var(--gold);font-size:13.5px;font-weight:800}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:7px;direction:ltr}
+.c{padding:9px 4px;text-align:center;background:var(--c2);border:1px solid var(--bd);border-radius:12px}
+.c small{display:block;margin-bottom:2px;font-size:11px;line-height:1.25;color:var(--mut)}
+.c b{display:block;font-size:18px;font-weight:800}
+.c i{display:block;font-style:normal;font-size:12px;font-weight:600;color:var(--g)}
+.c .ri{margin-top:4px;font-size:12px;padding:5px 2px}.c .ed{font-weight:700}
+.cm{font-size:12px;color:var(--mut);margin:4px 0}
+
+/* collapsibles */
+details{margin-top:14px}
+summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;list-style:none;padding:11px 14px;font-size:14px;font-weight:800;color:var(--gold);background:var(--c2);border:1px solid var(--bd);border-radius:12px;min-height:44px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"▾";font-size:13px;transition:transform .2s}
+details[open]>summary{margin-bottom:6px}
+details[open]>summary:after{transform:rotate(180deg)}
+ul{padding-inline-start:20px;margin:6px 0;font-size:13px;line-height:1.7}
+
+/* chips & misc */
+.f{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin:0 1px;border-radius:6px;font-size:11px;font-weight:800;color:#fff}
+.fW{background:var(--g)}.fD{background:var(--n)}.fL{background:var(--r)}
+.mut{color:var(--mut);font-size:12.5px;line-height:1.65}
+.card{margin-top:18px;padding:14px;background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);box-shadow:var(--sh)}
+details.card{padding:0;background:transparent;border:0;box-shadow:none}
+details.card>summary{background:var(--card);box-shadow:var(--sh)}
+details.card[open]>summary{margin-bottom:0;border-end-start-radius:0;border-end-end-radius:0}
+details.card>*:not(summary){margin-inline:0}
+select,button.go{width:100%;min-height:46px;margin-top:8px;padding:0 12px;font:inherit;font-size:14px;color:var(--tx);background:var(--c2);border:1px solid var(--bd);border-radius:12px;direction:ltr;text-align:left}
+select:focus{border-color:var(--gold);outline:0}
+button.go{background:linear-gradient(135deg,#67e8f9,#0ea5e9);color:#031321;border:0;font-weight:800;text-align:center;cursor:pointer;box-shadow:0 6px 16px rgba(14,165,233,.3)}
+button.go:active{transform:scale(.98)}
+label.ck{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px;min-height:40px}
+label.ck input{width:20px;height:20px;accent-color:var(--gold)}
+#cust{background:var(--card);border:1px solid var(--bd);border-radius:var(--rad);padding:0 0 14px;overflow:hidden}
+#cust>summary{border:0;border-radius:0}
+#cust>*:not(summary){margin-inline:14px;width:calc(100% - 28px)}
+#cust>#cres{width:auto}
+
+.ib{min-height:40px;margin:3px;padding:8px 13px;font:inherit;font-size:12.5px;font-weight:600;color:var(--tx);background:var(--c2);border:1px solid var(--bd);border-radius:10px;cursor:pointer;transition:.15s}
+.ib:active{transform:scale(.95)}
+.ib.on{border-color:var(--gold);color:var(--gold);background:rgba(56,189,248,.1)}
+.sh{min-height:40px;margin-bottom:6px;padding:8px 12px;font:inherit;font-size:12.5px;color:var(--tx);background:var(--c2);border:1px solid var(--bd);border-radius:10px}
+.ri,.rr{width:100%;padding:9px;font:inherit;font-size:14px;color:var(--tx);text-align:center;direction:ltr;background:var(--c2);border:1px solid var(--bd);border-radius:10px}
+.rr{margin-top:8px}
+.ri:focus,.rr:focus{border-color:var(--gold);outline:0}
+.vr{display:grid;grid-template-columns:44px 1fr 1fr 1fr 1fr;gap:4px;padding:4px 0;font-size:12px;text-align:center;direction:ltr}
+.vr.v{color:var(--g);font-weight:700}
+.hr{display:grid;grid-template-columns:24px 62px 1fr 44px 1fr;gap:4px;align-items:center;padding:6px 0;font-size:12px;border-bottom:1px solid var(--bd);direction:ltr}
+.hr .t1,.hr .t2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hr .t1{text-align:right}.hr .t2{text-align:left}.hr .s{text-align:center}
+.lr{margin-bottom:10px;padding:12px;background:var(--card);border:1px solid var(--bd);border-radius:14px}
+.ad{margin-bottom:10px;padding:20px;text-align:center;font-size:12px;color:var(--mut);border:1px dashed var(--bd);border-radius:14px}
+
+/* tables */
+.card table{border-collapse:collapse}
+.card table td{padding:8px 4px;white-space:nowrap}
+.card table tr:not(.mut):nth-child(even){background:rgba(127,140,170,.07)}
+.card table tr:not(.mut) td:first-child{color:var(--mut)}
+.card table tr:not(.mut):nth-child(-n+5) td:first-child{color:var(--gold);font-weight:800}
+
+main>p.mut{margin-top:22px;padding-top:14px;border-top:1px solid var(--bd);line-height:1.8;font-size:12px}
+#bt .card{margin-top:14px}
+
+/* age gate */
+#ag{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,7,12,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#ag>div{width:100%;max-width:340px;padding:24px 20px;text-align:center;background:var(--card);border:1px solid var(--gold);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#ag h2{margin:0 0 8px;font-size:34px;font-weight:900;color:var(--gold)}
+#ag p{margin:0 0 6px;color:var(--mut);font-size:14px}
+
+@media(min-width:700px){header,main,#tabs,#stk{max-width:720px}.m:hover{border-color:color-mix(in srgb,var(--gold) 55%,var(--bd))}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;margin-bottom:14px;padding:14px 14px 16px;border-radius:20px;border:1px solid rgba(56,189,248,.35);background:radial-gradient(420px 220px at 85% -20%,rgba(56,189,248,.35),transparent),radial-gradient(360px 200px at 0% 120%,rgba(99,102,241,.35),transparent),linear-gradient(160deg,#122046,#0a1230);box-shadow:0 14px 36px rgba(14,165,233,.18);color:#eef3ff;animation:fi .4s ease both}
+.hero:before{content:"";position:absolute;inset:0;opacity:.07;background:repeating-linear-gradient(90deg,#fff 0 1px,transparent 1px 44px);pointer-events:none}
+.hk{position:relative;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:13px;font-weight:800;color:#7dd3fc}
+.hk span{padding:2px 10px;font-size:11px;font-weight:700;color:#cbd5e1;background:rgba(255,255,255,.09);border-radius:999px}
+.hm{position:relative;display:grid;grid-template-columns:1fr 96px 1fr;align-items:center;direction:ltr;margin:8px 0 14px}
+.hm .tm{text-align:center;font-size:14px;font-weight:800}
+.hm .lg{width:66px;height:66px}.hm .lg img{width:54px;height:54px}
+.hc{text-align:center}.hc b{display:block;font-size:28px;font-weight:900;color:#fff;letter-spacing:.5px}.hc small{display:block;font-size:11.5px;color:#a9b8d8}
+.hero .pb{position:relative;margin:0 0 4px}
+.hero button.go.hb{position:relative;margin-top:12px}
+
+/* bottom nav */
+#bn{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;justify-content:space-around;max-width:720px;margin:0 auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--bd);border-radius:20px 20px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.35)}
+#bn button{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:52px;padding:4px 0;font:inherit;font-size:11px;font-weight:700;color:var(--mut);background:none;border:0;border-radius:14px;cursor:pointer;transition:.15s}
+#bn button span{font-size:20px;line-height:1.2;filter:grayscale(1) opacity(.7);transition:.15s}
+#bn button.on{color:var(--gold)}
+#bn button.on span{filter:none;transform:translateY(-2px)}
+#bn button.on:after{content:"";width:18px;height:3px;margin-top:2px;background:var(--gold);border-radius:3px}
+
+.sh2{margin:10px 0 4px;font-size:13px;font-weight:700}
+.sg{padding:10px 12px 8px;background:var(--c2);border:1px solid var(--bd);border-radius:14px}
+.sr{display:grid;grid-template-columns:104px 1fr 56px;align-items:center;gap:8px;padding:5px 0}
+.sn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:700}
+.sb{height:10px;background:rgba(127,140,170,.2);border-radius:6px;overflow:hidden;direction:ltr}
+.sb i{display:block;height:100%;border-radius:6px}
+.rk{text-align:left;white-space:nowrap}.rk b{font-size:17px;font-weight:900}.rk small{font-size:11px;color:var(--mut)}
+
+#stk{position:sticky;top:0;z-index:20;max-width:640px;margin:0 auto}
+#stale{margin:8px 14px 0;padding:9px 12px;font-size:12.5px;font-weight:700;line-height:1.6;color:#fde68a;background:rgba(245,158,11,.16);border:1px solid rgba(245,158,11,.42);border-radius:12px}
+:root[data-theme=light] #stale{color:#92400e;background:#fef3c7}
+.sk{height:210px;margin-bottom:12px;border-radius:16px;border:1px solid var(--bd);background:linear-gradient(100deg,var(--card) 30%,var(--c2) 50%,var(--card) 70%);background-size:300% 100%;animation:shm 1.3s linear infinite}
+@keyframes shm{to{background-position:-300% 0}}
+.pb i{opacity:.55;transition:opacity .2s}.pb i.mx{opacity:1;box-shadow:0 0 12px rgba(255,255,255,.2)}
+.pb.big{height:28px;margin:0 0 8px;border-radius:12px}.pb.big i{font-size:12px}
+.c.hi{border-color:var(--g);background:color-mix(in srgb,var(--g) 14%,var(--c2))}.c.hi b{color:var(--g)}
+.sm{padding:0 14px 8px;text-align:center;font-size:13.5px;font-weight:700;line-height:1.6}.sm em{font-style:normal;color:var(--gold)}
+.bdg{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:0 12px 12px}
+.bd{padding:3px 10px;font-size:11.5px;font-weight:700;color:var(--mut);background:var(--c2);border:1px solid var(--bd);border-radius:999px}
+.bd.ok{color:var(--g);border-color:color-mix(in srgb,var(--g) 55%,var(--bd));background:color-mix(in srgb,var(--g) 12%,var(--c2))}
+.bd.mid{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 50%,var(--bd))}
+.bd.low{color:#f59e0b;border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.1)}
+.lgd{display:flex;justify-content:space-between;gap:6px;margin-bottom:12px;font-size:11.5px;color:var(--mut)}
+.lgd i{display:inline-block;width:9px;height:9px;margin-inline-end:4px;border-radius:3px}
+.act{display:flex;gap:8px;margin-top:12px}
+.abtn{flex:1;min-height:44px;font:inherit;font-size:13px;font-weight:700;color:var(--tx);background:var(--c2);border:1px solid var(--bd);border-radius:12px;cursor:pointer}
+.abtn:active{transform:scale(.97)}
+.acc{margin:0 0 12px;padding:9px 12px;font-size:12.5px;line-height:1.7;color:var(--mut);background:var(--card);border:1px solid var(--bd);border-radius:12px}.acc b{color:var(--gold);font-size:14px}
+#ob{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,7,12,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#ob>div{width:100%;max-width:340px;padding:24px 20px;text-align:center;background:var(--card);border:1px solid var(--gold);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.obi{font-size:44px}#ob h2{margin:6px 0 8px;color:var(--gold);font-size:20px}#ob p{margin:0 0 14px;font-size:14px;line-height:1.9;color:var(--mut)}#ob p b{font-weight:800}
+.obd{display:flex;justify-content:center;gap:6px;margin-bottom:8px}.obd i{width:8px;height:8px;border-radius:50%;background:var(--bd);transition:.2s}.obd i.on{width:22px;background:var(--gold);border-radius:6px}
+.obs{background:transparent!important;color:var(--mut)!important;box-shadow:none!important}
+#ts{position:fixed;left:50%;bottom:92px;z-index:60;max-width:88%;padding:10px 16px;font-size:13px;font-weight:700;color:var(--tx);background:var(--card);border:1px solid var(--gold);border-radius:999px;box-shadow:var(--sh);opacity:0;pointer-events:none;transform:translate(-50%,20px);transition:.25s}
+#ts.show{opacity:1;transform:translate(-50%,0)}
+#up{position:fixed;inset-inline-end:14px;bottom:88px;z-index:45;width:44px;height:44px;font-size:20px;color:var(--gold);background:var(--card);border:1px solid var(--bd);border-radius:50%;box-shadow:var(--sh);cursor:pointer}
+#ptr{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 10px);z-index:70;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--gold);background:var(--card);border:1px solid var(--gold);border-radius:50%;opacity:0;pointer-events:none;transform:translate(-50%,-40px)}
+#ldb{position:fixed;top:0;left:0;right:0;height:3px;z-index:99;background:linear-gradient(90deg,transparent,var(--gold),transparent) no-repeat;background-size:40% 100%;opacity:0;pointer-events:none}
+#ldb.on{opacity:1;animation:ldm 1s linear infinite}
+@keyframes ldm{from{background-position:-40% 0}to{background-position:140% 0}}
+
+.fr{display:grid;grid-template-columns:104px 1fr 56px;align-items:center;gap:8px;padding:6px 0}
+.fbw{display:flex;align-items:flex-end;justify-content:flex-start;gap:6px;height:36px}
+.fb{display:block;flex:0 0 26px;min-height:6px;border-radius:6px 6px 2px 2px}
+.cmpb{width:100%;min-height:46px;margin:0 0 12px;font:inherit;font-size:14px;font-weight:700;color:var(--gold);background:var(--card);border:1px dashed var(--gold);border-radius:14px;cursor:pointer}
+.cmpb:active{transform:scale(.98)}
+#gr{height:38px;min-width:38px;margin-inline-start:auto;font:inherit;font-size:16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;color:var(--tx);cursor:pointer}h1 #ln{margin-inline-start:0}h1:not(.open) #ln,h1:not(.open) #tg,h1:not(.open) #hp{display:none}h1.open #gr{border-color:var(--gold)}.day{scroll-margin-top:120px}#ds{display:flex;gap:8px;overflow-x:auto;margin:0 0 6px;padding:2px 0 6px;scrollbar-width:none}#ds::-webkit-scrollbar{display:none}.dchip{min-height:36px;font-size:13px;padding:0 14px}.rs2{display:flex;justify-content:space-between;gap:8px;align-items:center}.rs2 b.sc{direction:ltr;font-size:18px}.ok{color:var(--g)}.no{color:var(--r)}.lg img{animation:lgf .35s ease both}@keyframes lgf{from{opacity:0}}
+#cust[open]{position:fixed;inset:auto 0 0 0;z-index:90;max-width:640px;margin:0 auto;max-height:82vh;overflow-y:auto;border-radius:20px 20px 0 0;border-color:var(--gold);box-shadow:0 -16px 48px rgba(0,0,0,.5);padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+#cust[open]>summary{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--bd)}
+#cust[open]>summary:before{content:"✕";order:2;margin-inline-start:auto;color:var(--mut)}
+.od div{font-size:12px}.od small{font-size:11.5px}.pb i{font-size:11.5px}.inj{font-size:12px}.c small{font-size:12px}.fav{padding:10px 12px;font-size:24px}.rrd>summary{min-height:40px;font-size:13px}.rrd .rr{margin-bottom:6px}.rel{display:block;margin-top:4px;font-size:11.5px;font-weight:700;color:var(--mut)}.rel.live{color:var(--r)}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:7px}h1{flex-wrap:wrap}#od2,#fs,#ins{height:38px;min-width:38px;display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:14px;font-weight:700;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:0 12px;color:var(--tx);cursor:pointer}#ins[hidden]{display:none!important}h1:not(.open) #od2,h1:not(.open) #fs,h1:not(.open) #ins{display:none}
+.pct .od b{display:none}.pct .od small{font-size:17px;font-weight:800;color:var(--tx);line-height:1.3}.pct .od div.pk small{color:var(--g)}html.big body{zoom:1.1}</style>
+</head>
+<body>
+<header><h1>⚽ متوقع المباريات <em>PRO</em><button id="gr" aria-label="الإعدادات" aria-expanded="false">⚙️</button><button id="ln" aria-label="لغة أسماء الفرق">EN</button><button id="tg" aria-label="تبديل المظهر">🌓</button><button id="hp" aria-label="شرح التطبيق">؟</button><button id="od2" aria-label="طريقة عرض الأرقام">٪</button><button id="fs" aria-label="حجم الخط">A+</button><button id="ins" aria-label="تثبيت التطبيق" hidden>📲</button></h1><p class="sub" id="sb">تحليل احتمالي بنموذج Dixon-Coles</p><div class="tb"><input id="q" type="search" placeholder="🔍 ابحث عن فريق (عربي أو English)" aria-label="بحث"><select id="so" aria-label="الترتيب"><option value="t">⏱ الترتيب حسب الوقت</option><option value="c">🎯 الأعلى ثقة أولاً</option><option value="h">🎯 ثقة عالية فقط</option><option value="g">⚽ الأكثر أهدافاً أولاً</option></select></div></header><div id="stk"><div id="stale" hidden></div><div id="tabs"></div></div>
+<main>
+<div id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+<details class="card" id="cust"><summary>⚖️ مقارنة ومباراة مخصصة (أي فريقين)</summary>
+<select id="cl"></select><select id="ch"></select><select id="ca"></select>
+<label class="ck"><input type="checkbox" id="cn"> ملعب محايد</label>
+<button class="go" id="cg">توقّع</button><div id="cres"></div></details>
+<p class="mut">المواعيد بتوقيت القاهرة. الأسعار تحليلية للتعلّم والتسلية وليست ضماناً لأي نتيجة. +18 | المراهنة تنطوي على مخاطر خسارة المال، فالعب بمسؤولية.</p>
+<div id="bt"></div>
+<p class="mut" id="ab" style="text-align:center"></p>
+</main>
+<nav id="bn" aria-label="التنقل"></nav>
+<button id="up" aria-label="للأعلى" hidden>↑</button><div id="ts" role="status"></div><div id="ptr">⟳</div><div id="ldb"></div>
+<!--H2H-BEGIN--><script id="h2h-data" type="application/json">{}</script><!--H2H-END-->
+<script>var D={"E0":{"mu":0.22000343592486257,"ha":0.1864264997393357,"rho":-0.06,"teams":{"Brighton":[0.268,-0.191,"WWLWW",149],"Everton":[-0.109,-0.191,"DLLWW",148],"Ipswich":[-0.05,0.34,"WLDDL",48],"Arsenal":[0.333,-0.668,"WWWWW",149],"Nott'm Forest":[-0.018,-0.116,"LLDLW",148],"Aston Villa":[0.189,-0.066,"DWWDD",148],"Sunderland":[-0.213,-0.085,"LLDLW",48],"Bournemouth":[0.141,-0.085,"LWWWW",148],"West Ham":[-0.019,0.11,"WLLLW",138],"Brentford":[0.169,-0.098,"DLDWL",148],"Burnley":[-0.221,0.256,"LLDLD",76],"Wolves":[-0.256,0.133,"LDLDD",138],"Coventry":[-0.1,0.218,"WLLWL",10],"Tottenham":[0.047,0.016,"DWWWL",148],"Chelsea":[0.235,-0.06,"WWLWL",149],"Crystal Palace":[-0.09,0.042,"WLLLL",149],"Man United":[0.178,-0.024,"DDLLD",149],"Fulham":[-0.057,-0.108,"LWWDD",148],"Man City":[0.433,-0.349,"WWLLL",149],"Newcastle":[0.192,-0.022,"LLWLD",148],"Leeds":[-0.058,-0.151,"LDDLW",73],"Hull":[-0.177,-0.289,"DLDDL",10],"Liverpool":[0.332,-0.195,"LWWLW",149]}},"SP1":{"mu":0.0845215346188947,"ha":0.288074248319987,"rho":-0.04,"teams":{"Sociedad":[0.2,0.033,"WWWLW",151],"Osasuna":[-0.04,0.039,"LWLLD",151],"Ath Madrid":[0.371,-0.332,"WWWWL",151],"Girona":[0.053,-0.01,"LDDLD",139],"Elche":[0.037,0.052,"DDWLL",75],"Malaga":[-0.441,0.249,"DLDLL",12],"Villarreal":[0.38,-0.073,"LDWLW",151],"Levante":[0.095,0.107,"DWLLD",50],"Oviedo":[-0.48,0.068,"LDLLL",38],"Espanol":[-0.089,-0.051,"DLLWD",113],"Santander":[0.163,0.539,"DLWLW",12],"La Coruna":[-0.017,-0.142,"LDLWD",12],"Valencia":[-0.104,-0.021,"DDLWL",151],"Alaves":[-0.061,-0.037,"LLDLD",126],"Getafe":[-0.359,-0.228,"LDLWL",151],"Betis":[0.249,-0.115,"WLDWW",151],"Celta":[0.044,-0.116,"DWDLD",151],"Sevilla":[0.051,0.056,"DLWLD",151],"Ath Bilbao":[0.071,-0.187,"DLWWD",150],"Vallecano":[-0.087,-0.089,"DDLWL",150],"Real Madrid":[0.564,-0.455,"WWWWW",151],"Barcelona":[0.818,-0.308,"WWLWW",151],"Mallorca":[-0.08,-0.067,"WDLLW",139]}},"I1":{"mu":0.15387825056304927,"ha":0.10196053074128705,"rho":0,"teams":{"Juventus":[0.23,-0.344,"LWLWD",150],"Parma":[-0.283,-0.03,"LLDWL",87],"Napoli":[0.271,-0.323,"LDWLD",150],"Udinese":[-0.046,0.104,"LLDLL",150],"Monza":[-0.036,0.304,"WLLLL",112],"Torino":[-0.025,0.041,"WWLLD",150],"Frosinone":[0.411,0.132,"WDWWL",49],"Roma":[0.431,-0.376,"WDWWW",150],"Como":[0.3,-0.367,"WWWWL",87],"Inter":[0.655,-0.33,"WWWLW",150],"Lazio":[0.207,-0.23,"WWWWD",150],"Milan":[0.325,-0.206,"WWLWW",150],"Venezia":[-0.339,0.13,"WLLLW",49],"Genoa":[-0.086,-0.049,"LWWWL",125],"Cremonese":[-0.308,0.126,"LLWWL",63],"Bologna":[0.165,-0.127,"LWWWW",150],"Verona":[-0.412,0.117,"DDLDL",139],"Fiorentina":[0.161,0.021,"LLDWD",150],"Pisa":[-0.495,0.326,"LLLLL",38],"Sassuolo":[0.09,0.233,"LLLLL",112],"Atalanta":[0.3,-0.141,"LDDLW",150],"Lecce":[-0.341,0.08,"WLLLD",150],"Cagliari":[-0.113,0.039,"LLLLW",125]}},"D1":{"mu":0.2549412245410005,"ha":0.23616218692616625,"rho":-0.06,"teams":{"Augsburg":[0.011,0.059,"DLDLL",132],"Paderborn":[-0.425,-0.263,"LDWDD",9],"Stuttgart":[0.325,-0.12,"WLLWW",132],"Union Berlin":[-0.24,0.024,"WDDDL",132],"Schalke 04":[-0.677,-0.259,"LLDLL",30],"FC Koln":[-0.124,0.072,"WLDDL",98],"Wolfsburg":[-0.029,0.081,"WDDLW",123],"Mainz":[0.062,-0.046,"LWLLL",132],"RB Leipzig":[0.362,-0.175,"WLWWW",132],"Heidenheim":[-0.139,0.145,"LWDWL",102],"Bayern Munich":[0.798,-0.365,"DWWDW",132],"Werder Bremen":[-0.022,0.009,"DDWWL",132],"Elversberg":[0.364,0.127,"LWLWL",9],"M'gladbach":[-0.021,0.1,"LLWDL",132],"Hamburg":[-0.163,0.048,"WWLLW",43],"Freiburg":[0.113,-0.064,"WLLWW",132],"Dortmund":[0.334,-0.401,"DDWDW",132],"Hoffenheim":[0.208,0.093,"LWWLW",132],"Ein Frankfurt":[0.202,0.083,"LWLWD",132],"St Pauli":[-0.526,-0.073,"DLLLL",68],"Leverkusen":[0.373,-0.178,"WWLLW",132]}},"F1":{"mu":0.1726894391535208,"ha":0.20392253786491685,"rho":-0.04,"teams":{"Paris SG":[0.577,-0.418,"WWWWW",136],"Nice":[0.08,-0.071,"WLWWW",136],"Le Havre":[-0.202,0.093,"LLLLL",112],"Lorient":[-0.018,-0.091,"WWDLW",102],"Brest":[0.149,-0.002,"WDLWW",136],"Auxerre":[-0.064,0.047,"LWDLL",102],"Strasbourg":[0.275,0.024,"LLLWL",136],"Le Mans":[-0.045,0.191,"LLDLD",10],"Troyes":[-0.466,0.112,"LLDWL",34],"Metz":[-0.233,0.322,"LDLLD",68],"Nantes":[-0.303,-0.005,"LLWLD",126],"Lille":[0.138,-0.423,"WDDWW",136],"Angers":[-0.366,0.066,"LLDLL",102],"Monaco":[0.315,-0.089,"DLDLD",136],"Lens":[0.276,-0.233,"WWWLL",136],"Paris FC":[0.174,-0.171,"LWLWW",44],"Marseille":[0.419,-0.079,"WWWWW",136],"Rennes":[0.337,0.062,"WLWLL",136],"Toulouse":[0.075,-0.105,"DWDLW",136],"Lyon":[0.249,-0.191,"LWLWL",136]}},"_fix":[["E0","Sat 21 Nov 14:30","Man City","Fulham"],["E0","Sat 21 Nov 17:00","Aston Villa","Sunderland"],["E0","Sat 21 Nov 17:00","Bournemouth","Nott'm Forest"],["E0","Sat 21 Nov 17:00","Chelsea","Leeds"],["E0","Sat 21 Nov 17:00","Coventry","Crystal Palace"],["E0","Sat 21 Nov 17:00","Tottenham","Ipswich"],["E0","Sat 21 Nov 19:30","Newcastle","Arsenal"],["E0","Sun 22 Nov 16:00","Hull","Brighton"],["E0","Sun 22 Nov 18:30","Liverpool","Man United"],["E0","Mon 23 Nov 22:00","Brentford","Everton"],["SP1","Fri 20 Nov 22:00","Ath Bilbao","Espanol"],["SP1","Sat 21 Nov 15:00","Alaves","La Coruna"],["SP1","Sat 21 Nov 17:15","Vallecano","Valencia"],["SP1","Sat 21 Nov 19:30","Sevilla","Betis"],["SP1","Sat 21 Nov 22:00","Real Madrid","Celta"],["SP1","Sun 22 Nov 15:00","Barcelona","Villarreal"],["SP1","Sun 22 Nov 17:15","Santander","Sociedad"],["SP1","Sun 22 Nov 19:30","Osasuna","Malaga"],["SP1","Sun 22 Nov 22:00","Getafe","Ath Madrid"],["SP1","Mon 23 Nov 22:00","Levante","Elche"],["I1","Sat 21 Nov 16:00","Como","Cagliari"],["I1","Sat 21 Nov 16:00","Lazio","Lecce"],["I1","Sat 21 Nov 19:00","Parma","Roma"],["I1","Sat 21 Nov 21:45","Napoli","Torino"],["I1","Sun 22 Nov 13:30","Juventus","Venezia"],["I1","Sun 22 Nov 16:00","Bologna","Udinese"],["I1","Sun 22 Nov 16:00","Sassuolo","Genoa"],["I1","Sun 22 Nov 19:00","Milan","Frosinone"],["I1","Sun 22 Nov 21:45","Atalanta","Inter"],["I1","Mon 23 Nov 21:45","Monza","Fiorentina"],["D1","Fri 20 Nov 21:30","Bayern Munich","FC Koln"],["D1","Sat 21 Nov 16:30","Leverkusen","Paderborn"],["D1","Sat 21 Nov 16:30","Ein Frankfurt","Hoffenheim"],["D1","Sat 21 Nov 16:30","Union Berlin","RB Leipzig"],["D1","Sat 21 Nov 16:30","M'gladbach","Dortmund"],["D1","Sat 21 Nov 16:30","Elversberg","Freiburg"],["D1","Sat 21 Nov 19:30","Schalke 04","Stuttgart"],["D1","Sun 22 Nov 16:30","Augsburg","Mainz"],["D1","Sun 22 Nov 18:30","Werder Bremen","Hamburg"],["F1","Fri 20 Nov 21:45","Troyes","Le Havre"],["F1","Sat 21 Nov 18:15","Nice","Paris SG"],["F1","Sat 21 Nov 21:45","Lens","Toulouse"],["F1","Sat 21 Nov 21:45","Lille","Lyon"],["F1","Sat 21 Nov 21:45","Monaco","Auxerre"],["F1","Sat 21 Nov 21:45","Strasbourg","Brest"],["F1","Sun 22 Nov 16:00","Paris FC","Angers"],["F1","Sun 22 Nov 18:15","Lorient","Rennes"],["F1","Sun 22 Nov 21:45","Marseille","Le Mans"]]};
+var N=10,cur=null;
+var NAMES={E0:"🇬🇧 الإنجليزي",SP1:"🇪🇸 الإسباني",I1:"🇮🇹 الإيطالي",D1:"🇩🇪 الألماني",F1:"🇫🇷 الفرنسي",INT:"🌍 المنتخبات"};
+var DAY={Mon:"الإثنين",Tue:"الثلاثاء",Wed:"الأربعاء",Thu:"الخميس",Fri:"الجمعة",Sat:"السبت",Sun:"الأحد"};
+var MON={Jan:"يناير",Feb:"فبراير",Mar:"مارس",Apr:"أبريل",May:"مايو",Jun:"يونيو",Jul:"يوليو",Aug:"أغسطس",Sep:"سبتمبر",Oct:"أكتوبر",Nov:"نوفمبر",Dec:"ديسمبر"};
+var SDB={"Man City":"Manchester City","Man United":"Manchester United","Nott'm Forest":"Nottingham Forest","Wolves":"Wolverhampton Wanderers","West Ham":"West Ham United","Newcastle":"Newcastle United","Leeds":"Leeds United","Hull":"Hull City","Ipswich":"Ipswich Town","Coventry":"Coventry City","Bournemouth":"AFC Bournemouth","Ath Madrid":"Atletico Madrid","Ath Bilbao":"Athletic Bilbao","Sociedad":"Real Sociedad","Betis":"Real Betis","Celta":"Celta Vigo","Vallecano":"Rayo Vallecano","Espanol":"Espanyol","La Coruna":"Deportivo La Coruna","Santander":"Racing Santander","Oviedo":"Real Oviedo","Milan":"AC Milan","Inter":"Inter Milan","Roma":"AS Roma","Verona":"Hellas Verona","Dortmund":"Borussia Dortmund","Leverkusen":"Bayer Leverkusen","Ein Frankfurt":"Eintracht Frankfurt","M'gladbach":"Borussia Monchengladbach","Mainz":"Mainz 05","Hamburg":"Hamburger SV","St Pauli":"St. Pauli","Elversberg":"SV Elversberg","Paris SG":"Paris Saint-Germain"};
+var LC={},NF={},Q=[],busy=false;
+try{LC=JSON.parse(localStorage.getItem("fb_logos")||"{}")}catch(e){}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pois(l,n){var p=Math.exp(-l),a=[p];for(var k=1;k<n;k++){p*=l/k;a.push(p)}return a}
+function tau(i,j,l,m,r){if(!r)return 1;if(i===0&&j===0)return 1-l*m*r;if(i===0&&j===1)return 1+l*r;if(i===1&&j===0)return 1+m*r;if(i===1&&j===1)return 1-r;return 1}
+
+/* ---------- logos ---------- */
+function badge(n){var x=0;for(var i=0;i<n.length;i++)x=(x*31+n.charCodeAt(i))%360;var p=n.split(" "),t=(p.length>1?p[0][0]+p[1][0]:n.slice(0,3)).toUpperCase();return '<span class="lg" data-t="'+esc(n)+'" style="background:hsl('+x+',55%,38%)">'+esc(t)+'</span>'}
+function logo(n){return LC[n]?'<span class="lg" style="background:#fff"><img src="'+esc(LC[n])+'" alt=""></span>':badge(n)}
+function paint(n){document.querySelectorAll(".lg[data-t]").forEach(function(el){if(el.getAttribute("data-t")===n&&LC[n]){el.removeAttribute("data-t");el.style.background="#fff";el.innerHTML='<img src="'+esc(LC[n])+'" alt="">'}})}
+var LOGOS=false;function want(c){if(!LOGOS||(c||cur)==="INT")return;document.querySelectorAll(".lg[data-t]").forEach(function(el){var n=el.getAttribute("data-t");if(LC[n]===undefined&&!NF[n]&&Q.indexOf(n)<0)Q.push(n)});pump()}
+function pump(){
+  if(busy||!Q.length)return;busy=true;var n=Q.shift();
+  fetch("https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t="+encodeURIComponent(SDB[n]||n))
+    .then(function(r){return r.json()})
+    .then(function(j){var t=(j.teams||[]).filter(function(x){return x.strSport==="Soccer"})[0];LC[n]=t?(t.strBadge||t.strTeamBadge||""):"";try{localStorage.setItem("fb_logos",JSON.stringify(LC))}catch(e){}paint(n)})
+    .catch(function(){NF[n]=1})
+    .then(function(){busy=false;setTimeout(pump,2200)});
+}
+
+/* ---------- model ---------- */
+function mat(code,h,a,neu,x){
+  var m=D[code],H=m&&m.teams[h],A=m&&m.teams[a];if(!H||!A)return null;
+  var ha=neu?0:m.ha,x=x||{hA:1,hC:1,aA:1,aC:1},lh=Math.exp(m.mu+ha+H[0]*sw(H)+A[1]*sw(A))*x.hA*x.aC,la=Math.exp(m.mu+A[0]*sw(A)+H[1]*sw(H))*x.aA*x.hC,ph=pois(lh,N),pa=pois(la,N),M=[],t=0;
+  for(var i=0;i<N;i++)for(var j=0;j<N;j++){var p=ph[i]*pa[j]*tau(i,j,lh,la,m.rho||0);M.push(p);t+=p}
+  for(var k=0;k<M.length;k++)M[k]/=t;
+  return{M:M,lh:lh,la:la,m:m,H:H,A:A,ha:ha};
+}
+function P(o,f){var s=0;for(var i=0;i<N;i++)for(var j=0;j<N;j++)if(f(i,j))s+=o.M[i*N+j];return s}
+var AC={_d:null},EXPN={E0:20,SP1:20,I1:20,D1:18,F1:18};
+function act(m){if(AC._d!==D)AC={_d:D};var c=null;leagues().forEach(function(k){if(D[k]===m)c=k});if(!c)return Object.keys(m.teams);if(AC[c])return AC[c];
+  var set={};(D._fix||[]).forEach(function(f){if(f[0]===c){set[f[2]]=1;set[f[3]]=1}});if(D._tab&&D._tab[c])Object.keys(D._tab[c]).forEach(function(t){set[t]=1});
+  var L=Object.keys(set).filter(function(t){return m.teams[t]});if(!EXPN[c]||L.length<EXPN[c])L=Object.keys(m.teams);return AC[c]=L}
+function rank(m,t,k,asc){var L=act(m).slice();if(L.indexOf(t)<0)L.push(t);var r=L.sort(function(x,y){return asc?m.teams[x][k]-m.teams[y][k]:m.teams[y][k]-m.teams[x][k]});return r.indexOf(t)+1}
+var od=function(x){return x>.004?(1/x).toFixed(2):"—"},pc=function(x){return Math.round(x*100)+"%"};
+function C(k,p,h){return '<div class="c'+(h?' hi':'')+'"><small>'+k+'</small><b>'+od(p)+'</b><i>'+pc(p)+'</i></div>'}
+function G(t,a){var sm=0,mx=0;a.forEach(function(x){sm+=x[1];mx=Math.max(mx,x[1])});var hi=a.length<=3&&Math.abs(sm-1)<.02;return '<div class="gt">'+t+'</div><div class="g3">'+a.map(function(x){return C(x[0],x[1],hi&&x[1]===mx)}).join("")+'</div>'}
+function chips(s){return s.split("").map(function(c){return '<span class="f f'+c+'">'+c+'</span>'}).join("")}
+
+function detail0(code,h,a,neu,x){
+  var o=mat(code,h,a,neu,x);if(!o)return '<p class="mut">لا توجد بيانات كافية لأحد الفريقين.</p>';
+  var w=P(o,function(i,j){return i>j}),d=P(o,function(i,j){return i===j}),l=1-w-d;
+  var o25=P(o,function(i,j){return i+j>2}),bt=P(o,function(i,j){return i>0&&j>0});
+  var sc=[];for(var i=0;i<N;i++)for(var j=0;j<N;j++)sc.push([i+"-"+j,o.M[i*N+j]]);
+  sc.sort(function(x,y){return y[1]-x[1]});
+  var s='<div class="bar"><div style="width:'+w*100+'%;background:var(--g)">'+pc(w)+'</div><div style="width:'+d*100+'%;background:var(--n)">'+pc(d)+'</div><div style="width:'+l*100+'%;background:var(--r)">'+pc(l)+'</div></div>'+
+   '<div class="kv"><span>الأهداف المتوقعة</span><b dir="ltr">'+o.lh.toFixed(2)+' - '+o.la.toFixed(2)+'</b></div>'+
+   '<div class="kv"><span>أرجح نتيجة</span><b dir="ltr">'+sc.slice(0,3).map(function(x){return x[0]+' ('+pc(x[1])+')'}).join(' • ')+'</b></div>'+
+   G("النتيجة النهائية 1X2",[["1 مضيف",w],["X تعادل",d],["2 ضيف",l]])+
+   G("الفرصة المزدوجة",[["1X",w+d],["12",w+l],["X2",d+l]])+
+   G("أهداف المباراة",[["أكثر 2.5",o25],["أقل 2.5",1-o25],["الفريقان يسجلان",bt]]);
+  var T=[];[0.5,1.5,3.5,4.5].forEach(function(x){var v=P(o,function(i,j){return i+j>x});T.push(["أكثر "+x,v]);T.push(["أقل "+x,1-v])});
+  var TH=[],TA=[];[0.5,1.5,2.5].forEach(function(x){TH.push(["أكثر "+x,P(o,function(i,j){return i>x})]);TA.push(["أكثر "+x,P(o,function(i,j){return j>x})])});
+  s+='<details><summary>كل الأسواق</summary>'+G("إجمالي الأهداف",T)+G("الفريقان يسجلان",[["نعم",bt],["لا",1-bt]])+
+   G("هاندكاب (-1)",[["1 (-1)",P(o,function(i,j){return i-j>=2})],["X (-1)",P(o,function(i,j){return i-j===1})],["2 (-1)",P(o,function(i,j){return i-j<=0})]])+
+   G("هاندكاب (+1)",[["1 (+1)",P(o,function(i,j){return i-j>=0})],["X (+1)",P(o,function(i,j){return j-i===1})],["2 (+1)",P(o,function(i,j){return j-i>=2})]])+
+   G("أهداف المضيف",TH)+G("أهداف الضيف",TA)+G("النتيجة الدقيقة",sc.slice(0,6))+'</details>';
+  var n=act(o.m).length,y=[];
+  y.push(esc(tn(h))+": هجوم #"+rank(o.m,h,0,false)+" ودفاع #"+rank(o.m,h,1,true)+" من "+n);
+  y.push(esc(tn(a))+": هجوم #"+rank(o.m,a,0,false)+" ودفاع #"+rank(o.m,a,1,true)+" من "+n);
+  y.push("ميزة الأرض: +"+((Math.exp(o.ha)-1)*100).toFixed(0)+"% أهداف");
+  y.push("المتوقع للمضيف "+o.lh.toFixed(2)+" مقابل متوسط الدوري "+Math.exp(o.m.mu+o.ha).toFixed(2));
+  if(o.H[2]&&o.A[2])y.push("آخر 5: "+esc(tn(h))+" "+chips(o.H[2])+" &nbsp;|&nbsp; "+esc(tn(a))+" "+chips(o.A[2]));
+  if(o.H[3]&&o.A[3]&&Math.min(o.H[3],o.A[3])<40)y.push("⚠️ أحد الفريقين لعب مباريات قليلة في هذا المستوى، فالتوقع أقل دقة");
+  if(o.m.rho)y.push("تصحيح Dixon-Coles للنتائج المنخفضة مفعّل");
+  var mx=Math.max(w,d,l);y.push(mx>.6?"الفارق كبير: ثقة أعلى":mx<.45?"مباراة متقاربة جداً: ثقة منخفضة":"ثقة متوسطة");
+  return s;
+}
+
+/* ---------- UI ---------- */
+function leagues(){return Object.keys(D).filter(function(k){return k[0]!=="_"})}
+function setLeague(k){if(k===cur){window.scrollTo({top:0,behavior:"smooth"});return}SCR[cur]=window.scrollY||0;cur=k;try{localStorage.setItem("fb_tab",k)}catch(e){}tabs();list();if(leagues().indexOf(k)>=0&&$("cl").value!==k)fillCust(k);window.scrollTo(0,SCR[k]||0)}
+$("tabs").onclick=function(e){var b=e.target.closest(".tab");if(b)setLeague(b.getAttribute("data-k"))};
+function fillCust(keep){
+  var L=leagues(),prev=typeof keep==="string"?keep:$("cl").value;$("cl").innerHTML=L.map(function(k){return'<option value="'+k+'">'+(NAMES[k]||k)+'</option>'}).join("");
+  if(prev&&L.indexOf(prev)>=0)$("cl").value=prev;
+  var t=act(D[$("cl").value]).slice().sort(function(x,y){return tn(x).localeCompare(tn(y),LANG==="ar"?"ar":"en")}),op=t.map(function(x){return'<option value="'+esc(x)+'">'+esc(tn(x))+'</option>'}).join("");
+  $("ch").innerHTML=op;$("ca").innerHTML=op;if(t.length>1)$("ca").selectedIndex=1;
+}
+$("cl").onchange=function(){fillCust()};
+$("cg").onclick=function(){
+  var h=$("ch").value,a=$("ca").value;
+  if(h===a){$("cres").innerHTML='<p class="mut">اختر فريقين مختلفين</p>';return}
+  $("cres").innerHTML='<div style="display:flex;justify-content:space-around;margin:12px 0;direction:ltr;text-align:center;font-size:13px;font-weight:600"><div>'+logo(h)+esc(tn(h))+'</div><div style="align-self:center">VS</div><div>'+logo(a)+esc(tn(a))+'</div></div>'+detail($("cl").value,h,a,$("cn").checked);
+  want($("cl").value);
+};
+
+/* ---------- v2: injuries, odds/value, analysis, favorites, search ---------- */
+var ADS=false,ST={},PRE={};
+try{ST=JSON.parse(localStorage.getItem("fb_st")||"{}")}catch(e){}
+function sv(){try{localStorage.setItem("fb_st",JSON.stringify(ST))}catch(e){}}
+function S(k){return ST[k]||(ST[k]={})}
+function injs(k){var s=ST[k]||{},p=(D._inj&&D._inj[k])||PRE[k]||auto(k);return s.inj||(p?{h:p.h||"",a:p.a||""}:{h:"",a:""})}
+function xm(k){var I=k?injs(k):{h:"",a:""};
+  function f(t){var a=1,c=1;t.split("").forEach(function(p){if(p==="G")c*=1.10;else if(p==="D")c*=1.035;else if(p==="M"){a*=.96;c*=1.015}else if(p==="F")a*=.91});return{a:Math.max(a,.75),c:Math.min(c,1.25)}}
+  var H=f(I.h),A=f(I.a);return{hA:H.a,hC:H.c,aA:A.a,aC:A.c}}
+function pr(c,h,a,n,k){var o=mat(c,h,a,n,xm(k));if(!o)return null;
+  o.w=P(o,function(i,j){return i>j});o.d=P(o,function(i,j){return i===j});o.l=1-o.w-o.d;
+  o.o25=P(o,function(i,j){return i+j>2});o.bt=P(o,function(i,j){return i>0&&j>0});return o}
+function fk(f){return f[0]+"|"+f[2]+"|"+f[3]}
+function detailAdv(code,h,a,neu,k){
+  var o=pr(code,h,a,neu,k);if(!o)return detail0(code,h,a,neu);
+  var s="";
+  if(k){var I=injs(k),LB={G:"🧤 حارس",D:"🛡 مدافع",M:"وسط",F:"مهاجم"};
+    s+='<details open><summary>🩹 الغيابات بالأسماء</summary>';
+    [["h",h],["a",a]].forEach(function(t){s+='<div class="mut"><b>'+esc(tn(t[1]))+'</b></div>'+absH(k,t[1]);
+      var X=xm(k),H_=t[0]==="h";s+='<div class="mut" dir="ltr">⚔ '+(H_?X.hA:X.aA).toFixed(2)+'  🛡 '+(H_?X.hC:X.aC).toFixed(2)+'</div>'});
+    s+='<p class="mut">🔴 غائب مؤكد • 🟡 مشكوك أو تعود في يوم المباراة. تدخل في الحساب تلقائياً الغيابات المؤكدة للاعبين المنتظمين (4 مشاركات فأكثر) فقط، التأثير تقريبي (غياب مهاجم أساسي ≈ -9% أهداف). المصدر: تقارير '+INJ_TS+' (sportsgambler وصحف الأندية)، وتغطي الدوريات الخمسة: الإنجليزي والإسباني والإيطالي والألماني والفرنسي.</p><button class="ib rs" data-k="'+esc(k)+'">↺ العودة للقائمة التلقائية</button></details>';
+  }
+  var mx=Math.max(o.w,o.d,o.l),dt=Math.min(o.H[3]||0,o.A[3]||0),cf=Math.round(100*(.5*Math.min(1,Math.max(0,(mx-.34)/.36))+.5*Math.min(1,dt/100)));
+  s+='<div class="gt">🎯 التحليل</div><div class="g3">'+
+   '<div class="c"><small>مفاجأة (فوز الأضعف)</small><b>'+pc(Math.min(o.w,o.l))+'</b></div>'+
+   '<div class="c"><small>شباك نظيفة للمضيف</small><b>'+pc(P(o,function(i,j){return j===0}))+'</b></div>'+
+   '<div class="c"><small>شباك نظيفة للضيف</small><b>'+pc(P(o,function(i,j){return i===0}))+'</b></div>'+
+   '<div class="c"><small>فوز كبير (3+ فارق)</small><b>'+pc(P(o,function(i,j){return Math.abs(i-j)>=3}))+'</b></div>'+
+   '<div class="c"><small>0-0</small><b>'+pc(o.M[0])+'</b></div></div>'+h2hHtml(code,h,a);
+  return s+strip0(detail0(code,h,a,neu,xm(k)))+basis(code,h,a,neu,k)+lastH(h,a)}
+function sgH(o,h,a){var m=o.m,n=act(m).length;
+  function blk(t,k,asc){return'<div class="sh2">'+t+'</div>'+[[h,"var(--gold)"],[a,"#a78bfa"]].map(function(x){var r=rank(m,x[0],k,asc),w=Math.max(6,(n-r+1)/n*100);return'<div class="sr"><span class="sn">'+esc(tn(x[0]))+'</span><span class="sb"><i style="width:'+w.toFixed(0)+'%;background:'+x[1]+'"></i></span><span class="rk" dir="ltr"><b style="color:'+x[1]+'">'+r+'</b><small>/'+n+'</small></span></div>'}).join("")}
+  return'<div class="gt">💪 قوة الفريقين</div><div class="sg">'+blk("⚔️ الهجوم (من يسجّل أكثر)",0,false)+blk("🛡 الدفاع (من يستقبل أقل)",1,true)+'<p class="mut" style="margin:8px 0 0">المركز 1 = الأفضل بين '+n+' فريق. الشريط الأطول = الأقوى.</p></div>'}
+function pbH(o){var mx=Math.max(o.w,o.d,o.l);function z(v,c,l){return'<i'+(v===mx?' class="mx"':'')+' style="width:'+v*100+'%;background:var('+c+')">'+(v>.12?l+" "+pc(v):v>.04?l:'')+'</i>'}return z(o.w,'--g','م')+z(o.d,'--n','ت')+z(o.l,'--r','ض')}
+function odH(o){var mx=Math.max(o.w,o.d,o.l);function z(l,v,p){return'<div'+(p&&v===mx?' class="pk"':'')+'>'+l+'<b>'+od(v)+'</b><small>'+pc(v)+'</small></div>'}return z('مضيف',o.w,1)+z('تعادل',o.d,1)+z('ضيف',o.l,1)+z('أكثر 2.5',o.o25,0)}
+function bd(n){return n?'<span class="inj">🩹 '+n+'</span>':''}
+function cairoOff(ms){try{var v=new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",timeZoneName:"shortOffset"}).formatToParts(new Date(ms)).filter(function(x){return x.type==="timeZoneName"})[0].value,m=/GMT([+-]\d+)/.exec(v);return m?+m[1]:2}catch(e){return 2}}
+function kick(f){var p=f[1].split(" ");if(!p[3])return null;var t=p[3].split(":"),m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].indexOf(p[2]),WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],now=Date.now(),y0=new Date(now).getUTCFullYear(),b=null,b2=null;if(m<0)return null;
+  [y0-1,y0,y0+1].forEach(function(y){var ms=Date.UTC(y,m,+p[1],+t[0],+t[1]);ms-=cairoOff(ms)*36e5;var d=Math.abs(ms-now),ok=WD[new Date(Date.UTC(y,m,+p[1])).getUTCDay()]===p[0];if(ok&&(!b||d<b.d))b={ms:ms,d:d};if(!b2||d<b2.d)b2={ms:ms,d:d}});
+  return(b||b2).ms}
+function rel(f){var k=kick(f);if(k===null)return"";var d=k-Date.now();if(d<0)return d>-108e5?'<small class="rel live">● جارية</small>':"";if(d<36e5)return'<small class="rel">بعد '+Math.max(1,Math.round(d/6e4))+'د</small>';if(d<864e5)return'<small class="rel">بعد '+Math.round(d/36e5)+'س</small>';return""}
+function past(f){var k=kick(f);return k!==null&&k<Date.now()-108e5}
+var LANG="ar";try{LANG=localStorage.getItem("fb_lang")||"ar"}catch(e){}
+var PN={"Arsenal":"آرسنال","Aston Villa":"أستون فيلا","Bournemouth":"بورنموث","Brentford":"برينتفورد","Brighton":"برايتون","Burnley":"بيرنلي","Chelsea":"تشيلسي","Coventry":"كوفنتري","Crystal Palace":"كريستال بالاس","Everton":"إيفرتون","Fulham":"فولهام","Hull":"هال سيتي","Ipswich":"إبسويتش","Leeds":"ليدز يونايتد","Liverpool":"ليفربول","Man City":"مانشستر سيتي","Man United":"مانشستر يونايتد","Newcastle":"نيوكاسل","Nott'm Forest":"نوتنغهام فورست","Sunderland":"سندرلاند","Tottenham":"توتنهام","West Ham":"وست هام","Wolves":"وولفرهامبتون",
+"Alaves":"ألافيس","Ath Bilbao":"أتلتيك بيلباو","Ath Madrid":"أتلتيكو مدريد","Barcelona":"برشلونة","Betis":"ريال بيتيس","Celta":"سيلتا فيغو","Elche":"إلتشي","Espanol":"إسبانيول","Getafe":"خيتافي","Girona":"جيرونا","La Coruna":"ديبورتيفو لاكورونيا","Levante":"ليفانتي","Malaga":"مالقة","Mallorca":"مايوركا","Osasuna":"أوساسونا","Oviedo":"أوفييدو","Real Madrid":"ريال مدريد","Santander":"راسينغ سانتاندير","Sevilla":"إشبيلية","Sociedad":"ريال سوسيداد","Valencia":"فالنسيا","Vallecano":"رايو فايكانو","Villarreal":"فياريال",
+"Atalanta":"أتالانتا","Bologna":"بولونيا","Cagliari":"كالياري","Como":"كومو","Cremonese":"كريمونيزي","Fiorentina":"فيورنتينا","Frosinone":"فروزينوني","Genoa":"جنوى","Inter":"إنتر ميلان","Juventus":"يوفنتوس","Lazio":"لاتسيو","Lecce":"ليتشي","Milan":"ميلان","Monza":"مونزا","Napoli":"نابولي","Parma":"بارما","Pisa":"بيزا","Roma":"روما","Sassuolo":"ساسولو","Torino":"تورينو","Udinese":"أودينيزي","Venezia":"فينيسيا","Verona":"هيلاس فيرونا",
+"Augsburg":"أوغسبورغ","Bayern Munich":"بايرن ميونخ","Dortmund":"بوروسيا دورتموند","Ein Frankfurt":"أينتراخت فرانكفورت","Elversberg":"إلفرسبرغ","FC Koln":"كولن","Freiburg":"فرايبورغ","Hamburg":"هامبورغ","Heidenheim":"هايدنهايم","Hoffenheim":"هوفنهايم","Leverkusen":"باير ليفركوزن","M'gladbach":"مونشنغلادباخ","Mainz":"ماينز","Paderborn":"بادربورن","RB Leipzig":"لايبزيغ","Schalke 04":"شالكه","St Pauli":"سانت باولي","Stuttgart":"شتوتغارت","Union Berlin":"يونيون برلين","Werder Bremen":"فيردر بريمن","Wolfsburg":"فولفسبورغ",
+"Angers":"أنجيه","Auxerre":"أوكسير","Brest":"بريست","Le Havre":"لوهافر","Le Mans":"لومان","Lens":"لانس","Lille":"ليل","Lorient":"لوريان","Lyon":"ليون","Marseille":"مارسيليا","Metz":"ميتز","Monaco":"موناكو","Nantes":"نانت","Nice":"نيس","Paris FC":"باريس إف سي","Paris SG":"باريس سان جيرمان","Rennes":"رين","Strasbourg":"ستراسبورغ","Toulouse":"تولوز","Troyes":"تروا"};
+function tn(n){return LANG==="ar"&&PN[n]?PN[n]:n}
+/* ---------- بحث بالعربي: أسماء الفرق وأشهر صيغها ---------- */
+var AR={"Arsenal":"ارسنال آرسنال المدفعجية","Aston Villa":"استون فيلا أستون فيلا","Bournemouth":"بورنموث","Brentford":"برينتفورد برنتفورد","Brighton":"برايتون","Burnley":"بيرنلي","Chelsea":"تشيلسي تشلسي","Coventry":"كوفنتري","Crystal Palace":"كريستال بالاس","Everton":"ايفرتون إيفرتون","Fulham":"فولهام","Hull":"هال سيتي","Ipswich":"ايبسويتش إبسويتش","Leeds":"ليدز يونايتد","Liverpool":"ليفربول","Man City":"مانشستر سيتي مان سيتي السيتي","Man United":"مانشستر يونايتد مان يونايتد اليونايتد","Newcastle":"نيوكاسل يونايتد","Nott'm Forest":"نوتنغهام فورست نوتينغهام نوتنجهام فورست","Sunderland":"سندرلاند","Tottenham":"توتنهام هوتسبير السبيرز","West Ham":"وست هام","Wolves":"وولفرهامبتون ولفرهامبتون وولفز",
+"Alaves":"ديبورتيفو الافيس الافيس","Ath Bilbao":"اتلتيك بلباو أتلتيك بيلباو بلباو","Ath Madrid":"اتلتيكو مدريد أتلتيكو مدريد","Barcelona":"برشلونة","Betis":"ريال بيتيس بيتيس","Celta":"سيلتا فيغو سيلتا فيجو","Elche":"التشي إلتشي","Espanol":"اسبانيول إسبانيول","Getafe":"خيتافي","Girona":"جيرونا","La Coruna":"ديبورتيفو لاكورونيا لاكورونيا","Levante":"ليفانتي","Malaga":"مالقة مالاغا","Mallorca":"ريال مايوركا مايوركا","Osasuna":"اوساسونا أوساسونا","Oviedo":"ريال اوفييدو اوفييدو","Real Madrid":"ريال مدريد","Santander":"راسينغ سانتاندير راسينج سانتاندير","Sevilla":"اشبيلية إشبيلية","Sociedad":"ريال سوسيداد سوسيداد","Valencia":"فالنسيا","Vallecano":"رايو فايكانو فايكانو","Villarreal":"فياريال",
+"Atalanta":"اتالانتا أتالانتا","Bologna":"بولونيا","Cagliari":"كالياري","Como":"كومو","Cremonese":"كريمونيزي","Fiorentina":"فيورنتينا","Frosinone":"فروزينوني","Genoa":"جنوى جنوا","Inter":"انتر ميلان إنتر ميلان الانتر","Juventus":"يوفنتوس يوفي","Lazio":"لاتسيو","Lecce":"ليتشي","Milan":"ايه سي ميلان ميلان","Monza":"مونزا","Napoli":"نابولي","Parma":"بارما","Pisa":"بيزا","Roma":"روما","Sassuolo":"ساسولو","Torino":"تورينو","Udinese":"اودينيزي أودينيزي","Venezia":"فينيسيا","Verona":"هيلاس فيرونا فيرونا",
+"Augsburg":"اوغسبورغ أوغسبورغ اوجسبورج","Bayern Munich":"بايرن ميونخ ميونيخ بايرن","Dortmund":"بوروسيا دورتموند دورتموند","Ein Frankfurt":"اينتراخت فرانكفورت فرانكفورت","Elversberg":"الفرسبرغ إلفرسبيرج","FC Koln":"كولن كولونيا","Freiburg":"فرايبورغ فرايبورج","Hamburg":"هامبورغ هامبورج","Heidenheim":"هايدنهايم","Hoffenheim":"هوفنهايم","Leverkusen":"باير ليفركوزن ليفركوزن","M'gladbach":"بوروسيا مونشنغلادباخ مونشنجلادباخ غلادباخ","Mainz":"ماينز","Paderborn":"بادربورن","RB Leipzig":"لايبزيغ لايبزيج","Schalke 04":"شالكه","St Pauli":"سانت باولي","Stuttgart":"شتوتغارت شتوتجارت","Union Berlin":"يونيون برلين","Werder Bremen":"فيردر بريمن","Wolfsburg":"فولفسبورغ فولفسبورج",
+"Angers":"انجيه أنجيه","Auxerre":"اوكسير أوكسير","Brest":"بريست","Le Havre":"لوهافر","Le Mans":"لومان","Lens":"لانس","Lille":"ليل","Lorient":"لوريان","Lyon":"ليون","Marseille":"مارسيليا","Metz":"ميتز","Monaco":"موناكو","Nantes":"نانت","Nice":"نيس","Paris FC":"باريس اف سي","Paris SG":"باريس سان جيرمان سان جيرمان","Rennes":"رين","Strasbourg":"ستراسبورغ ستراسبورج","Toulouse":"تولوز","Troyes":"تروا"};
+function nz(t){return String(t).toLowerCase().replace(/[\u064B-\u0652\u0640]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/ؤ/g,"و").replace(/ئ/g,"ي").replace(/\s+/g," ").trim()}
+function hit(f,q){var t=nz(f[2]+" "+f[3]+" "+(AR[f[2]]||"")+" "+(AR[f[3]]||""));return q.split(" ").every(function(w){return t.indexOf(w)>=0})}
+var SORT="t";try{SORT=localStorage.getItem("fb_sort")||"t"}catch(e){}$("so").value=SORT;$("so").onchange=function(){SORT=this.value;try{localStorage.setItem("fb_sort",SORT)}catch(e){}list()};
+function agg(L){var r={n:L.length,gf:0,ga:0,w:0,d:0,l:0};L.forEach(function(x){r.gf+=x[2];r.ga+=x[3];x[2]>x[3]?r.w++:x[2]===x[3]?r.d++:r.l++});return r}
+function tr(t,v){var L=(D._last||{})[t];if(!L||!L.length)return"";var A=agg(L),V=agg(L.filter(function(x){return x[1]===v}));return'<div class="kv"><span>'+esc(tn(t))+'</span><b style="font-size:12px">فاز '+A.w+' • تعادل '+A.d+' • خسر '+A.l+'</b></div><div class="mut" style="margin:-2px 0 8px">يسجّل '+(A.gf/A.n).toFixed(1)+' ويستقبل '+(A.ga/A.n).toFixed(1)+' في المباراة'+(V.n?' ('+(v==="H"?"في ملعبه":"خارج ملعبه")+': '+(V.gf/V.n).toFixed(1)+' / '+(V.ga/V.n).toFixed(1)+')':'')+'</div>'}
+function tools(o,h,a){var M=o.M,m=o.m,i,j,sc=[],T=[0,0,0],n=act(m).length;
+  for(i=0;i<N;i++)for(j=0;j<N;j++){sc.push([i+"-"+j,M[i*N+j]]);T[i+j<2?0:i+j<4?1:2]+=M[i*N+j]}
+  sc.sort(function(x,y){return y[1]-x[1]});var top=sc.slice(0,6),mx=top[0][1];
+  var bars=top.map(function(x){return'<div class="kv" dir="ltr"><b style="width:44px">'+x[0]+'</b><span style="flex:1;margin:0 8px;align-self:center"><i style="display:block;height:12px;border-radius:6px;background:var(--gold);width:'+(x[1]/mx*100).toFixed(0)+'%"></i></span><b>'+pc(x[1])+'</b></div>'}).join("");
+  var gl='<div class="g3"><div class="c"><small>0 – 1 هدف</small><b>'+pc(T[0])+'</b></div><div class="c"><small>2 – 3 أهداف</small><b>'+pc(T[1])+'</b></div><div class="c"><small>4 أهداف أو أكتر</small><b>'+pc(T[2])+'</b></div></div><p class="mut">المتوقع حوالي '+(o.lh+o.la).toFixed(1)+' هدف في المباراة.</p>';
+  function row(l,f){return'<div class="kv"><span>'+l+'</span><b style="font-size:12px">'+esc(tn(h))+' #'+f(h)+' • '+esc(tn(a))+' #'+f(a)+'</b></div>'}
+  var st=row("الهجوم",function(t){return rank(m,t,0,false)})+row("الدفاع",function(t){return rank(m,t,1,true)})+'<p class="mut">الترتيب بين '+n+' فريق (رقم 1 = الأفضل).</p>';
+  var d2=P(o,function(i,j){return i-j>=2}),d3=P(o,function(i,j){return i-j>=3}),e1=P(o,function(i,j){return i-j>=-1}),e2=P(o,function(i,j){return i-j>=-2});
+  var hc=G("الخطوط الآسيوية",[["1 (-1.5)",d2],["2 (+1.5)",1-d2],["1 (+1.5)",e1],["2 (-1.5)",1-e1],["1 (-2.5)",d3],["2 (+2.5)",1-d3],["1 (+2.5)",e2],["2 (-2.5)",1-e2]]);
+  return '<details><summary>🔬 أدوات إضافية (اضغط للفتح)</summary><div class="gt">🎯 أرجح النتايج</div><p class="mut">الرقم الأول = أهداف '+esc(tn(h))+' والتاني = أهداف '+esc(tn(a))+'.</p>'+bars+'<div class="gt">⚽ كام هدف هيتسجل؟</div>'+gl+(D._last?'<div class="gt">📈 آخر 10 مباريات</div>'+tr(h,"H")+tr(a,"A"):'')+'<div class="gt">⚖️ هاندكاب إضافي</div><p class="mut">الفريق يبدأ بفارق أهداف افتراضي. مثلاً 1 (-1.5) = يكسب فقط لو فاز بفارق هدفين أو أكتر.</p>'+hc+'</details>'}
+function cd(ms){return new Date(ms+cairoOff(ms)*36e5).toISOString().slice(0,10)}
+function lastH(h,a){var L=D._last;if(!L)return"";return'<details><summary>آخر 10 مباريات</summary>'+[h,a].map(function(t){var r=L[t];if(!r)return"";return'<div class="gt">'+esc(tn(t))+'</div>'+r.map(function(x){var w=x[2]>x[3]?"W":x[2]===x[3]?"D":"L";return'<div class="kv"><span><span class="f f'+w+'">'+w+'</span> '+(x[1]==="H"?"🏠":"✈️")+' '+esc(tn(x[0]))+'</span><b dir="ltr">'+x[2]+'-'+x[3]+'</b></div>'}).join("")}).join("")+'</details>'}
+function tblView(){var T=D._tab,s="";if(!T){setLeague(leagues()[0]);return}if(0){$("list").innerHTML='<p class="mut" style="padding:14px">الترتيب المتوقع يظهر بعد أول تحديث لـ data.json بالسكريبت الجديد.</p>';$("list").F=[];return}
+leagues().forEach(function(c){var t=T[c];if(!t)return;var R=Object.keys(t).sort(function(x,y){return t[y][2]-t[x][2]});
+s+='<details class="card"'+(s?"":" open")+'><summary>'+(NAMES[c]||c)+'</summary><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px;text-align:center;direction:ltr"><tr class="mut"><td>#</td><td style="text-align:left">Team</td><td>Pts</td><td>P</td><td>Exp</td><td>🏆%</td><td>Top4%</td><td>⬇%</td></tr>'+R.map(function(x,i){var v=t[x];return'<tr style="border-top:1px solid var(--bd)"><td>'+(i+1)+'</td><td style="text-align:left">'+esc(tn(x))+'</td><td>'+v[0]+'</td><td>'+v[1]+'</td><td><b>'+v[2]+'</b></td><td>'+v[3]+'</td><td>'+v[4]+'</td><td>'+v[5]+'</td></tr>'}).join("")+'</table></div><p class="mut">محاكاة 4000 مرة لباقي الموسم. Exp = متوسط النقاط النهائية. ⬇ = احتمال أن يكون ضمن آخر 3 (تقريبي).</p></details>'});
+$("list").innerHTML=s;$("list").F=[]}
+function items(){var q=nz($("q").value),r=[];
+  (D._fix||[]).forEach(function(f){if(!mat(f[0],f[2],f[3]))return;
+    if(q){if(!hit(f,q))return}
+    else if(cur==="TODAY"){var kk=kick(f);if(kk===null||cd(kk)!==cd(Date.now()))return}
+    else if(cur==="FAV"){if(!(ST[fk(f)]&&ST[fk(f)].fav))return}
+    else if(f[0]!==cur)return;
+    if(!q&&past(f))return;r.push(f)});if(SORT==="h")r=r.filter(function(f){var o=pr(f[0],f[2],f[3],false,fk(f));return o&&cfOf(o)>=82});if(SORT!=="t"){var sc={};r.forEach(function(f){var o=pr(f[0],f[2],f[3],false,fk(f));sc[fk(f)]=SORT==="c"||SORT==="h"?Math.max(o.w,o.d,o.l):o.lh+o.la});r.sort(function(x,y){return sc[fk(y)]-sc[fk(x)]})}return r}
+function tabs(){var T=$("tabs");T.innerHTML=leagues().map(function(k){return'<button class="tab'+(k===cur?" on":"")+'" data-k="'+k+'">'+(NAMES[k]||k)+'</button>'}).join("");bnav();var on=T.querySelector(".tab.on");if(on)T.scrollLeft+=on.getBoundingClientRect().left+on.offsetWidth/2-(T.getBoundingClientRect().left+T.clientWidth/2)}
+var LASTL=null;
+function bnav(){var isL=leagues().indexOf(cur)>=0;if(isL)LASTL=cur;var I=[["TODAY","📅","اليوم"],["M","⚽","المباريات"],["FAV","⭐","المفضلة"]];if(D._tab)I.push(["TBL","📋","الترتيب"]);I.push(["RES","✅","النتائج"]);I.push(["LOG","📊","السجل"]);$("tabs").style.display=(cur==="TBL"||cur==="LOG"||cur==="RES")?"none":"";$("bn").innerHTML=I.map(function(x){var on=x[0]===cur||(x[0]==="M"&&isL);return'<button data-k="'+x[0]+'" class="'+(on?"on":"")+'"><span>'+x[1]+'</span>'+x[2]+'</button>'}).join("")}
+$("bn").onclick=function(e){var b=e.target.closest("button");if(!b)return;var k=b.getAttribute("data-k");if(k==="M")k=LASTL||(leagues().filter(function(l){return(D._fix||[]).some(function(f){return f[0]===l})})[0])||leagues()[0];setLeague(k)};
+function hero(F){if(!F.length)return"";var bi=0,bq=-1e9;F.forEach(function(f,i){var o=mat(f[0],f[2],f[3]);if(!o)return;var q=o.H[0]-o.H[1]+o.A[0]-o.A[1];if(q>bq){bq=q;bi=i}});
+  var f=F[bi],o=pr(f[0],f[2],f[3],false,fk(f));if(!o)return"";var p=f[1].split(" "),day=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);
+  return'<section class="hero"><div class="hk">🔥 قمة الجولة <span>'+esc(NAMES[f[0]]||f[0])+'</span></div><div class="hm"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+'</div><div class="hc"><b>'+esc(p[3]||"")+'</b><small>'+esc(day)+'</small></div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+'</div></div><div class="pb" dir="ltr">'+pbH(o)+'</div><button class="go hb" data-i="'+bi+'">عرض التحليل الكامل ›</button></section>'}
+$("list").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".hb");if(!b)return;var m=$("list").querySelector('.m[data-i="'+b.getAttribute("data-i")+'"]');if(!m)return;if(!m.classList.contains("open"))m.querySelector(".mt").click();m.scrollIntoView({behavior:"smooth",block:"center"})});
+function list(){
+  if(cur==="RES"){resView();return}if(cur==="LOG"){logView();return}if(cur==="TBL"){tblView();return}
+  (D._fix||[]).forEach(function(f){var k=fk(f);if(ST[k]&&ST[k].inj&&past(f)){delete ST[k].inj;sv()}});
+  var F=items(),s="",last="";F.forEach(logSnap);
+  if(!F.length)s='<p class="mut" style="padding:14px">'+(cur==="FAV"?"لا توجد مباريات مفضلة. اضغط ☆ على أي مباراة.":(SORT==="h"?"مفيش مباريات بثقة عالية دلوقتي. جرّب الترتيب حسب الوقت.":"لا توجد مباريات مطابقة."))+($("q").value?'<br><button class="go clr">مسح البحث</button>':'')+'</p>';
+  F.forEach(function(f,i){var k=fk(f),p=f[1].split(" "),day=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);
+    if(SORT==="t"&&day!==last){s+='<div class="day" data-d="'+esc(day)+'">'+esc(day)+'</div>';last=day}
+    var o=pr(f[0],f[2],f[3],false,k);
+    s+='<div class="m" data-i="'+i+'"><span class="fav" role="button" tabindex="0" aria-label="مفضلة" data-k="'+esc(k)+'">'+((ST[k]||{}).fav?"★":"☆")+'</span><div class="mt" role="button" tabindex="0" aria-expanded="false"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+bdn(k,"h")+'</div><div class="mid">'+esc(p[3]||"")+'<b>VS</b>'+rel(f)+'</div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+bdn(k,"a")+'</div></div>'+
+     '<div class="pb" dir="ltr">'+pbH(o)+'</div><div class="smw">'+smI(o,f)+'</div><div class="od">'+odH(o)+'</div><div class="det"></div></div>';});
+  
+  if(!$("q").value&&(cur==="TODAY"||leagues().indexOf(cur)>=0))s=hero(F)+accH()+cmpH()+s;if(cur==="FAV"&&F.length&&!$("q").value)s='<button class="go remall" style="margin:0 0 12px">⏰ ذكّرني بكل المباريات المفضلة (ملف تقويم)</button>'+s;if(SORT==="t"&&!$("q").value&&F.length&&cur!=="FAV"||(SORT==="t"&&cur==="FAV"&&!$("q").value&&F.length)){var seen={},ch="";F.forEach(function(f){var p=f[1].split(" "),dd=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);if(!seen[dd]){seen[dd]=1;ch+='<button class="tab dchip" data-d="'+esc(dd)+'">'+esc((DAY[p[0]]||p[0])+" "+p[1])+'</button>'}});if(Object.keys(seen).length>1)s='<div id="ds">'+ch+'</div>'+s}$("list").innerHTML=s;$("list").F=F;want()}
+function rer(m){var f=$("list").F[+m.getAttribute("data-i")];m.querySelector(".det").innerHTML=detail(f[0],f[2],f[3],false,fk(f));var I2=injs(fk(f)),T=m.querySelectorAll(".mt .tm");m.querySelectorAll(".mt .inj").forEach(function(x){x.remove()});T[0].insertAdjacentHTML("beforeend",bdn(fk(f),"h"));T[1].insertAdjacentHTML("beforeend",bdn(fk(f),"a"));var q2=pr(f[0],f[2],f[3],false,fk(f));m.querySelector(".pb").innerHTML=pbH(q2);m.querySelector(".od").innerHTML=odH(q2);m.querySelector(".smw").innerHTML=smI(q2,f)}
+var _qt;$("q").oninput=function(){clearTimeout(_qt);_qt=setTimeout(list,160)};
+$("list").onclick=function(e){
+  var rs=e.target.closest(".rs");
+  if(rs){var k=rs.getAttribute("data-k");delete S(k).inj;sv();rer(rs.closest(".m"));return}
+  var fv=e.target.closest(".fav");
+  if(fv){var k=fv.getAttribute("data-k");S(k).fav=S(k).fav?0:1;sv();fv.textContent=S(k).fav?"★":"☆";fv.setAttribute("aria-pressed",S(k).fav?"true":"false");toast(S(k).fav?"أُضيفت للمفضلة":"أُزيلت من المفضلة");if(navigator.vibrate)navigator.vibrate(12);if(cur==="FAV")list();return}
+  var b=e.target.closest(".ib");
+  if(b){var k=b.getAttribute("data-k"),sd=b.getAttribute("data-s"),p=b.getAttribute("data-p"),I=injs(k),c=I[sd].split(p).length-1;I[sd]=c>=3?I[sd].split(p).join(""):I[sd]+p;S(k).inj=I;sv();rer(b.closest(".m"));return}
+  if(e.target.closest(".det"))return;
+  var m=e.target.closest(".m");if(!m)return;
+  var t0=m.getBoundingClientRect().top;var was=m.classList.contains("open");
+  document.querySelectorAll(".m.open").forEach(function(x){x.classList.remove("open");var t=x.querySelector(".mt");if(t)t.setAttribute("aria-expanded","false")});
+  if(was)return;
+  var box=m.querySelector(".det");if(!box.innerHTML)rer(m);
+  m.classList.add("open");m.querySelector(".mt").setAttribute("aria-expanded","true");var d0=m.getBoundingClientRect().top-t0;if(d0)window.scrollBy(0,d0);var r0=m.getBoundingClientRect().top,sh=($("stk")||{}).offsetHeight||60;if(r0<sh+8)window.scrollBy(0,r0-sh-12)};
+$("list").addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".mt,.fav")){e.preventDefault();e.target.click()}});
+
+
+/* ---------- v3: performance log, theme, age gate, data.json ---------- */
+var LG={};try{LG=JSON.parse(localStorage.getItem("fb_log")||"{}")}catch(e){}
+var LGALL=false;
+$("list").addEventListener("click",function(e){if(e.target.closest&&e.target.closest("#lgt")){LGALL=!LGALL;logView()}});
+function seasonOf(ms){var d=new Date(ms),y=d.getUTCFullYear();return d.getUTCMonth()>=6?y:y-1}
+function gs(g){return g.s!=null?g.s:seasonOf(kick(g.f)||Date.now())}
+function svl(){var K=Object.keys(LG);if(K.length>6000)K.slice(0,K.length-6000).forEach(function(k){delete LG[k]});try{localStorage.setItem("fb_log",JSON.stringify(LG))}catch(e){}}
+function logSnap(f){var k=fk(f);if(LG[k]||past(f))return;var o=pr(f[0],f[2],f[3],false,k);if(!o)return;LG[k]={f:f,s:seasonOf(kick(f)||Date.now()),w:o.w,d:o.d,l:o.l,r:null};svl()}
+function autoRes(){var R=D._res||H2HE._res||{},ch=0;Object.keys(LG).forEach(function(k){var g=LG[k];if(g&&!g.r&&R[k]){g.r=R[k];ch=1}});if(ch)svl()}
+function logExtra(K){var H1={n:0,h:0},H0={n:0,h:0},G={},B=[0,0,0,0,0].map(function(){return{n:0,p:0,y:0}}),ll=0,n=0;
+  K.forEach(function(k){var g=LG[k];if(!g||!g.r)return;n++;var y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2,p=[g.w,g.d,g.l];ll-=Math.log(Math.max(p[y],1e-6));var mxp=Math.max.apply(null,p),hb=mxp>=.5?H1:H0;hb.n++;if(p.indexOf(mxp)===y)hb.h++;
+    var c=g.f[0],q=G[c]||(G[c]={n:0,h:0});q.n++;if(p.indexOf(Math.max.apply(null,p))===y)q.h++;
+    p.forEach(function(v,i){var b=B[Math.min(4,Math.floor(v*5))];b.n++;b.p+=v;if(i===y)b.y++})});
+  if(!n)return"";
+  var s='<div class="gt">📐 مقاييس إضافية</div><div class="g3"><div class="c"><small>Log-loss (أقل أفضل)</small><b>'+(ll/n).toFixed(3)+'</b></div></div><p class="mut">مرجع: التخمين العشوائي = 1.099.</p>';
+  s+='<div class="gt">الإصابة حسب مستوى الثقة</div><div class="kv"><span>أرجح نتيجة ≥ 50%</span><b dir="ltr">'+(H1.n?Math.round(H1.h/H1.n*100)+'% ('+H1.n+')':'—')+'</b></div><div class="kv"><span>أرجح نتيجة أقل من 50%</span><b dir="ltr">'+(H0.n?Math.round(H0.h/H0.n*100)+'% ('+H0.n+')':'—')+'</b></div>';s+='<div class="gt">الإصابة حسب الدوري</div>'+Object.keys(G).map(function(c){return'<div class="kv"><span>'+(NAMES[c]||c)+'</span><b dir="ltr">'+Math.round(G[c].h/G[c].n*100)+'% ('+G[c].n+')</b></div>'}).join("");
+  s+='<div class="gt">معايرة النسب</div>'+B.map(function(b,i){return b.n?'<div class="kv"><span>'+i*20+'–'+(i*20+20)+'%</span><b dir="ltr">'+Math.round(b.p/b.n*100)+'% → '+Math.round(b.y/b.n*100)+'% ('+b.n+')</b></div>':''}).join("")+'<p class="mut">كل صف: متوسط ما توقعه النموذج ← ما حدث فعلاً. كلما تقاربا كانت النسب أدق. الصفوف الأقل من 30 حالة غير حاسمة.</p>';
+  return s}
+function accPanel(){var b=D._bt,h='<div class="card" style="margin-top:0"><b>📈 دقتنا بصراحة</b>';
+  if(b&&b.n){h+='<div class="g3" style="margin-top:10px"><div class="c"><small>اختبار رجعي</small><b>'+pc(b.acc)+'</b><i>'+b.n+' مباراة</i></div><div class="c"><small>التخمين العشوائي</small><b>33%</b></div></div>';
+    var W=b.weeks||[];if(W.length>1){var pt=W.map(function(x,i){return(i*(300/(W.length-1))).toFixed(1)+","+(60-x.acc*60).toFixed(1)}).join(" ");h+='<svg viewBox="0 0 300 60" style="width:100%;height:70px;margin-top:10px;overflow:visible" role="img" aria-label="الدقة الأسبوعية"><line x1="0" x2="300" y1="40" y2="40" stroke="var(--bd)" stroke-dasharray="4"/><polyline points="'+pt+'" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linejoin="round"/></svg><p class="mut">الدقة أسبوعياً، والخط المتقطع هو التخمين العشوائي (33%).</p>'}}
+  var B=[[0,.45,"ثقة أقل من 45%"],[.45,.6,"ثقة 45 – 60%"],[.6,2,"ثقة 60% فأكثر"]].map(function(x){return{l:x[2],lo:x[0],hi:x[1],n:0,h:0}}),T=0,H=0;
+  Object.keys(LG).forEach(function(k){var g=LG[k];if(!g||!g.r)return;var p=[g.w,g.d,g.l],mx=Math.max.apply(null,p),y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2,ok=p.indexOf(mx)===y?1:0;T++;H+=ok;B.forEach(function(q){if(mx>=q.lo&&mx<q.hi){q.n++;q.h+=ok}})});
+  if(T){h+='<div class="gt">توقعاتنا المسجّلة فعلياً: '+H+' من '+T+' ('+pc(H/T)+')</div>'+B.filter(function(q){return q.n}).map(function(q){return'<div class="kv"><span>'+q.l+'</span><b dir="ltr">'+q.h+'/'+q.n+' ('+pc(q.h/q.n)+')</b></div>'}).join("")+(T<100?'<p class="mut">العيّنة لسه أقل من 100 مباراة، فالأرقام دي مؤشر مبدئي مش حكم نهائي.</p>':'')}
+  else if(!(b&&b.n))h+='<p class="mut">هنعرض هنا نسبة إصابتنا الفعلية أول ما المباريات تنتهي.</p>';
+  return h+'</div>'}
+function resView(){autoRes();
+  var K=Object.keys(LG).filter(function(k){return LG[k]&&LG[k].r}).sort(function(a,b){return(kick(LG[b].f)||0)-(kick(LG[a].f)||0)}).slice(0,40),hit=0,s="";
+  var rows=K.map(function(k){var g=LG[k],p=[g.w,g.d,g.l],mx=Math.max.apply(null,p),pi=p.indexOf(mx),y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2,ok=pi===y;if(ok)hit++;
+    var lb=[ "فوز "+tn(g.f[2]),"تعادل","فوز "+tn(g.f[3])][pi];
+    return'<div class="lr"><div class="rs2"><b>'+esc(tn(g.f[2]))+' – '+esc(tn(g.f[3]))+'</b><b class="sc">'+g.r[0]+' - '+g.r[1]+'</b></div><div class="mut">توقعنا: '+esc(lb)+' ('+pc(mx)+') <b class="'+(ok?"ok":"no")+'">'+(ok?"✅ أصبنا":"❌ لم نصب")+'</b></div></div>'}).join("");
+  s=accPanel()+(K.length?rows:'<p class="mut" style="padding:14px">نتائج المباريات المنتهية هتظهر هنا مع توقعنا لكل مباراة.</p>');
+  $("list").innerHTML=s;$("list").F=[]}
+function logView(){autoRes();
+  var cs=seasonOf(Date.now()),K=Object.keys(LG).reverse().filter(function(k){return LGALL||gs(LG[k])===cs}),n=0,hit=0,br=0,s="";
+  K.forEach(function(k){var g=LG[k];if(!g.r)return;n++;var y=g.r[0]>g.r[1]?[1,0,0]:g.r[0]===g.r[1]?[0,1,0]:[0,0,1],p=[g.w,g.d,g.l];
+    br+=p.reduce(function(a,v,i){return a+(v-y[i])*(v-y[i])},0);if(p.indexOf(Math.max.apply(null,p))===y.indexOf(1))hit++});
+  s+='<div class="card" style="margin-top:0"><b>📊 سجل الأداء — '+(LGALL?"كل المواسم":"موسم "+cs+"/"+String(cs+1).slice(2))+'</b> <button class="tab" id="lgt" style="margin-inline-start:8px">'+(LGALL?"الموسم الحالي فقط":"كل المواسم")+'</button><p class="mut">يُحفظ توقع كل مباراة عند أول ظهورها قبل انطلاقها (بغياباتها وقتها). أدخل النتيجة النهائية بعد المباراة لقياس دقة النموذج.</p>';
+  s+=n?'<div class="g3"><div class="c"><small>مباريات مُقيّمة</small><b>'+n+'</b></div><div class="c"><small>إصابة النتيجة</small><b>'+Math.round(hit/n*100)+'%</b></div><div class="c"><small>Brier (أقل أفضل)</small><b>'+(br/n).toFixed(3)+'</b></div></div><p class="mut">مرجع: التخمين العشوائي = 0.667. العيّنة الأقل من 100 مباراة لا يُعتد بها.</p>':'<p class="mut">لا نتائج مُدخلة بعد.</p>';
+  s+=(n?'<details><summary>📐 تفاصيل تقنية</summary>'+logExtra(K)+'</details>':"")+'</div>';
+  if(!K.length)s+='<p class="mut" style="padding:14px">ستظهر هنا المباريات بعد فتح الدوريات.</p>';
+  K.forEach(function(k){var g=LG[k];s+='<div class="lr"><b>'+esc(tn(g.f[2]))+' – '+esc(tn(g.f[3]))+'</b><div class="mut">'+esc(g.f[1])+(g.r?' • النتيجة '+g.r[0]+'-'+g.r[1]:' • بانتظار النتيجة')+' | 1: '+pc(g.w)+' • X: '+pc(g.d)+' • 2: '+pc(g.l)+'</div><details class="rrd"><summary>✏️ تعديل النتيجة يدوياً</summary><input class="rr" data-k="'+esc(k)+'" placeholder="النتيجة النهائية مثل 2-1" value="'+(g.r?g.r[0]+"-"+g.r[1]:"")+'"></details></div>'});
+  s+='<div class="card"><b>💾 النسخ الاحتياطي</b><p class="mut">بيانات التطبيق (السجل والمفضلة والغيابات) تُحفظ في المتصفح فقط وقد تُمسح. انسخ نسخة واحتفظ بها.</p><button class="tab" data-act="bk">نسخ احتياطي</button> <button class="tab" data-act="rs">استرجاع</button> <button class="tab" data-act="csv">تصدير السجل CSV</button></div>';
+  $("list").innerHTML=s;$("list").F=[]}
+$("list").addEventListener("change",function(e){var i=e.target.closest(".rr");if(!i)return;var m=/(\d+)\s*[-:]\s*(\d+)/.exec(i.value),k=i.getAttribute("data-k");LG[k].r=m?[+m[1],+m[2]]:null;svl();logView()});
+function th(t){document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("fb_th",t)}catch(e){}}
+try{th(localStorage.getItem("fb_th")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"))}catch(e){}
+$("tg").onclick=function(){th(document.documentElement.getAttribute("data-theme")==="light"?"dark":"light")};
+(function(){var ok=false;try{ok=localStorage.getItem("fb_age")==="1"}catch(e){}if(ok)return;var g=document.createElement("div");g.id="ag";
+  g.innerHTML='<div><h2>+18</h2><p>هذا المحتوى تحليلي ويتعلق بالمراهنات. هل عمرك 18 سنة أو أكثر؟</p><button class="go" id="ay">نعم، أنا +18</button><button class="go" id="an" style="background:var(--c2);color:var(--tx)">لا</button></div>';
+  document.body.appendChild(g);$("ay").onclick=function(){try{localStorage.setItem("fb_age","1")}catch(e){}g.remove();showOb()};
+  $("an").onclick=function(){g.querySelector("p").textContent="عذراً، المحتوى غير متاح لمن هم دون 18 سنة."}})();
+
+/* ---------- v4: المواجهات المباشرة ---------- */
+var H2HE={};try{var _he=document.getElementById("h2h-data");if(_he)H2HE=JSON.parse(_he.textContent||"{}")}catch(e){}
+function h2hKey(c,h,a){return c+"|"+[h,a].sort().join("|")}
+function h2hGet(c,h,a){var k=h2hKey(c,h,a);return(D._h2h&&D._h2h[k])||H2HE[k]||null}
+function h2hStats(rec,h){var s={n:0,w:0,d:0,l:0,gf:0,ga:0,bt:0,o25:0};rec.forEach(function(r){var hm=r[1]===h,gf=hm?r[3]:r[4],ga=hm?r[4]:r[3];s.n++;s.gf+=gf;s.ga+=ga;if(gf>ga)s.w++;else if(gf===ga)s.d++;else s.l++;if(gf>0&&ga>0)s.bt++;if(gf+ga>2)s.o25++});return s}
+function h2dt(d){var p=String(d).split("-");return p.length===3?p[2]+"/"+p[1]+"/"+p[0]:esc(d)}
+function h2hHtml(c,h,a){
+  var t='<div class="gt">🤝 المواجهات المباشرة</div>',rec=h2hGet(c,h,a);
+  if(!rec||!rec.length)return '';
+  var s=h2hStats(rec,h),n=s.n,seg=function(v,col){return v?'<div style="width:'+v/n*100+'%;background:var('+col+')">'+v+'</div>':''},ts=D._h2h_ts||H2HE._ts;
+  return t+'<div class="bar">'+seg(s.w,"--g")+seg(s.d,"--n")+seg(s.l,"--r")+'</div>'+
+   '<div class="mut" style="margin:-4px 0 8px">'+esc(tn(h))+' فاز '+s.w+' • تعادل '+s.d+' • '+esc(tn(a))+' فاز '+s.l+' (آخر '+n+')</div>'+
+   '<div class="g3"><div class="c"><small>متوسط الأهداف</small><b>'+((s.gf+s.ga)/n).toFixed(1)+'</b></div><div class="c"><small>الفريقان يسجلان</small><b>'+pc(s.bt/n)+'</b></div><div class="c"><small>أكثر من 2.5</small><b>'+pc(s.o25/n)+'</b></div></div>'+
+   '<div style="margin-top:8px">'+rec.slice(0,6).map(function(r){var hm=r[1]===h,gf=hm?r[3]:r[4],ga=hm?r[4]:r[3],k=gf>ga?"W":gf===ga?"D":"L";return'<div class="hr"><span class="f f'+k+'">'+k+'</span><span class="mut">'+h2dt(r[0])+'</span><span class="t1">'+esc(r[1])+'</span><b class="s">'+r[3]+'-'+r[4]+'</b><span class="t2">'+esc(r[2])+'</span></div>'}).join("")+'</div>'+
+   '<p class="mut">الحروف من منظور '+esc(tn(h))+'. للسياق فقط ولا تدخل في حساب الاحتمالات'+(ts?' • آخر تحديث '+esc(ts):'')+'.</p>'}
+
+/* ---------- v5: نسخ احتياطي، مشاركة، لغة، PWA ---------- */
+function cp(t,msg){try{navigator.clipboard.writeText(t).then(function(){toast(msg)},function(){prompt(msg,t)})}catch(e){prompt(msg,t)}}
+$("list").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-act]");if(!b)return;var a=b.getAttribute("data-act");
+  if(a==="bk")cp(JSON.stringify({v:1,st:ST,lg:LG}),"تم نسخ النسخة الاحتياطية");
+  else if(a==="csv"){var R=["league,date,home,away,p1,px,p2,score"];Object.keys(LG).forEach(function(k){var g=LG[k];R.push([g.f[0],'"'+g.f[1]+'"','"'+g.f[2]+'"','"'+g.f[3]+'"',g.w.toFixed(3),g.d.toFixed(3),g.l.toFixed(3),g.r?g.r[0]+"-"+g.r[1]:""].join(","))});cp(R.join("\n"),"تم نسخ السجل بصيغة CSV")}
+  else if(a==="rs"){var t=prompt("الصق النسخة الاحتياطية هنا");if(!t)return;try{var o=JSON.parse(t);if(!o||typeof o.st!=="object"||typeof o.lg!=="object")throw 0;Object.keys(o.st).forEach(function(k){ST[k]=o.st[k]});Object.keys(o.lg).forEach(function(k){LG[k]=o.lg[k]});sv();svl();logView();toast("تم الاسترجاع")}catch(x){alert("النسخة غير صالحة")}}});
+/* ---------- v6: أسواق مركبة + حاسبة القيمة ---------- */
+function basis(code,h,a,neu,k){
+  var o=pr(code,h,a,neu,k);if(!o)return"";
+  var m=o.m,n=act(m).length,X=xm(k),I=k?injs(k):{h:"",a:""},H=o.H,A=o.A,
+   mx=Math.max(o.w,o.d,o.l),dt=Math.min(H[3]||0,A[3]||0),
+   c1=Math.round(50*Math.min(1,Math.max(0,(mx-.34)/.36))),c2=Math.round(50*Math.min(1,dt/100)),
+   sg=function(v){return(v>=0?"+":"")+v};
+  function row(x,y){return'<div class="kv"><span>'+x+'</span><b dir="ltr">'+y+'</b></div>'}
+  function tm(t,T){return'<div class="mut" style="margin-top:6px">'+esc(tn(t))+'</div>'+row("قوة الهجوم (الأعلى أفضل)",sg(T[0])+" • الترتيب #"+rank(m,t,0,false)+" من "+n)+row("قوة الدفاع (الأقل أفضل)",sg(T[1])+" • الترتيب #"+rank(m,t,1,true)+" من "+n)+row("حجم العينة (مباريات)",T[3]||"—")}
+  function ij(t,s,c,x){return row(esc(tn(t)),s.length?"غيابات: "+s.length+" ⚔×"+x.toFixed(2)+" 🛡×"+c.toFixed(2):"لا غيابات")}
+  var s='<details><summary>📚 على ماذا اعتمد التوقع (الشرح الكامل)</summary>';
+  s+='<div class="gt">1) النموذج الإحصائي</div><ul><li>توزيع بواسون لأهداف كل فريق مع تصحيح Dixon-Coles للنتائج المنخفضة (0-0 و1-0 و0-1 و1-1)، معامل التصحيح ρ = '+(m.rho||0)+'</li><li>مصفوفة نتائج من 0 إلى '+(N-1)+' أهداف لكل فريق، تُعاد معايرتها ليكون مجموعها 100%</li><li>كل سوق (1X2، الفرصة المزدوجة، الأهداف، الأسواق المركبة...) هو مجموع الخلايا المطابقة له في المصفوفة، فكل الأسواق متسقة مع بعضها</li><li>السعر العادل = 1 ÷ الاحتمال، بدون هامش أي شركة</li></ul>';
+  s+='<div class="gt">2) الأهداف المتوقعة</div><ul><li>المضيف = e^(متوسط الدوري + ميزة الأرض + هجوم المضيف + دفاع الضيف)</li><li>الضيف = e^(متوسط الدوري + هجوم الضيف + دفاع المضيف)</li></ul>'+
+   row("متوسط أهداف الفريق في الدوري",Math.exp(m.mu).toFixed(2))+row("ميزة الأرض",neu?"ملعب محايد (بدون ميزة)":"+"+((Math.exp(o.ha)-1)*100).toFixed(0)+"% أهداف")+row("الأهداف المتوقعة (مضيف - ضيف)",o.lh.toFixed(2)+" - "+o.la.toFixed(2))+row("المتوسط للمضيف في هذا الدوري",Math.exp(m.mu+o.ha).toFixed(2));
+  s+='<div class="gt">3) قوة الفريقين</div><p class="mut">مأخوذة من نتائج المباريات السابقة في بيانات الدوري، وكل رقم هو انحراف عن متوسط الدوري.</p>'+tm(h,H)+tm(a,A);
+  s+='<div class="gt">4) التعديلات اليدوية</div>'+ij(h,I.h,X.hC,X.hA)+ij(a,I.a,X.aC,X.aA)+'<p class="mut">الغيابات تُدخل يدوياً وتأثيرها تقريبي (مثلاً غياب مهاجم أساسي ≈ -9% أهداف)، والنموذج لا يعرف التشكيلة الفعلية.</p>';
+  if(H[2]&&A[2])s+='<div class="gt">5) الأداء الأخير</div><div class="kv"><span>'+esc(tn(h))+'</span><span>'+chips(H[2])+'</span></div><div class="kv"><span>'+esc(tn(a))+'</span><span>'+chips(A[2])+'</span></div><p class="mut">آخر 5 مباريات للعرض فقط، ولا تدخل مباشرة في الحساب.</p>';
+  var hr=h2hGet(code,h,a);
+  s+='<div class="gt">6) المواجهات المباشرة</div><p class="mut">'+(hr&&hr.length?"عدد المواجهات المسجلة: "+hr.length+". للسياق فقط ولا تدخل في الاحتمالات.":"لا توجد مواجهات مسجلة.")+'</p>';
+  s+='<div class="gt">7) درجة الثقة</div>'+row("وضوح الفارق بين النتائج",c1+"/50")+row("حجم العينة (الفريق الأقل مباريات: "+(dt||"—")+")",c2+"/50")+row("الإجمالي",(c1+c2)+"/100")+'<p class="mut">'+(mx>.6?"الفارق كبير بين الفريقين.":mx<.45?"مباراة متقاربة جداً فالثقة منخفضة.":"ثقة متوسطة.")+(dt&&dt<40?" ⚠️ أحد الفريقين لعب مباريات قليلة في هذا المستوى فالتوقع أقل دقة.":"")+'</p>';
+  s+='</details>';
+  return s}
+function cmb(o,k){
+  var B=(ST[k]||{}).bo||{},DC=[["1X",function(i,j){return i>=j}],["12",function(i,j){return i!==j}],["X2",function(i,j){return j>=i}]],
+  RS=[["1",function(i,j){return i>j}],["X",function(i,j){return i===j}],["2",function(i,j){return i<j}]];
+  function cell(id,lab,p){var b=B[id],e=b>1?p*b-1:null;
+    return '<div class="c"><small>'+lab+'</small><b>'+od(p)+'</b><i>'+pc(p)+'</i>'+'</div>'}
+  function grp(t,id,L,fn){var a=[];[1,0].forEach(function(y){L.forEach(function(d){a.push(cell(id+d[0]+y,d[0]+(y?" + نعم":" + لا"),P(o,function(i,j){return d[1](i,j)&&(fn(i,j)===!!y)})))})});return '<div class="gt">'+t+'</div><div class="g3">'+a.join("")+'</div>'}
+  var s=grp("فرصة مزدوجة + الفريقان يسجلان","a",DC,function(i,j){return i>0&&j>0})+
+   grp("فرصة مزدوجة + كل فريق يسجل هدفين أو أكثر","b",DC,function(i,j){return i>=2&&j>=2})+
+   grp("نتيجة المباراة + الفريقان يسجلان","c",RS,function(i,j){return i>0&&j>0});
+  return '<details'+''+'><summary>🧩 أسواق مركبة</summary>'+s+'</details>'}
+
+/* ---------- v7: الغيابات التلقائية بالأسماء لكل المباريات ---------- */
+var INJ_TS="16 نوفمبر 2026",INJ={"Arsenal": "Max Dowman|M|2|2026-11-29|rc;William Saliba|D|0||back;Bukayo Saka|F|7|2026-12-02|thigh", "Aston Villa": "Matty Cash|D|8|2026-11-21|yc;Johan Manzambi|M|7||calf;Matteo Ruggeri|M|4|2026-12-02|thigh;Amadou Onana|M|0|2027-06-01|knee", "Bournemouth": "Veljko Milosavljevic|M|0|2026-11-21|knee;Juanlu Sanchez|D|1||ankle;Alex Toth|M|2|2027-02-06|thigh;Julian Araujo|D|0|2026-11-21|thigh", "Brentford": "Igor Thiago|F|10|2026-12-05|rc;Joshua Dasilva|M|0||thigh;Fabio Carvalho|F|1|2026-11-23|knock;Rico Henry|D|1|2026-11-23|groin;Antoni Milambo|M|0|2026-11-23|knee", "Brighton": "Matias Orozco|M|0|2026-11-21|rc;Jaouen Hadjam|D|3||oth;Chema Andres|M|7||hip;Pascal Struijk|D|4|2026-11-22|thigh;Femi Azeez|F|0|2026-11-22|thigh;Zadok Yohanna|M|1|2026-11-22|oth;Kaoru Mitoma|M|0|2026-11-22|ham;Stefanos Tzimas|F|0|2026-12-02|acl;Eiran Cashin|D|0||calf;Evan Ferguson|F|0|2026-11-22|ankle", "Chelsea": "Mamadou Sarr|D|0||calf;Emiliano Martinez|G|6|2026-11-21|head;Mykhaylo Mudryk|F|1|2026-11-21|ankle;Jorrel Hato|D|6|2026-11-21|oth;Jamie Gittens|M|0|2026-11-21|ankle;Maxence Lacroix|D|8|2026-11-21|thigh;Joao Pedro|F|6|2026-11-21|thigh;Reece James|D|4|2027-01-03|thigh", "Coventry": "Frank Onyeka|M|7|2026-11-21|oth;Bobby Thomas|D|8|2026-11-21|calf;Luke Woolfenden|D|0|2026-11-21|knee;Josh Eccles|M|0|2026-11-21|oth;Haji Wright|F|0|2026-12-02|thigh;Aurele Amenda|D|4|2026-12-19|calf", "Crystal Palace": "Jean-Philippe Mateta|F|4|2026-12-02|rc;J. Strand Larsen|F|8||ankle;Ismaila Sarr|F|2|2026-11-21|groin;Takehiro Tomiyasu|D|4|2026-11-21|calf;Chadi Riad|D|1|2027-06-07|knee", "Fulham": "Emile Smith Rowe|M|4|2026-11-21|oth;Tom Cairney|M|3|2026-11-21|knee", "Hull": "Matt Crooks|M|6|2026-11-22|yc;Mohamed Belloumi|F|9||ham;Semi Ajayi|D|10||oth;Elliot Stroud|M|8||oth;Hidemasa Morita|M|5|2026-11-22|groin;Charlie Hughes|D|0|2026-11-22|groin;Darko Gyabi|M|0|2026-11-22|thigh;Ilyas Ansah|F|0|2026-11-22|back;Matt Targett|D|1|2026-12-19|ankle;Eliot Matazo|M|0|2027-02-20|knee", "Ipswich": "Jack Taylor|M|0|2026-11-21|knee;Sammie Szmodics|M|0||knee", "Leeds": "Anton Stach|M|9|2026-11-21|ankle;Mateo Joseph|F|0|2027-01-30|ankle", "Liverpool": "Virgil van Dijk|D|10||oth;Ryan Gravenberch|M|7|2026-11-22|calf;Jeremie Frimpong|D|5|2026-11-22|thigh;Conor Bradley|D|0|2026-12-02|knee;Giovanni Leoni|D|0|2027-01-02|acl;Hugo Ekitike|F|0|2027-01-02|calf;Vitezslav Jaros|G|0||oth", "Man City": "Mateo Kovacic|M|3||rc|o;Abdukodir Khusanov|D|7||oth;Marc Guehi|D|9||hip;Jack Grealish|M|6||club|o;Antoine Semenyo|F|7|2026-12-19|knee", "Man United": "Lisandro Martinez|D|8|2026-11-22|rc;Harry Maguire|D|10||back;Marcus Rashford|F|6|2026-11-22|groin;Carlos Baleba|M|4|2026-12-02|thigh;Benjamin Sesko|F|4|2027-01-02|calf;Luke Shaw|D|5|2026-11-22|oth;Manuel Ugarte|M|0|2027-04-03|acl", "Newcastle": "Jacob Ramsey|M|5|2026-11-21|rc;Joelinton|M|4||thigh|o;Ewen Jaouen|G|0|2026-12-12|thigh", "Nott'm Forest": "Nicolas Dominguez|M|2|2027-01-02|oth;Nicolo Savona|D|0|2026-11-21|knee", "Sunderland": "Omar Alderete|D|4|2026-11-21|rc;Granit Xhaka|M|10||calf;Brian Brobbey|F|8||oth;Juan Riquelme Angulo|F|1|2026-11-21|knock;Daniel Ballard|D|5|2026-12-13|thigh;Habib Diarra|M|4|2026-12-13|thigh;Simon Adingra|F|0||phys;Romaine Mundle|F|1|2027-01-02|knee", "Tottenham": "Mathys Tel|F|8||musc;Tosin Adarabioyo|D|2|2026-11-21|calf;Lucas Bergvall|M|4|2026-11-21|knee;Wilson Odobert|F|0|2027-02-06|knee;Savio|M|4|2026-11-21|musc;Xavi Simons|M|0|2027-02-20|acl", "Alaves": "Facundo Garces|D|0|2027-01-05|acl;Mikel Rodriguez|M|3|2027-04-04|acl", "Ath Bilbao": "Yuri Berchiche|D|9||yc;Nico Serrano|F|1|2026-11-20|musc;Aitor Paredes|D|7||musc;Maroan Sannadi|F|7|2026-12-12|musc;Gorka Guruzeta|F|5|2027-06-19|acl;Unai Eguiluz|D|0|2027-01-16|knee", "Ath Madrid": "Robin Le Normand|D|7||yc;Ademola Lookman|F|11||calf;Cristian Romero|D|6||oth;Thomas Lemar|M|8||oth", "Barcelona": "Rodri|M|10|2026-11-28|ham;Dani Olmo|F|9||oth;Jules Kounde|D|6||ankle;Roony Bardghji|M|0|2027-06-12|acl", "Celta": "Ilaix Moriba|M|12||knee;Manuel Sanchez|D|10||ham;Alvaro Nunez|D|4||groin;Borja Iglesias|F|3||calf;Carl Starfelt|D|3||ham;Miguel Roman|M|7||knee;Jones El-Abdellaoui|M|3||knee", "La Coruna": "Bright Ede|D|6||ham;Zakaria Eddahchouri|M|4||wrist", "Elche": "Buba Sangare|D|10||oth;Ali Houary|F|4||ankle;Adam Boayar|F|0|2026-11-23|musc;Gonzalo Villar|M|11||oth;Marc Aguado|M|6||ankle;Yago Santiago|M|0||knee", "Espanol": "Roger Hinojo|M|10|2026-11-20|yc;Pol Lozano|M|8||yc;Jofre Carreras|F|3|2026-11-20|phys;Kike Garcia|F|0|2027-01-15|ham", "Getafe": "Nemanja Gudelj|M|10|2026-11-30|yc;Djene|D|11||rc|o;Martin Satriano|F|12||yc;Juanmi|F|0|2026-11-22|musc;Zaid Abner Romero|D|7||oth;Christantus Uche|M|0|2027-06-12|knee", "Malaga": "Carlos Puga|D|10||oth;Rafita|D|12||ham;Diego Murillo|D|0|2026-11-22|oth;Julen Lobete|F|1|2027-06-30|knee;Aaron Ochoa|M|0||oth", "Osasuna": "Iker Munoz|M|10||yc;Aimar Oroz|M|3|2026-11-22|ham;Jorge Herrando|D|3|2026-11-22|musc;Romain Del Castillo|M|2||groin", "Santander": "Alvaro Mantilla|D|10||knee;Andres Martin|M|6||musc", "Vallecano": "Unai Lopez|M|11||yc;Oscar Valentin|M|9||knee;Alvaro Garcia|M|10||oth;Luiz Felipe|D|0||oth;Augusto Batalla|G|2|2027-01-09|leg", "Betis": "Facundo Bernal|M|8|2026-11-28|rc;Diego Llorente|D|5||head;Juan Hernandez|F|9||calf", "Real Madrid": "Vinicius Junior|F|8|2026-11-21|rc;Aurelien Tchouameni|M|8||musc;Ferland Mendy|D|0|2026-11-21|hip;Rodrygo|F|0|2026-11-21|acl;Raul Asencio|D|0||leg", "Sociedad": "Ander Barrenetxea|F|11||ham;Alvaro Odriozola|D|0|2026-11-22|acl", "Sevilla": "Manu Bueno|M|5|2026-11-21|rc;Isaac Romero|F|10||rc|o;Ruben Vargas|M|5||ill;Gerard Fernandez|F|4||ham;Marcao|D|0||musc;Miguel Angel Sierra|F|8||oth", "Valencia": "Jose Gaya|D|10|2026-11-29|rc;Umar Sadiq|F|5||knee;Jesus Vazquez|D|10||musc;Diego Lopez|F|0|2026-11-21|knee;Dimitri Foulquier|D|0||oth;David Otorbi|F|9||ham;Sergi Canos|F|0|2027-01-01|acl", "Villarreal": "Alassane Diatta|M|0||ham;Juan Foyth|D|6||oth;Gerard Moreno|F|10||oth;Ilias Akhomach|F|9||oth", "Milan": "Santiago Gimenez|F|0||rc|o;Strahinja Pavlovic|D|10||phys;Samuel Chukwueze|F|7|2027-02-14|hip;Fikayo Tomori|D|3|2026-11-30|ham;Ruben Loftus-Cheek|M|7|2026-11-22|thigh;Matteo Gabbia|D|3|2027-01-17|oth;Alexis Saelemaekers|M|4|2027-03-13|ankle;Pietro Terracciano|G|0||shoulder", "Atalanta": "Gianluca Gaetano|M|8||groin;Raoul Bellanova|D|7||thigh;Giacomo Raspadori|F|4||thigh;Odilon Kossounou|D|4|2026-11-22|thigh;Isak Hien|D|0|2026-11-22|thigh", "Bologna": "Juan Miranda|D|10||thigh;Antonio Raimondo|F|10|2027-01-02|ankle;Lorenzo De Silvestri|D|1||thigh;Thomas Gillier|G|0||back;Emil Holm|D|5|2027-01-31|thigh;Thijs Dallinga|F|0||acl", "Cagliari": "Adam Obert|D|10|2026-11-21|rc;Roberto Gagliardini|M|3||yc;Yerry Mina|D|4||thigh;Giuseppe Aurelio|D|2||thigh;Yael Trepy|F|3||thigh;Harry Winks|M|8||back;M'Bala Nzola|F|4||thigh;Kingstone Mutandwa|F|1|2026-12-31|ankle;Mattia Felici|M|2|2027-07-01|acl;Riyad Idrissi|D|0|2026-12-31|acl", "Como": "Edoardo Goldaniga|D|0||yc;Nicolas-Gerrit Kuehn|F|0||thigh;Assane Diao|F|6|2026-11-21|thigh;Trevoh Chalobah|D|6||oth;Alieu Fadera|M|9||ham;Jayden Addai|F|3||musc;Jesus Rodriguez|F|4|2026-12-03|knee", "Fiorentina": "Luca Ranieri|D|4||rc|o;Fabiano Parisi|D|0|2026-11-23|acl;Riccardo Sottil|F|0|2026-11-23|back;Moise Kean|F|4|2026-12-08|leg;Marin Pongracic|D|5|2026-11-23|thigh;Niccolo Fortini|D|5||thigh;Arthur Atta|M|5||abdomen;Albert Gudmundsson|F|4||shoulder", "Frosinone": "Aleksa Terzic|D|5||oth;Florian Grillitsch|M|1||thigh", "Genoa": "Vitinha|F|10||yc;Morten Frendrup|M|10||ankle;Joi Xheto Nuredini|F|0||oth", "Inter": "Davide Frattesi|M|11||groin;Ange-Yoan Bonny|F|10|2026-12-01|musc;Aleksandar Stankovic|M|4||groin;Marcus Thuram|F|10||musc;Luis Henrique|F|5|2026-11-22|thigh;Lautaro Martinez|F|5|2026-11-22|thigh;Valentin Carboni|M|0||acl", "Juventus": "Gleison Bremer|D|11||yc;Pierre Kalulu|D|11|2026-11-30|thigh;Andrea Cambiaso|D|7||oth;Kenan Yildiz|F|1|2026-12-12|foot;Fabio Miretti|M|0|2026-12-01|shoulder;Nico Gonzalez|F|6|2026-11-29|musc;Chico Conceicao|F|7|2026-11-22|shoulder;Manuel Locatelli|M|3|2027-02-06|knee;Arkadiusz Milik|F|0||oth;K. Thuram-Ulien|M|0|2027-01-15|knee", "Lazio": "Nicolo Rovella|M|2||rc|o;Kenneth Taylor|M|11||yc;Nuno Tavares|D|11|2026-12-08|leg;Adam Marusic|M|1||ham;Mattia Zaccagni|M|10||thigh;Alessio Furlanetto|G|0||acl", "Lecce": "Joel Monteiro|M|8||calf;Filip Marchwinski|M|0|2027-06-30|acl;Santiago Pierotti|F|7||ankle;Medon Berisha|M|1||thigh", "Monza": "Samuele Birindelli|D|10||leg", "Napoli": "Luca Marianucci|D|2|2026-11-21|rc;Pasquale Mazzocchi|D|5||thigh;Stanislav Lobotka|M|9|2026-12-20|ankle;Alisson Santos|M|4|2026-11-21|musc;David Neres|F|4|2026-11-21|ham;Giovanni Di Lorenzo|D|10||thigh;Michael Folorunsho|M|7||calf;A. Buongiorno|D|0||knee;Leonardo Spinazzola|D|7||thigh", "Parma": "Abdoulaye N'Diaye|D|3|2026-11-28|rc;David Romero|F|9||shoulder;Adrian Bernabe|M|7||musc;Lautaro Valenti|D|1||club|o", "Roma": "Wesley|D|10||rc|o;Neil El Aynaoui|M|1|2026-11-21|ankle;Gianluca Mancini|D|9||thigh;Paulo Dybala|F|6|2026-11-21|calf;Devyne Rensch|D|7|2026-11-21|thigh;Pierluigi Gollini|G|5|2026-11-21|back;Lorenzo Pellegrini|M|2|2027-01-02|thigh;Mile Svilar|G|5|2026-11-21|foot", "Sassuolo": "Jay Idzes|M|5||yc;Domenico Berardi|F|9||oth;Cristian Volpato|F|5|2026-11-22|musc;Yeferson Paz|D|0||acl;Daniel Boloca|M|0||knee;Ismael Kone|M|0|2027-01-03|leg", "Torino": "Ivan Ilic|M|5||thigh;Franco Israel|G|0||shoulder", "Udinese": "Hassane Kamara|M|11||yc;Sandi Lovric|M|2||yc;Thomas Kristensen|D|5||thigh;Alessandro Zanoli|D|2|2026-11-21|oth;Idrissa Gueye|F|4|2027-01-03|ankle", "Venezia": "Andrea Adorante|F|0|2026-11-22|back;Marin Sverko|D|0||hip;Daniel Fila|F|0|2026-12-06|ham;Seid Korac|D|0||acl;Mattia Compagnon|M|0||knee;Bartol Franjic|D|2|2026-12-12|shoulder", "Augsburg": "Kristijan Jakic|M|0||yc;Chrislain Matsima|D|9||musc;Tim Breithaupt|M|0||foot;Calvin Brackelmann|D|7||head;Faik Sakar|M|0||ankle;Noahkai Banks|D|4||knee;Steve Mounie|F|0||oth", "M'gladbach": "Ko Itakura|D|6|2026-11-27|rc;Lukas Ullrich|D|8||shoulder;Moritz Nicolas|G|7|2026-11-21|musc;Tim Kleindienst|F|3||musc;Hugo Bolin|M|7||musc;Fritz Fleck|M|1||oth;Jan Leszcynski|D|3||knee;Enzo Leopold|M|0|2027-06-01|acl", "Bayern Munich": "Jamal Musiala|M|3|2026-11-20|thigh;Manuel Neuer|G|5|2027-01-02|foot;Arijon Ibrahimovic|F|7||calf;Bara Ndiaye|D|0||abdomen;Serge Gnabry|F|5|2026-12-31|ham;Ismael Saibari|M|8||ankle;Luis Diaz|F|6||musc;Tarek Buchmann|D|0||foot", "Dortmund": "Carney Chukwuemeka|M|4||ham;Waldemar Anton|D|9||oth;Emre Can|M|0|2026-11-21|acl;Kaua Prates|D|1|2026-11-21|musc;Serhou Guirassy|F|8|2026-11-21|ham;G. Konstantelias|M|1|2027-06-01|acl;Justin Lerma|F|0||musc", "Elversberg": "Lukas Pinckert|D|9||ankle;Jan Gyamerah|D|6||thigh;Tom Zimmerschied|F|1||ankle;Luis Seifert|D|0||foot", "FC Koln": "Ragnar Ache|F|4|2026-11-20|thigh;Rav van den Berg|D|0||musc;Ellyes Skhiri|M|5||ankle;Imad Rondic|M|2||ham;Timo Huebers|D|0||knee", "Ein Frankfurt": "Elias Baum|D|9|2026-11-28|rc;Mario Goetze|M|6||head;Jessic Ngankam|F|0||thigh", "Freiburg": "Mio Backhaus|G|9|2026-11-21|hand;Bruno Ogbus|D|0|2026-11-21|musc;Karl Steinmann|D|0||ham;Florent Muslija|M|0|2027-01-15|acl", "Hamburg": "Patson Daka|F|6||ankle;Miro Muheim|D|5||oth;Nicolas Capaldo|M|6|2026-11-22|musc;Fabio Vieira|M|6||ham;Nicolai Remberg|M|5||knee;Bilal Nadir|M|4||thigh;Fernando Dickes|G|0||shoulder", "Hoffenheim": "Alexander Prass|M|4||ham;Bambase Conte|F|7|2026-11-21|groin;Robin Hranac|D|5||knee;Valentin Gendrey|D|2||leg;Arthur Chaves|D|0||musc;Kelven Frees|D|0||musc;Nathan De Cat|M|2||knee;Patrick Wimmer|M|4||thigh;Albian Hajdari|D|4||knee", "Leverkusen": "Nathan Tella|M|3|2026-11-21|musc;Moussa Diaby|F|6||ham;Martin Terrier|F|2||ham;Christian Kofane|F|4||thigh;Guela Doue|D|1||calf;Kennet Eichhorn|M|0||ill", "Mainz": "Stefan Posch|D|7|2026-11-22|rc;Phillipp Mwene|D|8|2026-11-22|yc;Otto Ruoppi|M|3|2026-11-22|knee;Silas Katompa Mvumpa|F|0|2026-11-21|foot;Dominik Kohr|M|1|2026-11-21|ankle;Nelson Weiper|F|0||oth", "Paderborn": "Timur Gayret|M|0|2026-11-21|knee;N. Awortwie-Grant|D|0|2026-11-21|knee;Sven Michel|F|1||knock;Sebastian Klaas|M|0||groin;Oliver Batista Meier|F|3||knee;Marcel Hoffmeier|D|0||musc", "RB Leipzig": "Lukas Klostermann|D|1||yc;Viggo Gebel|M|0||oth;Benno Kaltefleiter|M|0||knock;Max Finkgrafe|D|3||thigh;F. Assan Ouedraogo|M|1|2026-12-25|shoulder;Marc Guiu|F|1||ham", "Schalke 04": "Timo Becker|D|8||foot;Loris Karius|G|9||head;Adrian Gantenbein|D|2||musc;Janik Bachmann|M|2||hip;Maximilian Woeber|D|6||thigh;Ron Schallenberg|M|3||leg;Moussa Sylla|F|4||leg", "Stuttgart": "Luca Jaquez|D|2||rib;Jeremy Arevalo|F|0|2026-11-22|back;Noah Darvich|F|5|2026-11-21|ham;Angelo Stiller|M|7||groin;Leo Sauer|F|6||groin;Justin Diehl|F|0||musc;Josha Vagnoman|D|6||ham", "Union Berlin": "Felix Uduokhai|D|6|2026-11-21|rc;Derrick Koehn|D|4||yc;Aljoscha Kemlein|M|8||oth;Stanley N'Soki|D|0||calf;Robert Skov|M|1||knock;Andrik Markgraf|D|0|2027-04-02|knee;Josip Juranovic|M|3||ill", "Werder Bremen": "Marco Gruell|F|9||calf;Felix Agu|D|0||musc;Markus Kolke|G|0||oth;Mitchell Weiser|D|6||musc;Skelly Alvero|M|0||calf;Salim Musah|F|3||ham;Keke Topp|F|0|2027-02-05|acl;Jens Stage|M|0|2027-01-09|thigh", "Angers": "Jordan Lefort|D|9|2026-11-28|yc;Yassin Belkhdim|M|10||yc", "Auxerre": "Sekou Fofana|D|0||groin;Assane Diousse|M|0|2027-05-01|knee;Bryan Okoh|D|0|2027-01-30|acl", "Brest": "Romain Cagnon|G|0||oth;Brendan Chardonnet|D|0||calf", "Le Havre": "Ayumu Seko|M|8|2026-11-20|yc;Rassoul Ndiaye|M|8||thigh;Sota Nakamura|F|9||oth;Lionel Mpasi-Nzau|G|3|2026-11-20|oth;Felix Mambimbi|F|0|2026-11-20|musc;Junior Mwanga|M|9||oth;Timothee Pembele|D|3||oth", "Le Mans": "Samuel Yohou|D|8||head;Djibril Sidibe|D|5||foot", "Lens": "Odsonne Edouard|F|6||oth;Pierre Ganiou|D|5||knee;Abdallah Sima|F|5||thigh;Maik Nawrocki|D|2|2027-05-15|acl;Jhoanner Chavez|D|0||thigh", "Lille": "Hamza Igamane|F|0|2026-11-21|acl;Ayase Ueda|F|4||foot;Tiago Santos|D|6||oth", "Lorient": "Souleymane Toure|D|5||groin;Bandiougou Fadiga|M|0|2026-11-22|ham;Mohamed Bamba|F|0|2026-11-22|phys;Panos Katseris|D|5||musc", "Lyon": "Keito Nakamura|F|6||yc;Tyler Morton|M|7||groin;Pavel Sulc|M|7||knee;Steeve Kango|D|0||back;Mohamed Ouedraogo|D|1||knee", "Marseille": "Emerson|D|9||knee;Derek Cornelius|D|3||hip", "Monaco": "Christian Mawissa|D|4||groin;Eric Dier|D|8||head;Aleksandr Golovin|M|10||calf;Ansu Fati|F|3||ham;Stanis Idumbo|M|5||oth", "Nice": "Hicham Boudaoui|M|6||back;Mohamed Abdelmonem|D|10||ham;Salis Abdul Samed|M|0|2026-11-21|oth;Moise Bombito|D|0|2026-11-21|leg;Ali Abdi|D|3||musc;Antoine Mendy|D|3|2027-05-29|acl;Laurent Abergel|M|0|2027-04-24|knee", "Paris SG": "Desire Doue|M|9||head;Maghnes Akliouche|M|9||calf;Ousmane Dembele|F|5||musc;Marquinhos|D|5||thigh;K. Kvaratskhelia|F|7||acl|o;Nuno Mendes|D|3||musc", "Paris FC": "Mamadou Mbow|D|7||yc;Nhoa Sangui|D|0|2026-11-22|ham;Adama Camara|M|8||ham;Jonathan Ikone|F|2||thigh", "Rennes": "Brice Samba|G|8||yc;Esteban Lepaul|F|7||ankle", "Strasbourg": "Giovanni Reyna|M|10||thigh;Hermann Diandaga|D|0|2026-11-21|oth;Deivid Washington|F|0|2026-11-21|oth;Maxi Oyedele|M|0|2026-11-21|oth;Fabio Balde|F|4||leg;Joaquin Panichelli|F|0|2026-12-05|knee", "Toulouse": "Aron Doennum|M|4|2026-11-21|rc;Thomas Joergensen|M|10||oth;Abu Francis|M|0|2026-11-21|ham"};
+var RS_AR={rc:"إيقاف (طرد)",yc:"إيقاف (إنذارات)",thigh:"فخذ",knee:"ركبة",calf:"سمانة",ham:"أوتار الركبة",ankle:"كاحل",groin:"أربية",acl:"رباط صليبي",musc:"عضلة",hip:"حوض",back:"ظهر",oth:"غير محدد",ill:"مرض",head:"رأس",knock:"ضربة",leg:"أسفل الساق",wrist:"معصم",phys:"إزعاج بدني",club:"إيقاف إداري",foot:"قدم",shoulder:"كتف",abdomen:"بطن",rib:"ضلع",hand:"يد"},PA={G:"حارس",D:"مدافع",M:"وسط",F:"مهاجم"};
+function fxOf(k){var r=null;(D._fix||[]).forEach(function(f){if(fk(f)===k)r=f});return r}
+function mdate(k){var f=fxOf(k),m=f&&kick(f);return m?new Date(m).toISOString().slice(0,10):"9999-12-31"}
+function absn(t,md){var s=(D._abs||INJ||{})[t];if(!s)return[];var r=[];s.split(";").forEach(function(x){var p=x.split("|");if(p.length<5)return;var d=p[3],st=p[5]==="o"?"o":d?(d>md?"o":d===md?"d":""):"d";if(st)r.push({n:p[0],p:p[1],a:+p[2]||0,r:d,w:p[4],s:st})});return r}
+function auto(k){var q=k.split("|"),md=mdate(k),o={h:"",a:""};[["h",q[1]],["a",q[2]]].forEach(function(t){absn(t[1],md).forEach(function(x){if(x.s==="o"&&x.a>=4)o[t[0]]+=x.p})});return o}
+function bdn(k,s){if(ST[k]&&ST[k].inj)return bd(injs(k)[s].length);var q=k.split("|"),L=absn(q[s==="h"?1:2],mdate(k)).filter(function(x){return x.s==="o"&&x.a>=4});if(!L.length)return"";var w=L[0].n.split(" ");return'<span class="inj">🩹 '+esc(w[w.length-1])+(L.length>1?" +"+(L.length-1):"")+'</span>'}
+function absH(k,t){var L=absn(t,mdate(k)).sort(function(x,y){return(y.s==="o")-(x.s==="o")||y.a-x.a});if(!L.length)return'<div class="mut">✅ لا غيابات مسجلة</div>';
+  return L.map(function(x){return'<div class="kv"><span>'+(x.s==="o"?"🔴":"🟡")+" "+esc(x.n)+' <small class="mut">'+(PA[x.p]||"")+(x.a<4?" • مشاركات قليلة":"")+'</small></span><b dir="ltr" style="font-size:12px">'+(RS_AR[x.w]||x.w)+(x.r?" • "+x.r.slice(5):"")+'</b></div>'}).join("")}
+function lnb(){$("ln").textContent=LANG==="ar"?"EN":"عربي"}
+$("ln").onclick=function(){LANG=LANG==="ar"?"en":"ar";try{localStorage.setItem("fb_lang",LANG)}catch(e){}lnb();tabs();list();fillCust()};lnb();
+$("ab").textContent="الإصدار 5.0"+(H2HE._ts?" • آخر تحديث للمواجهات: "+H2HE._ts:"");
+try{if(typeof navigator!=="undefined"&&"serviceWorker" in navigator&&typeof location!=="undefined"&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}
+(function(){try{var f=(D._fix||[])[0];if(!f)return;var o=pr(f[0],f[2],f[3],false,fk(f));if(!o)return;var t=0;o.M.forEach(function(v){t+=v});if(Math.abs(t-1)>1e-6||Math.abs(o.w+o.d+o.l-1)>1e-6)console.warn("selfTest: الاحتمالات لا تجمع 100%")}catch(e){console.warn("selfTest",e)}})();
+function abR(){fresh();var t=D._ts,old=t&&(Date.now()-Date.parse(t))/864e5>3;$("ab").textContent="الإصدار 5.1"+(t?" • آخر تحديث للبيانات: "+t+(old?" ⚠️ قديمة":""):"")+(H2HE._ts?" • آخر تحديث للمواجهات: "+H2HE._ts:"")}
+function btR(){abR();stl();var b=D._bt,e=$("bt");if(!e)return;if(!b||!b.weeks||!b.weeks.length){e.innerHTML="";return}
+var W=b.weeks,w=300,h=70,pt=W.map(function(x,i){return(W.length>1?i*(w/(W.length-1)):w/2).toFixed(1)+","+(h-x.acc*h).toFixed(1)}).join(" ");
+e.innerHTML='<div class="card"><div class="gt">📈 دقة النموذج (اختبار رجعي أسبوعي)</div><svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:80px;overflow:visible" role="img" aria-label="دقة النموذج"><line x1="0" x2="'+w+'" y1="'+(h-h/3)+'" y2="'+(h-h/3)+'" stroke="var(--bd)" stroke-dasharray="4"/><polyline points="'+pt+'" fill="none" stroke="var(--gold)" stroke-width="2.5"/></svg><div class="kv"><span>نسبة إصابة 1X2</span><b>'+pc(b.acc)+'</b></div><div class="kv"><span>RPS (الأقل أفضل) / خط الأساس</span><b dir="ltr">'+b.rps.toFixed(3)+' / '+b.base_rps.toFixed(3)+'</b></div><p class="mut">على '+b.n+' مباراة. الخط المنقط = 33% (تخمين عشوائي).</p></div>'}
+
+/* ---------- v8: تحسينات تجربة المستخدم ---------- */
+var SCR={},ADV=false;try{ADV=localStorage.getItem("fb_adv")==="1"}catch(e){}
+function strip0(x){var i=x.indexOf('<div class="gt">');return i>0?x.slice(i):x}
+function cfOf(o){var mx=Math.max(o.w,o.d,o.l),dt=Math.min(o.H[3]||0,o.A[3]||0);return Math.round(100*(.5*Math.min(1,Math.max(0,(mx-.34)/.36))+.5*Math.min(1,dt/100)))}
+function smI(o,f){var h=tn(f[2]),a=tn(f[3]),mx=Math.max(o.w,o.d,o.l),g=o.lh+o.la,t;
+  if(mx<.40)t='مباراة <em>متقاربة جداً</em> ولا فريق مرجّح بوضوح';
+  else if(o.d===mx)t='<em>التعادل</em> هو الأرجح ('+pc(o.d)+')';
+  else t='<em>'+esc(o.w===mx?h:a)+'</em> الأرجح ('+pc(mx)+')';
+  t+=g>=3?'، ومباراة هجومية':g<=2.2?'، ومباراة مغلقة':'، ومباراة متوازنة';
+  var c=cfOf(o),B=[c>=82?'<span class="bd ok">ثقة عالية</span>':c>=68?'<span class="bd mid">ثقة متوسطة</span>':'<span class="bd low">ثقة منخفضة</span>'];
+  if(mx<.40)B.push('<span class="bd low">مباراة متقاربة</span>');
+  if(o.o25>=.6)B.push('<span class="bd">أهداف كثيرة</span>');else if(o.o25<=.4)B.push('<span class="bd">أهداف قليلة</span>');
+  if(o.bt>=.6)B.push('<span class="bd">الفريقان يسجلان</span>');
+  return'<div class="sm">'+t+'</div><div class="bdg">'+B.join("")+'</div>'}
+function actH(k){return k?'<div class="act"><button class="abtn sbtn" data-k="'+esc(k)+'">📤 شارك التوقع</button><button class="abtn rem" data-k="'+esc(k)+'">⏰ ذكّرني</button><button class="abtn imgb" data-k="'+esc(k)+'">🖼 صورة</button></div>':''}
+function sw(T){var n=T[3]||60;return Math.min(1,(n/(n+20))/.75)}
+function wdl(lh,la,r){var p=pois(lh,N),q=pois(la,N),w=0,d=0,t=0,i,j,v;for(i=0;i<N;i++)for(j=0;j<N;j++){v=p[i]*q[j]*tau(i,j,lh,la,r||0);t+=v;if(i>j)w+=v;else if(i===j)d+=v}return[w/t,d/t,1-(w+d)/t]}
+function ciH(o,h,a){var nh=o.H[3],na=o.A[3];if(!nh||!na)return"";var sd=1.5*Math.sqrt(1/(nh*1.3)+1/(na*1.3)),seed=1,s=h+a,i,x;for(i=0;i<s.length;i++)seed=(seed*31+s.charCodeAt(i))|0;x=seed>>>0||1;
+  function R(){x=(x*1664525+1013904223)>>>0;return x/4294967296}function g(){return Math.sqrt(-2*Math.log(R()+1e-12))*Math.cos(6.2831853*R())}
+  var W=[],T=[],L=[],k,r;for(k=0;k<300;k++){r=wdl(o.lh*Math.exp(g()*sd-sd*sd/2),o.la*Math.exp(g()*sd-sd*sd/2),o.m.rho);W.push(r[0]);T.push(r[1]);L.push(r[2])}
+  function q(A,p){A.sort(function(u,v){return u-v});return A[Math.floor(p*(A.length-1))]}
+  function row(l,A,c){return'<div class="kv"><span><i class="dot" style="background:var('+c+')"></i>'+l+'</span><b dir="ltr">'+pc(q(A,.1))+' – '+pc(q(A,.9))+'</b></div>'}
+  return'<div class="gt">📏 مدى عدم اليقين</div>'+row("فوز "+esc(tn(h)),W,"--g")+row("تعادل",T,"--n")+row("فوز "+esc(tn(a)),L,"--r")+'<p class="mut">النطاق بيعبّر عن شكّ النموذج في قوة الفريقين بسبب عدد المباريات. كل ما كان أضيق كان التوقع أثبت.'+(Math.min(nh,na)<40?' ⚠️ أحد الفريقين عيّنته صغيرة فالنطاق واسع.':'')+'</p>'}
+function xchk(o,h,a){var L=D._last||{},A=L[h],B=L[a];if(!A||!B||A.length<5||B.length<5)return"";
+  function av(X){var f=0,g=0;X.forEach(function(z){f+=z[2];g+=z[3]});return[f/X.length,g/X.length]}
+  var x=av(A),y=av(B),r=wdl((x[0]+y[1])/2,(y[0]+x[1])/2,o.m.rho),mx=Math.max(Math.abs(r[0]-o.w),Math.abs(r[2]-o.l))*100,n=Math.min(A.length,B.length);
+  return'<div class="gt">🔎 فحص الفورمة (آخر '+n+' مباريات)</div><div class="kv"><span>الفورمة وحدها</span><b dir="ltr">'+pc(r[0])+' • '+pc(r[1])+' • '+pc(r[2])+'</b></div><div class="kv"><span>توقع النموذج</span><b dir="ltr">'+pc(o.w)+' • '+pc(o.d)+' • '+pc(o.l)+'</b></div><p class="mut">'+(mx<12?'✅ الفورمة الأخيرة متفقة مع النموذج.':'⚠️ الفورمة الأخيرة بتقول حاجة مختلفة بفارق '+Math.round(mx)+' نقطة، فاعتبر التوقع أقل ثباتاً.')+'</p>'}
+function eloR(m,t){var T=m.teams[t];if(!T)return null;var b=1500+(T[0]-T[1])*250,r=b,L=(D._last||{})[t],hv=!!(L&&L.length);
+  if(hv)L.slice().reverse().forEach(function(x){var O=m.teams[x[0]];if(!O)return;var ro=1500+(O[0]-O[1])*250,h=x[1]==="H"?60:-60,E=1/(1+Math.pow(10,(ro-r-h)/400)),S=x[2]>x[3]?1:x[2]===x[3]?.5:0;r+=20*(1+Math.log(1+Math.abs(x[2]-x[3])))*(S-E)});
+  return{b:b,r:r,f:hv}}
+function eloH(o,h,a){var x=eloR(o.m,h),y=eloR(o.m,a);if(!x||!y)return"";
+  function row(t,e){var d=Math.round(e.r-e.b);return'<div class="kv"><span>'+esc(tn(t))+'</span><b dir="ltr">'+Math.round(e.r)+(e.f?' <span class="'+(d>=0?"ok":"no")+'">'+(d>=0?"▲ +":"▼ ")+d+'</span>':'')+'</b></div>'}
+  var df=Math.round(x.r-y.r);
+  return'<div class="gt">🏅 تصنيف القوة (يشبه Elo)</div>'+row(h,x)+row(a,y)+'<p class="mut">'+(df===0?'الفريقان متساويان في التصنيف.':'فرق التصنيف '+Math.abs(df)+' نقطة لصالح '+esc(tn(df>0?h:a))+'.')+' التقدير مبني على قوة الهجوم والدفاع، والسهم يوضح أثر آخر 10 مباريات. للمقارنة فقط ولا يغيّر الاحتمالات.</p>'}
+function simpleH(o,h,a,k){var sc=[],i,j;for(i=0;i<N;i++)for(j=0;j<N;j++)sc.push([i+"-"+j,o.M[i*N+j]]);sc.sort(function(x,y){return y[1]-x[1]});
+  return'<div class="pb big" dir="ltr">'+pbH(o)+'</div><div class="lgd" dir="ltr"><span><i style="background:var(--g)"></i>فوز '+esc(tn(h))+'</span><span><i style="background:var(--n)"></i>تعادل</span><span><i style="background:var(--r)"></i>فوز '+esc(tn(a))+'</span></div>'+
+   '<div class="g3"><div class="c"><small>النتيجة الأرجح</small><b>'+sc[0][0]+'</b><i>'+pc(sc[0][1])+'</i></div><div class="c"><small>الأهداف المتوقعة</small><b>'+o.lh.toFixed(1)+' - '+o.la.toFixed(1)+'</b></div><div class="c"><small>الثقة</small><b>'+cfOf(o)+'/100</b></div></div>'+ciH(o,h,a)+xchk(o,h,a)+eloH(o,h,a)+sgH(o,h,a)+formH(o,h,a)+actH(k)}
+function detail(code,h,a,neu,k){var o=pr(code,h,a,neu,k);if(!o)return detail0(code,h,a,neu);
+  return simpleH(o,h,a,k)+'<details class="adv"'+(ADV?' open':'')+'><summary>🔬 تفاصيل متقدمة: الأسواق والأسعار والغيابات</summary>'+detailAdv(code,h,a,neu,k)+'</details>'}
+$("list").addEventListener("toggle",function(e){var d=e.target;if(d&&d.classList&&d.classList.contains("adv")){ADV=d.open;try{localStorage.setItem("fb_adv",ADV?"1":"0")}catch(x){}}},true);
+function accH(){var b=D._bt;if(!b||!b.n)return"";return'<div class="acc">📈 دقة النموذج الفعلية: <b>'+pc(b.acc)+'</b> في إصابة 1X2 على '+b.n+' مباراة سابقة (التخمين العشوائي 33%). ليست ضماناً لأي نتيجة.</div>'}
+function stl(){var e=$("stale");if(!e)return;var t=D._ts,old=t&&(Date.now()-Date.parse(t))/36e5>6,al=D._fix||[],allp=al.length&&al.every(past);
+  if(old||allp){e.hidden=false;e.textContent="⚠️ "+(allp?"كل المباريات المحفوظة انتهت":"البيانات قديمة")+(t?" (آخر تحديث "+t+")":"")+". التوقعات قد لا تعكس آخر الأخبار."}else e.hidden=true}
+var _tt;function toast(m){var e=$("ts");e.textContent=m;e.className="show";clearTimeout(_tt);_tt=setTimeout(function(){e.className=""},2800)}
+function shareTxt(k){var f=fxOf(k);if(!f)return"";var o=pr(f[0],f[2],f[3],false,k);if(!o)return"";var sc=[],i,j;for(i=0;i<N;i++)for(j=0;j<N;j++)sc.push([i+"-"+j,o.M[i*N+j]]);sc.sort(function(x,y){return y[1]-x[1]});var p=f[1].split(" ");
+  return"⚽ "+tn(f[2])+" × "+tn(f[3])+"\n🗓 "+(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2])+" • "+(p[3]||"")+" (توقيت القاهرة)\n📊 فوز "+tn(f[2])+" "+pc(o.w)+" • تعادل "+pc(o.d)+" • فوز "+tn(f[3])+" "+pc(o.l)+"\n🎯 النتيجة الأرجح: "+sc[0][0]+"\n⚽ الأهداف المتوقعة: "+o.lh.toFixed(1)+" - "+o.la.toFixed(1)+"\n\nتحليل إحصائي للتسلية والتعلّم وليس ضماناً لأي نتيجة. (متوقع المباريات PRO)"}
+function ics(keys){var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//MatchPredictor//AR","CALSCALE:GREGORIAN"],n=0,z=function(t){return new Date(t).toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"")};
+  keys.forEach(function(k){var f=fxOf(k),ms=f&&kick(f);if(!ms||ms<Date.now())return;n++;L.push("BEGIN:VEVENT","UID:"+k.replace(/[^A-Za-z0-9]/g,"")+"@mp","DTSTAMP:"+z(Date.now()),"DTSTART:"+z(ms),"DTEND:"+z(ms+72e5),"SUMMARY:"+f[2]+" - "+f[3],"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:تبدأ المباراة بعد 30 دقيقة","TRIGGER:-PT30M","END:VALARM","END:VEVENT")});
+  if(!n){toast("لا توجد مباراة قادمة لإضافتها");return}L.push("END:VCALENDAR");toast("تم تجهيز ملف التذكير");
+  var b=new Blob([L.join("\r\n")],{type:"text/calendar;charset=utf-8"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="match-reminders.ics";document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(u)},1500);toast("افتح الملف لإضافة التذكير لتقويم الهاتف (تنبيه قبل 30 دقيقة)")}
+$("list").addEventListener("click",function(e){var t=e.target.closest&&e.target.closest(".sbtn,.rem,.remall,.imgb,.cmpb");if(!t)return;var k=t.getAttribute("data-k");
+  if(t.classList.contains("sbtn")){var x=shareTxt(k);if(!x)return;if(navigator.share)navigator.share({text:x}).catch(function(){});else cp(x,"تم نسخ التوقع، الصقه في واتساب")}
+  else if(t.classList.contains("cmpb")){var cc=$("cust");cc.open=true;cc.scrollIntoView({behavior:"smooth"})}else if(t.classList.contains("rem"))ics([k]);else if(t.classList.contains("imgb"))shareImg(k);else ics(($("list").F||[]).map(fk))});
+function showOb(force){if(document.getElementById("ob"))return;var ok=false,done=false;try{ok=localStorage.getItem("fb_age")==="1";done=localStorage.getItem("fb_ob")==="1"}catch(e){}if(!force&&(!ok||done))return;
+  var S=[["🎨","الألوان","الشريط الملوّن يوضح احتمال كل نتيجة: <b style='color:var(--g)'>أخضر = فوز صاحب الأرض</b>، <b style='color:var(--n)'>رمادي = تعادل</b>، <b style='color:var(--r)'>أحمر = فوز الضيف</b>. الجزء الأوضح هو الأرجح."],
+   ["🔢","الأسعار العادلة","الرقم تحت كل نتيجة = 1 ÷ الاحتمال. كلما قلّ الرقم زاد احتمال حدوثها، فمثلاً 1.60 تعني حوالي 62%. بدون هامش أي شركة."],
+   ["🎯","الثقة","شارة الثقة تقيس وضوح الفارق وحجم بيانات الفريقين. عند «مباراة متقاربة» لا يوجد فريق مرجّح بوضوح، فخذ التوقع بحذر."]],i=0,g=document.createElement("div");g.id="ob";
+  function end(){try{localStorage.setItem("fb_ob","1")}catch(e){}g.remove()}
+  function draw(){var x=S[i];g.innerHTML='<div><div class="obi">'+x[0]+'</div><h2>'+x[1]+'</h2><p>'+x[2]+'</p><div class="obd">'+S.map(function(_,j){return'<i'+(j===i?' class="on"':'')+'></i>'}).join("")+'</div><button class="go" id="obn">'+(i<S.length-1?"التالي":"ابدأ")+'</button><button class="go obs" id="obs">تخطّي</button></div>';
+    $("obn").onclick=function(){if(i<S.length-1){i++;draw()}else end()};$("obs").onclick=end}
+  document.body.appendChild(g);draw()}
+$("hp").onclick=function(){showOb(true)};
+function ld(manual){var b=$("ldb");b.className="on";function fail(){b.className="";if(manual)toast("تعذّر التحديث، تأكد من الاتصال")}
+  try{fetch("data.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){b.className="";if(j&&j.E0&&j._fix){var ch=!D._ts||j._ts!==D._ts;D=j;tabs();list();fillCust();btR();if(manual)toast(ch?"تم تحديث البيانات ✓":"البيانات محدّثة بالفعل ✓")}else if(manual)toast("لا يوجد ملف بيانات للتحديث")}).catch(fail)}catch(e){fail()}}
+window.addEventListener("scroll",function(){$("up").hidden=(window.scrollY||0)<600},{passive:true});$("up").hidden=true;$("up").onclick=function(){window.scrollTo({top:0,behavior:"smooth"})};
+(function(){var y0=null,pl=0,p=$("ptr");document.addEventListener("touchstart",function(e){y0=(window.scrollY<=0&&e.touches.length===1)?e.touches[0].clientY:null;pl=0},{passive:true});
+  document.addEventListener("touchmove",function(e){if(y0===null)return;var d=e.touches[0].clientY-y0;if(d>0&&window.scrollY<=0){pl=d;p.style.opacity=Math.min(d/90,1);p.style.transform="translate(-50%,"+(Math.min(d,110)/2-30)+"px) rotate("+d*3+"deg)"}},{passive:true});
+  document.addEventListener("touchend",function(){if(y0===null)return;p.style.opacity=0;p.style.transform="translate(-50%,-40px)";if(pl>90)ld(true);y0=null;pl=0})})();
+
+/* ---------- v9: مقارنة، شكل الفريق، صورة المشاركة ---------- */
+function formH(o,h,a){if(!o.H[2]||!o.A[2])return"";
+  function row(t,f,c){var pts=0,bars=f.split("").map(function(x){pts+=x==="W"?3:x==="D"?1:0;return'<i class="fb f'+x+'" style="height:'+(x==="W"?100:x==="D"?55:25)+'%"></i>'}).join("");return'<div class="fr"><span class="sn">'+esc(tn(t))+'</span><span class="fbw" dir="ltr">'+bars+'</span><span class="rk" dir="ltr"><b style="color:'+c+'">'+pts+'</b><small>/15</small></span></div>'}
+  return'<div class="gt">📈 الشكل في آخر 5 مباريات</div><div class="sg">'+row(h,o.H[2],'var(--gold)')+row(a,o.A[2],'#a78bfa')+'<p class="mut" style="margin:8px 0 0">العمود الأعلى = فوز، المتوسط = تعادل، الأقصر = خسارة. الرقم = نقاط من 15.</p></div>'}
+function cmpH(){return'<button class="cmpb">⚖️ قارن بين أي فريقين</button><button class="go dayb" style="margin:8px 0 12px">📤 شارك أقوى توقعات القايمة</button>'}
+function rrect(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function shareImg(k){var f=fxOf(k);if(!f)return;var o=pr(f[0],f[2],f[3],false,k);if(!o)return;var sc=[],i,j;for(i=0;i<N;i++)for(j=0;j<N;j++)sc.push([i+"-"+j,o.M[i*N+j]]);sc.sort(function(x,y){return y[1]-x[1]});var p=f[1].split(" ");
+  var W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;var x=c.getContext("2d");if(!x){toast("المتصفح لا يدعم إنشاء الصورة");return}
+  var g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,"#0b1330");g.addColorStop(1,"#070b1a");x.fillStyle=g;x.fillRect(0,0,W,H);
+  var gl=x.createRadialGradient(W*.8,0,0,W*.8,0,720);gl.addColorStop(0,"rgba(56,189,248,.38)");gl.addColorStop(1,"rgba(56,189,248,0)");x.fillStyle=gl;x.fillRect(0,0,W,H);
+  x.direction="rtl";x.textAlign="center";var FF='"Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif';
+  function T(t,y,sz,col,w){x.font=(w||"bold")+" "+sz+"px "+FF;x.textAlign="center";x.fillStyle=col;x.fillText(t,W/2,y)}
+  T("متوقع المباريات PRO",110,46,"#7dd3fc");
+  T(String(NAMES[f[0]]||f[0]).replace(/[^؀-ۿA-Za-z ]/g,"").trim(),175,38,"#94a3b8","600");
+  T(tn(f[2]),380,76,"#ffffff");T("×",468,56,"#38bdf8");T(tn(f[3]),556,76,"#ffffff");
+  T((DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2])+" • "+(p[3]||"")+" (القاهرة)",640,34,"#94a3b8","600");
+  var bx=90,bw=W-180,by=710,bh=72,cx=bx;[[o.w,"#22c55e"],[o.d,"#64748b"],[o.l,"#ef4444"]].forEach(function(v){var w=bw*v[0];x.fillStyle=v[1];rrect(x,cx,by,Math.max(w-4,6),bh,16);x.fill();if(v[0]>.1){x.font="bold 38px "+FF;x.fillStyle="#fff";x.textAlign="center";x.fillText(pc(v[0]),cx+w/2,by+50)}cx+=w});
+  T("فوز "+tn(f[2])+"  |  تعادل  |  فوز "+tn(f[3]),by+135,28,"#94a3b8","600");
+  T("النتيجة الأرجح",by+250,34,"#94a3b8","600");T(sc[0][0],by+360,130,"#38bdf8");
+  T("الأهداف المتوقعة  "+o.lh.toFixed(1)+" - "+o.la.toFixed(1),by+450,42,"#e2e8f0");
+  T("تحليل إحصائي للتسلية وليس ضماناً لأي نتيجة",H-70,28,"#64748b","600");
+  c.toBlob(function(b){if(!b){toast("تعذّر إنشاء الصورة");return}var file=new File([b],"prediction.png",{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[file]}))navigator.share({files:[file]}).catch(function(){});
+    else{var u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="prediction.png";document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(u)},1500);toast("تم تجهيز الصورة، افتحها من التنزيلات")}},"image/png")}
+var L0=leagues();
+cur=L0.filter(function(k){return(D._fix||[]).some(function(f){return f[0]===k})})[0]||L0[0];
+try{var lt=localStorage.getItem("fb_tab");if(lt&&(L0.indexOf(lt)>=0||["TODAY","FAV","TBL","LOG","RES"].indexOf(lt)>=0))cur=lt}catch(e){}
+tabs();list();fillCust(cur);btR();
+$("list").addEventListener("click",function(e){if(e.target.closest&&e.target.closest(".clr")){$("q").value="";list()}});
+$("gr").onclick=function(){var h=document.querySelector("h1"),o=h.classList.toggle("open");this.setAttribute("aria-expanded",o)};
+$("list").addEventListener("click",function(e){var c=e.target.closest&&e.target.closest(".dchip");if(!c)return;var d=c.getAttribute("data-d");[].forEach.call($("list").querySelectorAll(".day"),function(x){if(x.getAttribute("data-d")===d)x.scrollIntoView({behavior:"smooth",block:"start"})})});
+window._lt=Date.now();document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-window._lt>6e5){window._lt=Date.now();ld(false)}});
+var PCT=1,BIG=0,DIP=null;try{PCT=localStorage.getItem("fb_pct")==="0"?0:1;BIG=localStorage.getItem("fb_big")==="1"?1:0}catch(e){}
+function applyUI(){var r=document.documentElement;r.classList.toggle("pct",!!PCT);r.classList.toggle("big",!!BIG);$("od2").textContent=PCT?"٪":"1.60";$("fs").textContent=BIG?"A−":"A+"}
+$("od2").onclick=function(){PCT=PCT?0:1;try{localStorage.setItem("fb_pct",PCT)}catch(e){}applyUI();toast(PCT?"عرض النسب المئوية فقط":"عرض النسب والأسعار")};
+$("fs").onclick=function(){BIG=BIG?0:1;try{localStorage.setItem("fb_big",BIG)}catch(e){}applyUI();toast(BIG?"خط أكبر":"الخط العادي")};
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();DIP=e;$("ins").hidden=false});
+$("ins").onclick=function(){if(DIP){DIP.prompt();DIP=null;$("ins").hidden=true}};
+window.addEventListener("offline",function(){toast("انقطع الاتصال، بتشوف آخر نسخة محفوظة")});
+window.addEventListener("online",function(){toast("رجع الاتصال");ld(false)});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")$("cust").open=false});
+function ago(t){var m=Math.round((Date.now()-Date.parse(t))/6e4);if(isNaN(m)||m<0)return"";return m<2?"الآن":m<60?"منذ "+m+" دقيقة":m<1440?"منذ "+Math.round(m/60)+" ساعة":"منذ "+Math.round(m/1440)+" يوم"}
+function fresh(){var e=$("sb");if(!e)return;var a=D._ts?ago(D._ts):"";e.textContent="تحليل احتمالي بنموذج Dixon-Coles"+(a?" • آخر تحديث "+a:"")}
+setInterval(function(){fresh();stl();if(!document.hidden&&!document.querySelector(".m.open")&&window.scrollY<200&&(leagues().indexOf(cur)>=0||cur==="TODAY"||cur==="FAV")&&document.activeElement!==$("q"))list()},6e4);
+setInterval(function(){if(!document.hidden)ld(false)},18e5);
+fresh();
+$("list").addEventListener("click",function(e){if(!(e.target.closest&&e.target.closest(".dayb")))return;var R=[];($("list").F||[]).forEach(function(f){var o=pr(f[0],f[2],f[3],false,fk(f));if(o)R.push([f,o,Math.max(o.w,o.d,o.l),cfOf(o)])});R.sort(function(a,b){return b[3]-a[3]});R=R.slice(0,5);if(!R.length){toast("مفيش مباريات للمشاركة");return}
+var t="🎯 أقوى توقعات القايمة\n\n"+R.map(function(r){var f=r[0],o=r[1],pi=[o.w,o.d,o.l].indexOf(r[2]),lb=pi===0?"فوز "+tn(f[2]):pi===1?"تعادل":"فوز "+tn(f[3]);return"⚽ "+tn(f[2])+" × "+tn(f[3])+"\n   الأرجح: "+lb+" ("+pc(r[2])+")"}).join("\n\n")+(D._bt&&D._bt.n?"\n\n📈 دقة النموذج السابقة: "+pc(D._bt.acc)+" على "+D._bt.n+" مباراة":"")+"\n\nتحليل إحصائي للتسلية وليس ضماناً لأي نتيجة.";
+if(navigator.share)navigator.share({text:t}).catch(function(){});else cp(t,"تم نسخ التوقعات، الصقها في واتساب")});
+applyUI();
+ld(false);showOb();
+</script>
+</body>
+</html>
