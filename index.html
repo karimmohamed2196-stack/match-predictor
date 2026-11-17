@@ -225,10 +225,10 @@ main>p.mut{margin-top:22px;padding-top:14px;border-top:1px solid var(--bd);line-
 #cust[open]>summary{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--bd)}
 #cust[open]>summary:before{content:"✕";order:2;margin-inline-start:auto;color:var(--mut)}
 .od div{font-size:12px}.od small{font-size:11.5px}.pb i{font-size:11.5px}.inj{font-size:12px}.c small{font-size:12px}.fav{padding:10px 12px;font-size:24px}.rrd>summary{min-height:40px;font-size:13px}.rrd .rr{margin-bottom:6px}.rel{display:block;margin-top:4px;font-size:11.5px;font-weight:700;color:var(--mut)}.rel.live{color:var(--r)}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:7px}h1{flex-wrap:wrap}#od2,#fs,#ins{height:38px;min-width:38px;display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:14px;font-weight:700;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:0 12px;color:var(--tx);cursor:pointer}#ins[hidden]{display:none!important}h1:not(.open) #od2,h1:not(.open) #fs,h1:not(.open) #ins{display:none}
-.pct .od b{display:none}.pct .od small{font-size:17px;font-weight:800;color:var(--tx);line-height:1.3}.pct .od div.pk small{color:var(--g)}html.big body{zoom:1.1}</style>
+.pct .od b{display:none}.pct .od small{font-size:17px;font-weight:800;color:var(--tx);line-height:1.3}.pct .od div.pk small{color:var(--g)}html.big body{zoom:1.1}.pb i{direction:ltr;unicode-bidi:isolate;white-space:nowrap;overflow:hidden}</style>
 </head>
 <body>
-<header><h1>⚽ متوقع المباريات <em>PRO</em><button id="gr" aria-label="الإعدادات" aria-expanded="false">⚙️</button><button id="ln" aria-label="لغة أسماء الفرق">EN</button><button id="tg" aria-label="تبديل المظهر">🌓</button><button id="hp" aria-label="شرح التطبيق">؟</button><button id="od2" aria-label="طريقة عرض الأرقام">٪</button><button id="fs" aria-label="حجم الخط">A+</button><button id="ins" aria-label="تثبيت التطبيق" hidden>📲</button></h1><p class="sub" id="sb">تحليل احتمالي بنموذج Dixon-Coles</p><div class="tb"><input id="q" type="search" placeholder="🔍 ابحث عن فريق (عربي أو English)" aria-label="بحث"><select id="so" aria-label="الترتيب"><option value="t">⏱ الترتيب حسب الوقت</option><option value="c">🎯 الأعلى ثقة أولاً</option><option value="h">🎯 ثقة عالية فقط</option><option value="g">⚽ الأكثر أهدافاً أولاً</option></select></div></header><div id="stk"><div id="stale" hidden></div><div id="tabs"></div></div>
+<header><h1>⚽ متوقع المباريات <em>PRO</em><button id="gr" aria-label="الإعدادات" aria-expanded="false">⚙️</button><button id="ln" aria-label="لغة أسماء الفرق">EN</button><button id="tg" aria-label="تبديل المظهر">🌓</button><button id="hp" aria-label="شرح التطبيق">؟</button><button id="od2" aria-label="طريقة عرض الأرقام">٪</button><button id="fs" aria-label="حجم الخط">A+</button><button id="ins" aria-label="تثبيت التطبيق" hidden>📲</button></h1><p class="sub" id="sb">تحليل احتمالي بنموذج Dixon-Coles</p><div class="tb"><input id="q" type="search" placeholder="🔍 ابحث عن فريق" aria-label="بحث"><select id="so" aria-label="الترتيب"><option value="t">⏱ الترتيب حسب الوقت</option><option value="c">🎯 الأعلى ثقة أولاً</option><option value="h">🎯 ثقة عالية فقط</option><option value="g">⚽ الأكثر أهدافاً أولاً</option></select></div></header><div id="stk"><div id="stale" hidden></div><div id="tabs"></div></div>
 <main>
 <div id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
 <details class="card" id="cust"><summary>⚖️ مقارنة ومباراة مخصصة (أي فريقين)</summary>
@@ -369,7 +369,7 @@ function detailAdv(code,h,a,neu,k){
 function sgH(o,h,a){var m=o.m,n=act(m).length;
   function blk(t,k,asc){return'<div class="sh2">'+t+'</div>'+[[h,"var(--gold)"],[a,"#a78bfa"]].map(function(x){var r=rank(m,x[0],k,asc),w=Math.max(6,(n-r+1)/n*100);return'<div class="sr"><span class="sn">'+esc(tn(x[0]))+'</span><span class="sb"><i style="width:'+w.toFixed(0)+'%;background:'+x[1]+'"></i></span><span class="rk" dir="ltr"><b style="color:'+x[1]+'">'+r+'</b><small>/'+n+'</small></span></div>'}).join("")}
   return'<div class="gt">💪 قوة الفريقين</div><div class="sg">'+blk("⚔️ الهجوم (من يسجّل أكثر)",0,false)+blk("🛡 الدفاع (من يستقبل أقل)",1,true)+'<p class="mut" style="margin:8px 0 0">المركز 1 = الأفضل بين '+n+' فريق. الشريط الأطول = الأقوى.</p></div>'}
-function pbH(o){var mx=Math.max(o.w,o.d,o.l);function z(v,c,l){return'<i'+(v===mx?' class="mx"':'')+' style="width:'+v*100+'%;background:var('+c+')">'+(v>.12?l+" "+pc(v):v>.04?l:'')+'</i>'}return z(o.w,'--g','م')+z(o.d,'--n','ت')+z(o.l,'--r','ض')}
+function pbH(o){var mx=Math.max(o.w,o.d,o.l);function z(v,c,l){return'<i'+(v===mx?' class="mx"':'')+' style="width:'+v*100+'%;background:var('+c+')">'+(v>.12?pc(v)+" "+l:v>.04?l:'')+'</i>'}return z(o.w,'--g','م')+z(o.d,'--n','ت')+z(o.l,'--r','ض')}
 function odH(o){var mx=Math.max(o.w,o.d,o.l);function z(l,v,p){return'<div'+(p&&v===mx?' class="pk"':'')+'>'+l+'<b>'+od(v)+'</b><small>'+pc(v)+'</small></div>'}return z('مضيف',o.w,1)+z('تعادل',o.d,1)+z('ضيف',o.l,1)+z('أكثر 2.5',o.o25,0)}
 function bd(n){return n?'<span class="inj">🩹 '+n+'</span>':''}
 function cairoOff(ms){try{var v=new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",timeZoneName:"shortOffset"}).formatToParts(new Date(ms)).filter(function(x){return x.type==="timeZoneName"})[0].value,m=/GMT([+-]\d+)/.exec(v);return m?+m[1]:2}catch(e){return 2}}
@@ -707,7 +707,5 @@ if(navigator.share)navigator.share({text:t}).catch(function(){});else cp(t,"تم
 applyUI();
 ld(false);showOb();
 </script>
-  <script async="async" data-cfasync="false" src="https://czernik.org/21/6f4d2845891bcd0351a3f0b11e1647cb"></script>
-<div id="container-6f4d2845891bcd0351a3f0b11e1647cb"></div>
 </body>
 </html>
