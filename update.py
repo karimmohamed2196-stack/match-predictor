@@ -14,9 +14,13 @@ XI, RIDGE, N = 0.0018, 1.0, 10          # time decay per day, ridge, goal grid
 MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 WD = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
 
+def decode(raw):
+    try: return raw.decode("utf-8-sig")
+    except UnicodeDecodeError: return raw.decode("latin-1")
+
 def get(url):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    return urllib.request.urlopen(req, timeout=60).read().decode("latin-1")
+    return decode(urllib.request.urlopen(req, timeout=60).read())
 
 def seasons(today):
     y = today.year if today.month >= 7 else today.year - 1
@@ -113,6 +117,9 @@ def backtest(data, today, weeks=12):
 
 def fixtures(today):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
+    df.columns = [str(c).strip().lstrip("\ufeff") for c in df.columns]
+    if "Div" not in df.columns:
+        print("fixtures columns:", list(df.columns)[:8]); df = df.rename(columns={df.columns[0]: "Div"})
     n0 = len(df); df = df[df["Div"].isin(LEAGUES)].dropna(subset=["Date","HomeTeam","AwayTeam"]); out = []; print("fixtures.csv rows:", n0, "ours:", len(df))
     for r in df.to_dict("records"):
         tm = r.get("Time") if isinstance(r.get("Time"), str) else "15:00"; d = None
