@@ -171,7 +171,7 @@ def main():
     except Exception as e: print("backtest failed:", e); 
     if "_bt" not in out and "_bt" in old: out["_bt"] = old["_bt"]
     strip = lambda j: {k: v for k, v in j.items() if k != "_ts"}
-    if strip(out) == strip(old): print("no change"); return
+    print("data unchanged, refreshing timestamp only" if strip(out) == strip(old) else "data changed")
     out["_ts"] = today.strftime("%Y-%m-%dT%H:%M:%SZ")
     json.dump(out, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     print("data.json written")

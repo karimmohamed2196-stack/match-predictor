@@ -627,8 +627,8 @@ function detail(code,h,a,neu,k){var o=pr(code,h,a,neu,k);if(!o)return detail0(co
   return simpleH(o,h,a,k)+'<details class="adv"'+(ADV?' open':'')+'><summary>🔬 تفاصيل متقدمة: الأسواق والأسعار والغيابات</summary>'+detailAdv(code,h,a,neu,k)+'</details>'}
 $("list").addEventListener("toggle",function(e){var d=e.target;if(d&&d.classList&&d.classList.contains("adv")){ADV=d.open;try{localStorage.setItem("fb_adv",ADV?"1":"0")}catch(x){}}},true);
 function accH(){var b=D._bt;if(!b||!b.n)return"";return'<div class="acc">📈 دقة النموذج الفعلية: <b>'+pc(b.acc)+'</b> في إصابة 1X2 على '+b.n+' مباراة سابقة (التخمين العشوائي 33%). ليست ضماناً لأي نتيجة.</div>'}
-function stl(){var e=$("stale");if(!e)return;var t=D._ts,old=t&&(Date.now()-Date.parse(t))/36e5>6,al=D._fix||[],allp=al.length&&al.every(past);
-  if(old||allp){e.hidden=false;e.textContent="⚠️ "+(allp?"كل المباريات المحفوظة انتهت":"البيانات قديمة")+(t?" (آخر تحديث "+t+")":"")+". التوقعات قد لا تعكس آخر الأخبار."}else e.hidden=true}
+function stl(){var e=$("stale");if(!e)return;var t=D._ts,old=t&&(Date.now()-Date.parse(t))/36e5>12,al=D._fix||[],allp=al.length&&al.every(past);
+  if(old||allp){e.hidden=false;e.textContent="⚠️ "+(allp?"كل المباريات المحفوظة انتهت":"البيانات قديمة")+(t?" (آخر تحديث منذ "+Math.round((Date.now()-Date.parse(t))/36e5)+" ساعة)":"")+". التوقعات قد لا تعكس آخر الأخبار."}else e.hidden=true}
 var _tt;function toast(m){var e=$("ts");e.textContent=m;e.className="show";clearTimeout(_tt);_tt=setTimeout(function(){e.className=""},2800)}
 function shareTxt(k){var f=fxOf(k);if(!f)return"";var o=pr(f[0],f[2],f[3],false,k);if(!o)return"";var sc=[],i,j;for(i=0;i<N;i++)for(j=0;j<N;j++)sc.push([i+"-"+j,o.M[i*N+j]]);sc.sort(function(x,y){return y[1]-x[1]});var p=f[1].split(" ");
   return"⚽ "+tn(f[2])+" × "+tn(f[3])+"\n🗓 "+(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2])+" • "+(p[3]||"")+" (توقيت القاهرة)\n📊 فوز "+tn(f[2])+" "+pc(o.w)+" • تعادل "+pc(o.d)+" • فوز "+tn(f[3])+" "+pc(o.l)+"\n🎯 النتيجة الأرجح: "+sc[0][0]+"\n⚽ الأهداف المتوقعة: "+o.lh.toFixed(1)+" - "+o.la.toFixed(1)+"\n\nتحليل إحصائي للتسلية والتعلّم وليس ضماناً لأي نتيجة. (متوقع المباريات PRO)"}
@@ -706,10 +706,6 @@ var t="🎯 أقوى توقعات القايمة\n\n"+R.map(function(r){var f=r[
 if(navigator.share)navigator.share({text:t}).catch(function(){});else cp(t,"تم نسخ التوقعات، الصقها في واتساب")});
 applyUI();
 ld(false);showOb();
-</script> 
-  <script data-cfasync="false" src="https://capitalhospitals.org/1/ad52099a13e8577d90c50c1b5e3b024b"></script>
-  <script async="async" data-cfasync="false" src="https://czernik.org/21/6f4d2845891bcd0351a3f0b11e1647cb"></script>
-<div id="container-6f4d2845891bcd0351a3f0b11e1647cb"></div>
+</script>
 </body>
 </html>
-
