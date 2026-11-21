@@ -53,11 +53,11 @@ def est_rho(lh, la, gh, ga, w):
         if l > bl: bl, best = l, r
     return round(float(best), 2)
 
-def fit(d, asof):
+def fit(d, asof, xi=None):
     teams = sorted(set(d.HomeTeam) | set(d.AwayTeam)); ix = {t:i for i,t in enumerate(teams)}; T = len(teams)
     h = d.HomeTeam.map(ix).values; a = d.AwayTeam.map(ix).values
     gh = d.FTHG.values.astype(float); ga = d.FTAG.values.astype(float)
-    w = np.exp(-XI*(asof - d.Date).dt.days.clip(lower=0).values)
+    w = np.exp(-(XI if xi is None else xi)*(asof - d.Date).dt.days.clip(lower=0).values)
     def f(p):
         mu, ha = p[0], p[1]; att = p[2:2+T]; de = p[2+T:]
         eh = mu+ha+att[h]+de[a]; ea = mu+att[a]+de[h]; lh = np.exp(eh); la = np.exp(ea)
@@ -78,42 +78,93 @@ def fit(d, asof):
 
 def sw(n): return min(1.0, (n/(n+20))/0.75)          # same small-sample shrinkage as the app
 
-def wdl(lh, la, rho):
+def grid(lh, la, rho):
     k = np.arange(N); lg = np.array([math.lgamma(i+1) for i in k])
     p = np.exp(-lh+k*np.log(lh)-lg); q = np.exp(-la+k*np.log(la)-lg); M = np.outer(p, q)
     M[0,0]*=1-lh*la*rho; M[0,1]*=1+lh*rho; M[1,0]*=1+la*rho; M[1,1]*=1-rho
-    M /= M.sum(); w = np.tril(M,-1).sum(); dr = np.trace(M)
+    return M / M.sum()
+
+def wdl(lh, la, rho):
+    M = grid(lh, la, rho); w = np.tril(M,-1).sum(); dr = np.trace(M)
     return w, dr, 1-w-dr
 
-def predict(m, ht, at):
+def lams(m, ht, at, k=1.0):
     if ht not in m["att"] or at not in m["att"]: return None
     sh, sa = sw(m["n"][ht]), sw(m["n"][at])
-    lh = math.exp(m["mu"]+m["ha"]+m["att"][ht]*sh+m["def"][at]*sa)
-    la = math.exp(m["mu"]+m["att"][at]*sa+m["def"][ht]*sh)
-    return wdl(lh, la, m["rho"])
+    return (math.exp(m["mu"]+m["ha"]+(m["att"][ht]*sh+m["def"][at]*sa)*k),
+            math.exp(m["mu"]+(m["att"][at]*sa+m["def"][ht]*sh)*k))
+
+def predict(m, ht, at):
+    L = lams(m, ht, at)
+    return None if L is None else wdl(L[0], L[1], m["rho"])
 
 def rps(p, y):
     o = [0,0,0]; o[y] = 1
     return 0.5*((p[0]-o[0])**2 + (p[0]+p[1]-o[0]-o[1])**2)
 
+S = np.add.outer(np.arange(N), np.arange(N))
+CONF_EDGES = [0.0, 0.45, 0.55, 0.65, 1.01]      # 1X2 top-probability buckets
+DC_EDGES = [0.0, 0.65, 0.75, 0.85, 1.01]        # double-chance buckets
+
+def bucket(edges, v):
+    for i in range(len(edges)-1):
+        if edges[i] <= v < edges[i+1]: return i
+    return len(edges)-2
+
+XIS = [0.0010, 0.0018, 0.0030]      # time-decay candidates (per day)
+KS = [0.80, 0.90, 1.00, 1.10]       # global strength scale (<1 = less extreme probabilities)
+DEFAULT = (0.0018, 1.00)
+
 def backtest(data, today, weeks=12):
-    W, hits, R, B, n = [], 0, 0.0, 0.0, 0
-    for k in range(weeks, 0, -1):
-        end = today - dt.timedelta(days=7*(k-1)); start = end - dt.timedelta(days=7); wh = wn = 0
+    """Fit once per (week, league, xi); score each (xi, k); keep the best only if it beats the default by a margin."""
+    pack = {xi: [] for xi in XIS}; W = {}
+    for wk in range(weeks, 0, -1):
+        end = today - dt.timedelta(days=7*(wk-1)); start = end - dt.timedelta(days=7)
         for code, d in data.items():
             tr = d[d.Date < start]; te = d[(d.Date >= start) & (d.Date < end)]
             if len(te) == 0 or len(tr) < 300: continue
-            m = fit(tr, start)
             fr = [(tr.FTHG>tr.FTAG).mean(), (tr.FTHG==tr.FTAG).mean(), (tr.FTHG<tr.FTAG).mean()]
+            for xi in XIS: pack[xi].append((wk, fit(tr, start, xi), te, fr))
+    def yof(r): return 0 if r.FTHG > r.FTAG else 1 if r.FTHG == r.FTAG else 2
+    def score(xi, k):
+        R = n = 0
+        for wk, m, te, fr in pack[xi]:
             for r in te.itertuples():
-                p = predict(m, r.HomeTeam, r.AwayTeam)
-                if p is None: continue
-                y = 0 if r.FTHG > r.FTAG else 1 if r.FTHG == r.FTAG else 2
-                ok = int(np.argmax(p) == y); wh += ok; wn += 1; hits += ok; n += 1
-                R += rps(p, y); B += rps(fr, y)
-        if wn >= 10: W.append({"acc": round(wh/wn, 3)})
-    if not n: return None
-    return {"n": n, "acc": round(hits/n, 3), "rps": round(R/n, 4), "base_rps": round(B/n, 4), "weeks": W}
+                L = lams(m, r.HomeTeam, r.AwayTeam, k)
+                if L is None: continue
+                R += rps(wdl(L[0], L[1], m["rho"]), yof(r)); n += 1
+        return R/n if n else None
+    sc = {(xi, k): score(xi, k) for xi in XIS for k in KS}
+    ds = sc.get(DEFAULT)
+    ok = [(v, c) for c, v in sc.items() if v is not None]
+    if not ok: return None, {"xi": DEFAULT[0], "k": DEFAULT[1]}
+    bv, bc = min(ok)
+    if ds is None or bv > ds - 0.001: bc = DEFAULT          # not clearly better: keep the default
+    xi, k = bc
+    hits = n = 0; R = B = 0.0; byw = {}
+    cf = [[0,0] for _ in CONF_EDGES[:-1]]; dcf = [[0,0] for _ in DC_EDGES[:-1]]
+    mk = {q: [0,0] for q in ("dc","o15","o25","btts")}
+    for wk, m, te, fr in pack[xi]:
+        wh = wn = 0
+        for r in te.itertuples():
+            L = lams(m, r.HomeTeam, r.AwayTeam, k)
+            if L is None: continue
+            M = grid(L[0], L[1], m["rho"]); w = np.tril(M,-1).sum(); dr = np.trace(M); p = (w, dr, 1-w-dr); y = yof(r)
+            ok1 = int(np.argmax(p) == y); wh += ok1; wn += 1; hits += ok1; n += 1; R += rps(p, y); B += rps(fr, y)
+            i = bucket(CONF_EDGES, max(p)); cf[i][0] += 1; cf[i][1] += ok1
+            pairs = [p[0]+p[1], p[0]+p[2], p[1]+p[2]]; j = int(np.argmax(pairs))
+            okdc = int(y in ((0,1),(0,2),(1,2))[j]); mk["dc"][0] += 1; mk["dc"][1] += okdc
+            i = bucket(DC_EDGES, pairs[j]); dcf[i][0] += 1; dcf[i][1] += okdc
+            g = int(r.FTHG + r.FTAG)
+            for name, pr_, real in (("o15", M[S>=2].sum(), g>=2), ("o25", M[S>=3].sum(), g>=3), ("btts", M[1:,1:].sum(), r.FTHG>0 and r.FTAG>0)):
+                mk[name][0] += 1; mk[name][1] += int((pr_ > 0.5) == bool(real))
+        a_, b_ = byw.get(wk, (0, 0)); byw[wk] = (a_+wh, b_+wn)
+    Wk = [{"acc": round(a/b, 3)} for wk, (a, b) in sorted(byw.items(), reverse=True) if b >= 10]
+    if not n: return None, {"xi": xi, "k": k}
+    tbl = lambda E, A: [{"lo": E[i], "hi": min(E[i+1], 1.0), "n": a[0], "acc": round(a[1]/a[0], 3) if a[0] else None} for i, a in enumerate(A)]
+    return ({"n": n, "acc": round(hits/n, 3), "rps": round(R/n, 4), "base_rps": round(B/n, 4), "rps_default": round(ds, 4) if ds else None,
+             "tuned": bc != DEFAULT, "weeks": Wk, "conf": tbl(CONF_EDGES, cf), "dc_conf": tbl(DC_EDGES, dcf),
+             "mkts": {q: {"n": v[0], "acc": round(v[1]/v[0], 3)} for q, v in mk.items() if v[0]}}, {"xi": xi, "k": k})
 
 def fixtures(today):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
@@ -154,22 +205,27 @@ def main():
     old = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
     try: fx = fixtures(today)
     except Exception as e: print("fixtures failed:", e); fx = old.get("_fix", [])
-    out, data, last, res, ok = {}, {}, {}, {}, 0
+    data = {}
     for code in LEAGUES:
         d = load_league(code, today)
-        if d is None or len(d) < 200:
+        if d is not None and len(d) >= 200: data[code] = d
+    if not data: sys.exit("no league updated; keeping old data.json")
+    bt, cfg = None, {"xi": DEFAULT[0], "k": DEFAULT[1]}
+    try: bt, cfg = backtest(data, today)
+    except Exception as e: print("backtest failed:", e)
+    print("model config:", cfg, "| tuned:", bool(bt and bt.get("tuned")))
+    globals()["XI"] = cfg["xi"]
+    out, last, res = {}, {}, {}
+    for code in LEAGUES:
+        if code not in data:
             if code in old: out[code] = old[code]
             continue
         ft = {x for f in fx if f[0]==code for x in (f[2], f[3])}
-        out[code], l, r = build_league(code, d, today, ft); last.update(l); res.update(r); data[code] = d; ok += 1
+        out[code], l, r = build_league(code, data[code], today, ft); last.update(l); res.update(r)
         print(code, "teams", len(out[code]["teams"]), "rho", out[code]["rho"])
-    if not ok: sys.exit("no league updated; keeping old data.json")
-    out["_fix"] = fx or old.get("_fix", []); out["_last"] = last; out["_res"] = res
-    try:
-        bt = backtest(data, today)
-        if bt: out["_bt"] = bt
-    except Exception as e: print("backtest failed:", e); 
-    if "_bt" not in out and "_bt" in old: out["_bt"] = old["_bt"]
+    out["_fix"] = fx or old.get("_fix", []); out["_last"] = last; out["_res"] = res; out["_cfg"] = cfg
+    if bt: out["_bt"] = bt
+    elif "_bt" in old: out["_bt"] = old["_bt"]
     strip = lambda j: {k: v for k, v in j.items() if k != "_ts"}
     print("data unchanged, refreshing timestamp only" if strip(out) == strip(old) else "data changed")
     out["_ts"] = today.strftime("%Y-%m-%dT%H:%M:%SZ")
