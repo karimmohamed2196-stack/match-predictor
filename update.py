@@ -166,6 +166,8 @@ def backtest(data, today, weeks=12):
              "tuned": bc != DEFAULT, "weeks": Wk, "conf": tbl(CONF_EDGES, cf), "dc_conf": tbl(DC_EDGES, dcf),
              "mkts": {q: {"n": v[0], "acc": round(v[1]/v[0], 3)} for q, v in mk.items() if v[0]}}, {"xi": xi, "k": k})
 
+KO = {}
+
 def fixtures(today):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
     df.columns = [str(c).strip().lstrip("\ufeff") for c in df.columns]
@@ -179,6 +181,7 @@ def fixtures(today):
             except ValueError: pass
         if d is None: continue
         t = d.replace(tzinfo=ZoneInfo("Europe/London")).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
+        KO[(r["Div"], r["HomeTeam"], r["AwayTeam"])] = d.replace(tzinfo=ZoneInfo("Europe/London")).astimezone(dt.timezone.utc).replace(tzinfo=None)
         if t.date() < today.date() or t.date() > today.date()+dt.timedelta(days=14): continue
         out.append((t, [r["Div"], f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r["HomeTeam"], r["AwayTeam"]]))
     out.sort(key=lambda x: x[0]); print("fixtures kept:", len(out)); return [x[1] for x in out]
@@ -199,6 +202,60 @@ def build_league(code, d, today, fix_teams):
     res = {f"{code}|{r.HomeTeam}|{r.AwayTeam}": [int(r.FTHG), int(r.FTAG)]
            for r in d[d.Date >= today-dt.timedelta(days=21)].itertuples()}
     return {"mu": round(m["mu"],4), "ha": round(m["ha"],4), "rho": m["rho"], "teams": teams}, last, res
+
+
+def blk_pred(blk, h, a, k):
+    T = blk["teams"]
+    if h not in T or a not in T: return None
+    sh, sa = sw(T[h][3]), sw(T[a][3])
+    lh = math.exp(blk["mu"]+blk["ha"]+(T[h][0]*sh+T[a][1]*sa)*k); la = math.exp(blk["mu"]+(T[a][0]*sa+T[h][1]*sh)*k)
+    M = grid(lh, la, blk["rho"]); w = float(np.tril(M,-1).sum()); dr = float(np.trace(M))
+    return [round(w,4), round(dr,4), round(1-w-dr,4)], round(float(M[S>=3].sum()),4), round(float(M[1:,1:].sum()),4)
+
+def new_agg():
+    return {"n": 0, "hits": 0, "br": 0.0, "conf": [[0,0] for _ in CONF_EDGES[:-1]], "dc": [0,0], "o25": [0,0], "bt": [0,0], "lg": {}}
+
+def agg_add(A, e):
+    p, r = e["p"], e["r"]; y = 0 if r[0] > r[1] else 1 if r[0] == r[1] else 2; ok = int(int(np.argmax(p)) == y)
+    A["n"] += 1; A["hits"] += ok; A["br"] += sum((p[i] - (1 if i == y else 0))**2 for i in range(3))
+    i = bucket(CONF_EDGES, max(p)); A["conf"][i][0] += 1; A["conf"][i][1] += ok
+    pairs = [p[0]+p[1], p[0]+p[2], p[1]+p[2]]; j = int(np.argmax(pairs))
+    A["dc"][0] += 1; A["dc"][1] += int(y in ((0,1),(0,2),(1,2))[j])
+    g = r[0] + r[1]; A["o25"][0] += 1; A["o25"][1] += int((e["o25"] > 0.5) == (g >= 3))
+    A["bt"][0] += 1; A["bt"][1] += int((e["bt"] > 0.5) == (r[0] > 0 and r[1] > 0))
+    lg = A["lg"].setdefault(e["f"][0], [0,0]); lg[0] += 1; lg[1] += ok
+
+def agg_stats(A):
+    n = A["n"]; f = lambda c: {"n": c[0], "acc": round(c[1]/c[0], 3) if c[0] else None}
+    return {"n": n, "hits": A["hits"], "acc": round(A["hits"]/n, 3) if n else None, "brier": round(A["br"]/n, 3) if n else None,
+            "conf": [{"lo": CONF_EDGES[i], "hi": min(CONF_EDGES[i+1], 1.0), "n": c[0], "acc": round(c[1]/c[0], 3) if c[0] else None} for i, c in enumerate(A["conf"])],
+            "mkts": {"dc": f(A["dc"]), "o25": f(A["o25"]), "btts": f(A["bt"])}, "lg": {k: f(v) for k, v in A["lg"].items()}}
+
+def log_update(old, out, data, fx, cfg, today):
+    """Freeze each prediction before kickoff, attach the real result afterwards, and keep running statistics."""
+    L = old or {}
+    O = L.get("open", {}); A = L.get("agg") or new_agg(); R = L.get("recent", []); since = L.get("since")
+    sc = seasons(today)[0][0]
+    for f in fx:                                    # 1) record new upcoming matches (prediction is frozen now)
+        code, h, a = f[0], f[2], f[3]; ko = KO.get((code, h, a))
+        if not ko or ko <= today or code not in out: continue
+        key = f"{code}|{h}|{a}|{sc}"
+        if key in O: continue
+        pr_ = blk_pred(out[code], h, a, cfg["k"])
+        if pr_ is None: continue
+        O[key] = {"f": f, "ko": ko.strftime("%Y-%m-%dT%H:%MZ"), "p": pr_[0], "o25": pr_[1], "bt": pr_[2]}
+        since = since or ko.strftime("%Y-%m-%d")
+    for key in list(O):                             # 2) attach results of finished matches
+        e = O[key]; ko = dt.datetime.strptime(e["ko"], "%Y-%m-%dT%H:%MZ"); d = data.get(e["f"][0])
+        if ko > today: continue
+        if (today - ko).days > 30: del O[key]; continue          # postponed or never found: drop quietly
+        if d is None: continue
+        day = pd.Timestamp(ko.date())
+        rows = d[(d.HomeTeam == e["f"][2]) & (d.AwayTeam == e["f"][3]) & (d.Date >= day - pd.Timedelta(days=1)) & (d.Date <= day + pd.Timedelta(days=5))]
+        if len(rows):
+            r0 = rows.iloc[0]; e["r"] = [int(r0.FTHG), int(r0.FTAG)]; agg_add(A, e); R.insert(0, e); del O[key]
+    R = sorted(R, key=lambda e: e["ko"], reverse=True)[:40]
+    return {"open": O, "agg": A, "recent": R, "since": since, "pending": len(O), "stats": agg_stats(A)}
 
 def main():
     today = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)
@@ -224,6 +281,9 @@ def main():
         out[code], l, r = build_league(code, data[code], today, ft); last.update(l); res.update(r)
         print(code, "teams", len(out[code]["teams"]), "rho", out[code]["rho"])
     out["_fix"] = fx or old.get("_fix", []); out["_last"] = last; out["_res"] = res; out["_cfg"] = cfg
+    try: out["_log"] = log_update(old.get("_log"), out, data, fx, cfg, today)
+    except Exception as e:
+        print("log failed:", e); out["_log"] = old.get("_log")
     if bt: out["_bt"] = bt
     elif "_bt" in old: out["_bt"] = old["_bt"]
     strip = lambda j: {k: v for k, v in j.items() if k != "_ts"}
