@@ -179,21 +179,26 @@ ESPN_ROOT = "https://site.api.espn.com/apis/site/v2/sports/soccer/"
 HISTORY_DAYS = 540                      # first run: how far back to fetch (later runs only fetch the last few days)
 _SLUG, _ALL, _OLD_XH, _NEW_XH, _ERR = {}, [], {}, {}, []
 
+def espn_probe(slug):
+    """True if ESPN answers for this slug. Some leagues (e.g. egy.1) reject the date-less scoreboard, so also try dated requests."""
+    d = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)
+    urls = [f"{ESPN_ROOT}{slug}/scoreboard?dates={(d - dt.timedelta(days=n)):%Y%m%d}" for n in (0, 14, 60)] + [f"{ESPN_ROOT}{slug}/scoreboard"]
+    for u in urls:
+        try: get(u); return True
+        except Exception as e: print("espn probe failed:", u[len(ESPN_ROOT):], e)
+    return False
+
 def espn_slug(code):
     if code in _SLUG: return _SLUG[code]
     first, prefix = ESPN_LEAGUES[code]; _SLUG[code] = None
-    try:
-        get(f"{ESPN_ROOT}{first}/scoreboard"); _SLUG[code] = first; print(code, "espn slug ok:", first); return first
-    except Exception as e: print(code, "espn slug failed:", first, e)
+    if espn_probe(first): _SLUG[code] = first; print(code, "espn slug ok:", first); return first
     try:
         if not _ALL:
             j = json.loads(get("https://sports.core.api.espn.com/v2/sports/soccer/leagues?limit=1000"))
             _ALL.extend(it.get("$ref", "").split("/leagues/")[-1].split("?")[0] for it in j.get("items", []))
         found = [x for x in _ALL if x.lower().startswith(prefix)]; print(code, "espn leagues found:", found)
         for c in found:
-            try:
-                get(f"{ESPN_ROOT}{c}/scoreboard"); _SLUG[code] = c; print(code, "espn slug ok:", c); return c
-            except Exception as e: print(code, "espn slug failed:", c, e)
+            if espn_probe(c): _SLUG[code] = c; print(code, "espn slug ok:", c); return c
     except Exception as e: print(code, "espn league list failed:", e)
     return None
 
