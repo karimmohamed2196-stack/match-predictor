@@ -27,6 +27,7 @@ def seasons(today):
     return [f"{(y-i)%100:02d}{(y-i+1)%100:02d}" for i in range(3)], dt.datetime(y, 7, 1)
 
 def load_league(code, today):
+    if code in X365: return load_x365(code, today)
     if code in ESPN_LEAGUES: return load_espn(code, today)
     frames = []
     for s in seasons(today)[0]:
@@ -174,7 +175,7 @@ KO = {}
 # code -> (ESPN slug to try first, prefix used to search ESPN's league list if that slug fails)
 import time, urllib.error
 from concurrent.futures import ThreadPoolExecutor
-ESPN_LEAGUES = {"EGY": ("egy.1", "egy"), "KSA": ("ksa.1", "ksa"), "UCL": ("uefa.champions", "uefa.champions"), "UEL": ("uefa.europa", "uefa.europa")}
+ESPN_LEAGUES = {"KSA": ("ksa.1", "ksa"), "UCL": ("uefa.champions", "uefa.champions"), "UEL": ("uefa.europa", "uefa.europa")}
 ESPN_ROOT = "https://site.api.espn.com/apis/site/v2/sports/soccer/"
 HISTORY_DAYS = 540                      # first run: how far back to fetch (later runs only fetch the last few days)
 _SLUG, _ALL, _OLD_XH, _NEW_XH, _ERR = {}, [], {}, {}, []
@@ -276,6 +277,101 @@ def espn_fixtures(code, today):
         out.append((t, [code, f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[0], r[1]]))
     print(code, "fixtures:", len(out)); return out
 
+# ---------------- Egyptian league via 365Scores public web API (ESPN has no data for it) ----------------
+X365 = {"EGY": 552}
+X365_ROOT = "https://webws.365scores.com"
+X365_Q = "appTypeId=5&langId=1&timezoneName=Africa/Cairo&userCountryId=21&sports=1&showOdds=false"
+EGY_ALIAS = {
+    "al ahly": "Al Ahly", "ahly": "Al Ahly", "zamalek": "Zamalek", "pyramids": "Pyramids", "al masry": "Al Masry", "masry": "Al Masry", "el masry": "Al Masry",
+    "al ittihad alexandria": "Al Ittihad", "ittihad alexandria": "Al Ittihad", "al ittihad al sakandary": "Al Ittihad", "al ittihad": "Al Ittihad", "ittihad": "Al Ittihad",
+    "ismaily": "Ismaily", "al ismaily": "Ismaily", "ceramica cleopatra": "Ceramica Cleopatra", "modern sport": "Modern Sport", "modern future": "Modern Future", "future": "Future FC",
+    "enppi": "ENPPI", "eastern company": "ENPPI", "al sharqiya enppi": "ENPPI", "eastern enppi": "ENPPI", "smouha": "Smouha", "zed": "Zed",
+    "al mokawloon al arab": "Al Mokawloon", "arab contractors": "Al Mokawloon", "al mokawloon": "Al Mokawloon", "pharco": "Pharco", "petrojet": "Petrojet", "suez petrojet": "Petrojet",
+    "national bank of egypt": "National Bank of Egypt", "nbe": "National Bank of Egypt", "nbe club": "National Bank of Egypt", "el gouna": "El Gouna", "gouna": "El Gouna",
+    "haras el hodoud": "Haras El Hodoud", "haras el-hodoud": "Haras El Hodoud", "ghazl el mahalla": "Ghazl El Mahalla", "ghazl el-mehalla": "Ghazl El Mahalla", "ghazl el mehalla": "Ghazl El Mahalla",
+    "tala'ea el gaish": "Tala'ea El-Gaish", "tala'ea el-gaish": "Tala'ea El-Gaish", "el geish": "Tala'ea El-Gaish", "el gaish": "Tala'ea El-Gaish",
+    "telephonat beni suef": "Telephonat Beni Suef", "kahrabaa ismailia": "Kahrabaa Ismailia", "el entag el harby": "El Entag El Harby", "baladiyat el mahalla": "Baladiyat El Mahalla",
+    "asyut petroleum": "Asyut Petroleum", "abu qir fertilizers": "Abu Qair Semad", "abu qair semad": "Abu Qair Semad", "canal": "Canal SC",
+}
+
+def egy_name(n):
+    n = (n or "").strip(); k = n.lower()
+    for _ in range(3):
+        for suf in (" sc", " fc", " club"):
+            if k.endswith(suf): k = k[:-len(suf)].strip(); n = n[:-len(suf)].strip()
+    return EGY_ALIAS.get(k, n)
+
+def x365_get(path):
+    url = path if path.startswith("http") else X365_ROOT + path
+    hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+           "Origin": "https://www.365scores.com", "Referer": "https://www.365scores.com/", "Accept": "application/json"}
+    for i in range(3):
+        try: return json.loads(decode(urllib.request.urlopen(urllib.request.Request(url, headers=hdr), timeout=60).read()))
+        except Exception as e:
+            if i < 2: time.sleep(2 * (i + 1)); continue
+            raise
+
+def x365_parse(g):
+    """-> (home, away, home_score, away_score, finished, kickoff_utc_naive, bad) or None"""
+    hc, ac = g.get("homeCompetitor") or {}, g.get("awayCompetitor") or {}
+    h, a = egy_name(hc.get("name")), egy_name(ac.get("name"))
+    if not h or not a: return None
+    try:
+        u = dt.datetime.fromisoformat(str(g.get("startTime")).replace("Z", "+00:00"))
+        if u.tzinfo: u = u.astimezone(dt.timezone.utc).replace(tzinfo=None)
+    except Exception: return None
+    st = str(g.get("statusText", "")).lower()
+    bad = any(w in st for w in ("postpon", "cancel", "abandon", "suspend"))
+    hs, as_ = hc.get("score"), ac.get("score")
+    ok = g.get("statusGroup") == 4 and hs is not None and as_ is not None and float(hs) >= 0 and float(as_) >= 0
+    return h, a, hs, as_, ok, u, bad
+
+def load_x365(code, today):
+    cid = X365[code]; old = xh_unpack(_OLD_XH.get(code)); rows = {(r[0], r[1], r[2]): r for r in old}
+    start = (dt.datetime.strptime(max(r[0] for r in old), "%Y-%m-%d") - dt.timedelta(days=5)) if old else today - dt.timedelta(days=HISTORY_DAYS)
+    cut_s = start.strftime("%Y-%m-%d"); url = f"/web/games/results/?{X365_Q}&competitions={cid}"; earliest = None
+    for page in range(40):
+        try: j = x365_get(url)
+        except Exception as e: print(code, "365 results failed:", str(e)[:80]); break
+        games = j.get("games") or []; days = []
+        for g in games:
+            r = x365_parse(g)
+            if not r or not r[4] or r[6]: continue
+            day = r[5].strftime("%Y-%m-%d"); days.append(day); rows[(day, r[0], r[1])] = (day, r[0], r[1], int(float(r[2])), int(float(r[3])))
+        pmin = min(days) if days else None
+        print(code, "365 page", page, "games:", len(games), "finished:", len(days), "oldest:", pmin)
+        if pmin is None or (earliest is not None and pmin >= earliest) or pmin < cut_s: break
+        earliest = pmin; url = (j.get("paging") or {}).get("nextPage")
+        if not url: break
+    keep = sorted(rows.values(), key=lambda r: r[0])
+    cut = (today - dt.timedelta(days=1100)).strftime("%Y-%m-%d"); keep = [r for r in keep if r[0] >= cut]
+    print(code, "matches loaded:", len(keep), "(from cache:", len(old), ")")
+    if not keep: return None
+    _NEW_XH[code] = xh_pack(keep)
+    d = pd.DataFrame(keep, columns=["Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG"]); d["Date"] = pd.to_datetime(d["Date"])
+    return d.sort_values("Date").reset_index(drop=True)
+
+def x365_fixtures(code, today):
+    cid = X365[code]; url = f"/web/games/fixtures/?{X365_Q}&competitions={cid}"; out, seen, latest = [], set(), None
+    for page in range(4):
+        try: j = x365_get(url)
+        except Exception as e: print(code, "365 fixtures request failed:", str(e)[:80]); break
+        games = j.get("games") or []; pmax = None
+        for g in games:
+            r = x365_parse(g)
+            if not r or r[4] or r[6]: continue
+            u = r[5]; pmax = u if pmax is None or u > pmax else pmax
+            if u < today - dt.timedelta(hours=3) or u > today + dt.timedelta(days=15) or (r[0], r[1], u) in seen: continue
+            seen.add((r[0], r[1], u))
+            t = u.replace(tzinfo=dt.timezone.utc).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
+            KO[(code, r[0], r[1])] = u
+            out.append((t, [code, f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[0], r[1]]))
+        print(code, "365 fixtures page", page, "games:", len(games), "kept so far:", len(out))
+        if pmax is None or (latest is not None and pmax <= latest) or pmax > today + dt.timedelta(days=15): break
+        latest = pmax; url = (j.get("paging") or {}).get("nextPage")
+        if not url: break
+    print(code, "fixtures:", len(out)); return out
+
 def fixtures(today):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
     df.columns = [str(c).strip().lstrip("\ufeff") for c in df.columns]
@@ -295,6 +391,9 @@ def fixtures(today):
     for _c in ESPN_LEAGUES:
         try: out += espn_fixtures(_c, today)
         except Exception as e: print(_c, "fixtures failed:", e)
+    for _c in X365:
+        try: out += x365_fixtures(_c, today)
+        except Exception as e: print(_c, "365 fixtures failed:", e)
     out.sort(key=lambda x: x[0]); print("fixtures kept:", len(out)); return [x[1] for x in out]
 
 def build_league(code, d, today, fix_teams):
