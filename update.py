@@ -27,7 +27,7 @@ def seasons(today):
     return [f"{(y-i)%100:02d}{(y-i+1)%100:02d}" for i in range(3)], dt.datetime(y, 7, 1)
 
 def load_league(code, today):
-    if code in ESPN_LEAGUES: return load_espn(code, today)
+    if code in EXTRA: return load_extra(code, today)
     frames = []
     for s in seasons(today)[0]:
         try:
@@ -170,77 +170,80 @@ def backtest(data, today, weeks=12):
 KO = {}
 
 
-# ---------------- Extra leagues via ESPN public API (no key) ----------------
-# code -> (ESPN slug to try first, prefix used to search ESPN's league list if that slug fails)
-ESPN_LEAGUES = {"EGY": ("egy.1", "egy"), "KSA": ("ksa.1", "ksa"), "UCL": ("uefa.champions", "uefa.champions"), "UEL": ("uefa.europa", "uefa.europa")}
-ESPN_ROOT = "https://site.api.espn.com/apis/site/v2/sports/soccer/"
-_SLUG, _ALL = {}, []
+# ---------------- Extra leagues via TheSportsDB (free key "3", no signup) ----------------
+import time, urllib.error
+TSDB = "https://www.thesportsdb.com/api/v1/json/3/"
+EXTRA = {"EGY": 4829, "KSA": 4668, "UCL": 4480, "UEL": 4481}     # TheSportsDB league ids
+_T0, _EV = [0.0], {}
 
-def espn_slug(code):
-    if code in _SLUG: return _SLUG[code]
-    import json as _j
-    first, prefix = ESPN_LEAGUES[code]; _SLUG[code] = None
-    try:
-        get(f"{ESPN_ROOT}{first}/scoreboard"); _SLUG[code] = first; print(code, "espn slug ok:", first); return first
-    except Exception as e: print(code, "espn slug failed:", first, e)
-    try:
-        if not _ALL:
-            j = _j.loads(get("https://sports.core.api.espn.com/v2/sports/soccer/leagues?limit=1000"))
-            _ALL.extend(it.get("$ref", "").split("/leagues/")[-1].split("?")[0] for it in j.get("items", []))
-        found = [x for x in _ALL if x.lower().startswith(prefix)]; print(code, "espn leagues found:", found)
-        for c in found:
-            try:
-                get(f"{ESPN_ROOT}{c}/scoreboard"); _SLUG[code] = c; print(code, "espn slug ok:", c); return c
-            except Exception as e: print(code, "espn slug failed:", c, e)
-    except Exception as e: print(code, "espn league list failed:", e)
-    return None
+def tsdb(path):
+    """GET with the free key's rate limit (about 30 requests/minute) respected."""
+    wait = 2.2 - (time.time() - _T0[0])
+    if wait > 0: time.sleep(wait)
+    for i in range(2):
+        _T0[0] = time.time()
+        try: return json.loads(get(TSDB + path))
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and i == 0: print("tsdb 429, waiting 30s"); time.sleep(30); continue
+            raise
 
-def espn_events(code, a, b):
-    """All events of league `code` between dates a and b (inclusive), fetched in 28-day chunks."""
-    import json as _j
-    slug = espn_slug(code)
-    if not slug: return []
-    out, cur = [], a
-    while cur <= b:
-        end = min(cur + dt.timedelta(days=27), b)
-        url = f"{ESPN_ROOT}{slug}/scoreboard?dates={cur:%Y%m%d}-{end:%Y%m%d}"
-        try: out += _j.loads(get(url)).get("events", [])
-        except Exception as e: print(code, "espn skip", cur.date(), e)
-        cur = end + dt.timedelta(days=1)
-    return out
+def tsdb_events(code, today):
+    """Events of one league: last 3 seasons + latest 15 + next 15 + each of the next 7 days (deduplicated)."""
+    if code in _EV: return _EV[code]
+    lid = EXTRA[code]; y = today.year if today.month >= 7 else today.year - 1
+    paths = [f"eventsseason.php?id={lid}&s={y-i}-{y-i+1}" for i in range(3)]
+    paths += [f"eventspastleague.php?id={lid}", f"eventsnextleague.php?id={lid}"]
+    paths += [f"eventsday.php?d={(today + dt.timedelta(days=i)):%Y-%m-%d}&l={lid}" for i in range(8)]
+    seen, out = set(), []
+    for pth in paths:
+        try: ev = tsdb(pth).get("events") or []
+        except Exception as e: print(code, "tsdb skip", pth.split("?")[0], e); continue
+        for e in ev:
+            k = e.get("idEvent") or (e.get("dateEvent"), e.get("strHomeTeam"), e.get("strAwayTeam"))
+            if k in seen: continue
+            seen.add(k); out.append(e)
+    names = {e.get("strLeague") for e in out if e.get("strLeague")}
+    print(code, "tsdb events:", len(out), "| leagues in data:", sorted(names)[:3])
+    _EV[code] = out; return out
 
-def espn_rows(ev):
-    c = (ev.get("competitions") or [{}])[0]; tm = c.get("competitors") or []
-    h = next((x for x in tm if x.get("homeAway") == "home"), None); a = next((x for x in tm if x.get("homeAway") == "away"), None)
+def tsdb_row(e):
+    h, a = e.get("strHomeTeam"), e.get("strAwayTeam")
     if not h or not a: return None
-    nm = lambda x: (x.get("team") or {}).get("shortDisplayName") or (x.get("team") or {}).get("displayName")
-    st = (ev.get("status") or {}).get("type") or {}
-    return nm(h), nm(a), h.get("score"), a.get("score"), bool(st.get("completed")), ev.get("date")
+    ts = e.get("strTimestamp") or ((e.get("dateEvent") or "") + " " + (e.get("strTime") or "00:00:00"))
+    try:
+        t = pd.to_datetime(ts)
+        if t.tzinfo is not None: t = t.tz_convert("UTC").tz_localize(None)
+        t = t.to_pydatetime()
+    except Exception: return None
+    st = (e.get("strStatus") or "").lower()
+    hs, as_ = e.get("intHomeScore"), e.get("intAwayScore")
+    bad = any(w in st for w in ("postpon", "cancel", "abandon", "suspend"))
+    done = hs not in (None, "") and as_ not in (None, "") and not bad
+    try: hg, ag = (int(hs), int(as_)) if done else (None, None)
+    except Exception: done, hg, ag = False, None, None
+    return t, h, a, hg, ag, done, bad
 
-def load_espn(code, today):
-    ss = seasons(today)[0]; y0 = 2000 + int(ss[-1][:2])        # oldest of the 3 seasons
+def load_extra(code, today):
     rows = []
-    for ev in espn_events(code, dt.datetime(y0, 7, 1), today):
-        r = espn_rows(ev)
-        if not r or not r[0] or not r[1] or not r[4] or r[2] in (None, "") or r[3] in (None, ""): continue
-        try: rows.append((pd.to_datetime(r[5]).tz_localize(None), r[0], r[1], int(r[2]), int(r[3])))
-        except Exception: continue
+    for e in tsdb_events(code, today):
+        r = tsdb_row(e)
+        if r and r[5] and r[0] <= today: rows.append((r[0], r[1], r[2], r[3], r[4]))
     print(code, "matches loaded:", len(rows))
     if not rows: return None
     d = pd.DataFrame(rows, columns=["Date","HomeTeam","AwayTeam","FTHG","FTAG"]).drop_duplicates(["Date","HomeTeam","AwayTeam"])
     return d.sort_values("Date").reset_index(drop=True)
 
-def espn_fixtures(code, today):
+def extra_fixtures(code, today):
     out = []
-    for ev in espn_events(code, today.replace(hour=0, minute=0), today + dt.timedelta(days=14)):
-        r = espn_rows(ev)
-        if not r or not r[0] or not r[1] or r[4]: continue
-        try: u = pd.to_datetime(r[5]).tz_localize(None).to_pydatetime()
-        except Exception: continue
+    for e in tsdb_events(code, today):
+        r = tsdb_row(e)
+        if not r or r[5] or r[6]: continue
+        u = r[0]
         if u < today - dt.timedelta(hours=3): continue
         t = u.replace(tzinfo=dt.timezone.utc).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
-        KO[(code, r[0], r[1])] = u
-        out.append((t, [code, f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[0], r[1]]))
+        if t.date() > today.date() + dt.timedelta(days=14): continue
+        KO[(code, r[1], r[2])] = u
+        out.append((t, [code, f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[1], r[2]]))
     print(code, "fixtures:", len(out)); return out
 
 def fixtures(today):
@@ -259,8 +262,8 @@ def fixtures(today):
         KO[(r["Div"], r["HomeTeam"], r["AwayTeam"])] = d.replace(tzinfo=ZoneInfo("Europe/London")).astimezone(dt.timezone.utc).replace(tzinfo=None)
         if t.date() < today.date() or t.date() > today.date()+dt.timedelta(days=14): continue
         out.append((t, [r["Div"], f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r["HomeTeam"], r["AwayTeam"]]))
-    for _c in ESPN_LEAGUES:
-        try: out += espn_fixtures(_c, today)
+    for _c in EXTRA:
+        try: out += extra_fixtures(_c, today)
         except Exception as e: print(_c, "fixtures failed:", e)
     out.sort(key=lambda x: x[0]); print("fixtures kept:", len(out)); return [x[1] for x in out]
 
