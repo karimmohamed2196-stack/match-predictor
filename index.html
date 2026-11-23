@@ -436,7 +436,7 @@ main>p.mut{text-align:center;color:var(--mut);opacity:.85;border-top-color:color
 
 
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.init({appId:"9873ca1b-1cbb-4bad-a473-c4c8a0a4301c",safari_web_id:"web.onesignal.auto.33b67024-44c4-4b60-aec5-91af5568c874",serviceWorkerPath:"match-predictor/push/onesignal/OneSignalSDKWorker.js",serviceWorkerParam:{scope:"/match-predictor/push/onesignal/"},notifyButton:{enable:false}})}catch(e){}});</script>
+<script>window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.init({appId:"9873ca1b-1cbb-4bad-a473-c4c8a0a4301c",safari_web_id:"web.onesignal.auto.33b67024-44c4-4b60-aec5-91af5568c874",serviceWorkerPath:"match-predictor/push/onesignal/OneSignalSDKWorker.js",serviceWorkerParam:{scope:"/match-predictor/push/onesignal/"},notifyButton:{enable:false}})}catch(e){window.OSERR=String(e&&e.message||e)}});</script>
 </head>
 <body>
 <div id="splash" aria-hidden="true"><svg class="sp-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 7.2l3.9 2.8-1.5 4.6H9.6L8.1 10z" fill="currentColor"/><path d="M12 7.2V1.7M15.9 10l5.2-1.7M14.4 14.6l3.2 4.4M9.6 14.6l-3.2 4.4M8.1 10L2.9 8.3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><div class="sp-t">متوقع المباريات</div><div class="sp-s">PRO</div></div>
@@ -987,7 +987,7 @@ function ntCheck(){if(!NT||typeof Notification==="undefined"||Notification.permi
   if(ch)try{localStorage.setItem("fb_nsent",JSON.stringify(NSENT))}catch(e){}}
 $("nt").onclick=function(){if(NT){NT=0;try{localStorage.setItem("fb_nt","0")}catch(e){}try{if(window.OneSignal&&OneSignal.User)OneSignal.User.PushSubscription.optOut()}catch(e){}ntUI();toast("اتقفلت التنبيهات");return}
   if(typeof Notification==="undefined"){toast("المتصفح ده مش بيدعم التنبيهات");return}
-  (window.OneSignal&&OneSignal.Notifications?OneSignal.Notifications.requestPermission().then(function(){try{OneSignal.User.PushSubscription.optIn()}catch(e){}return Notification.permission}):Notification.requestPermission()).then(function(p){if(p==="granted"){NT=1;try{localStorage.setItem("fb_nt","1")}catch(e){}ntUI();toast("اتفعّلت: هتتنبّه قبل مباريات مفضلتك بنص ساعة (والتطبيق مفتوح)");ntCheck()}else toast("لازم تسمح بالتنبيهات من إعدادات المتصفح")})};
+  (window.OneSignal&&OneSignal.Notifications?OneSignal.Notifications.requestPermission().then(function(){try{OneSignal.User.PushSubscription.optIn()}catch(e){}return Notification.permission}).catch(function(e){toast("OneSignal: "+(window.OSERR||(e&&e.message)||e));return Notification.requestPermission()}):(toast("مكتبة OneSignal لسه ما اتحمّلتش"+(window.OSERR?": "+window.OSERR:"")),Notification.requestPermission())).then(function(p){if(p==="granted"){NT=1;try{localStorage.setItem("fb_nt","1")}catch(e){}ntUI();toast("اتفعّلت: هتتنبّه قبل مباريات مفضلتك بنص ساعة (والتطبيق مفتوح)");ntCheck()}else toast("لازم تسمح بالتنبيهات من إعدادات المتصفح")})};
 /* عرض النتائج تلقائياً بعد انتهاء المباريات */
 var RSEEN=null,LASTLD=Date.now();
 function rsLoad(){try{var s=localStorage.getItem("fb_rseen");RSEEN=s?JSON.parse(s):null}catch(e){RSEEN=null}}
