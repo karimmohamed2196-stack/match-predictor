@@ -280,7 +280,7 @@ def espn_fixtures(code, today):
 # ---------------- Egyptian league via 365Scores public web API (ESPN has no data for it) ----------------
 X365 = {"EGY": 552}
 X365_ROOT = "https://webws.365scores.com"
-X365_Q = "appTypeId=5&langId=1&timezoneName=Africa/Cairo&userCountryId=21&sports=1&showOdds=false"
+X365_Q = "appTypeId=5&langId=1&timezoneName=Africa/Cairo&userCountryId=21&showOdds=false"
 EGY_ALIAS = {
     "al ahly": "Al Ahly", "ahly": "Al Ahly", "zamalek": "Zamalek", "pyramids": "Pyramids", "al masry": "Al Masry", "masry": "Al Masry", "el masry": "Al Masry",
     "al ittihad alexandria": "Al Ittihad", "ittihad alexandria": "Al Ittihad", "al ittihad al sakandary": "Al Ittihad", "al ittihad": "Al Ittihad", "ittihad": "Al Ittihad",
@@ -324,25 +324,33 @@ def x365_parse(g):
     bad = any(w in st for w in ("postpon", "cancel", "abandon", "suspend"))
     hs, as_ = hc.get("score"), ac.get("score")
     ok = g.get("statusGroup") == 4 and hs is not None and as_ is not None and float(hs) >= 0 and float(as_) >= 0
-    return h, a, hs, as_, ok, u, bad
+    return h, a, hs, as_, ok, u, bad, g.get("competitionId")
+
+def x365_diag(code, what, games):
+    from collections import Counter
+    c = Counter((g.get("competitionId"), g.get("competitionDisplayName")) for g in games)
+    print(code, "365", what, "competitions in response:", c.most_common(4))
 
 def load_x365(code, today):
     cid = X365[code]; old = xh_unpack(_OLD_XH.get(code)); rows = {(r[0], r[1], r[2]): r for r in old}
     start = (dt.datetime.strptime(max(r[0] for r in old), "%Y-%m-%d") - dt.timedelta(days=5)) if old else today - dt.timedelta(days=HISTORY_DAYS)
-    cut_s = start.strftime("%Y-%m-%d"); url = f"/web/games/results/?{X365_Q}&competitions={cid}"; earliest = None
-    for page in range(40):
-        try: j = x365_get(url)
-        except Exception as e: print(code, "365 results failed:", str(e)[:80]); break
-        games = j.get("games") or []; days = []
-        for g in games:
-            r = x365_parse(g)
-            if not r or not r[4] or r[6]: continue
-            day = r[5].strftime("%Y-%m-%d"); days.append(day); rows[(day, r[0], r[1])] = (day, r[0], r[1], int(float(r[2])), int(float(r[3])))
-        pmin = min(days) if days else None
-        print(code, "365 page", page, "games:", len(games), "finished:", len(days), "oldest:", pmin)
-        if pmin is None or (earliest is not None and pmin >= earliest) or pmin < cut_s: break
-        earliest = pmin; url = (j.get("paging") or {}).get("nextPage")
-        if not url: break
+    cut_s = start.strftime("%Y-%m-%d"); first = None
+    for key in ("nextPage", "previousPage"):          # we don't know which one goes back in time, so try both
+        url = f"/web/games/results/?{X365_Q}&competitions={cid}" if first is None else (first.get("paging") or {}).get(key); earliest = None
+        for page in range(40):
+            if not url: break
+            try: j = x365_get(url)
+            except Exception as e: print(code, "365 results failed:", str(e)[:80]); break
+            if first is None: first = j; x365_diag(code, "results", j.get("games") or [])
+            games = j.get("games") or []; days = []
+            for g in games:
+                r = x365_parse(g)
+                if not r or not r[4] or r[6] or r[7] not in (None, cid): continue
+                day = r[5].strftime("%Y-%m-%d"); days.append(day); rows[(day, r[0], r[1])] = (day, r[0], r[1], int(float(r[2])), int(float(r[3])))
+            pmin = min(days) if days else None
+            print(code, "365", key, "page", page, "games:", len(games), "ours finished:", len(days), "oldest:", pmin)
+            if pmin is None or (earliest is not None and pmin >= earliest) or pmin < cut_s: break
+            earliest = pmin; url = (j.get("paging") or {}).get(key)
     keep = sorted(rows.values(), key=lambda r: r[0])
     cut = (today - dt.timedelta(days=1100)).strftime("%Y-%m-%d"); keep = [r for r in keep if r[0] >= cut]
     print(code, "matches loaded:", len(keep), "(from cache:", len(old), ")")
@@ -357,16 +365,17 @@ def x365_fixtures(code, today):
         try: j = x365_get(url)
         except Exception as e: print(code, "365 fixtures request failed:", str(e)[:80]); break
         games = j.get("games") or []; pmax = None
+        if page == 0: x365_diag(code, "fixtures", games)
         for g in games:
             r = x365_parse(g)
-            if not r or r[4] or r[6]: continue
+            if not r or r[4] or r[6] or r[7] not in (None, cid): continue
             u = r[5]; pmax = u if pmax is None or u > pmax else pmax
             if u < today - dt.timedelta(hours=3) or u > today + dt.timedelta(days=15) or (r[0], r[1], u) in seen: continue
             seen.add((r[0], r[1], u))
             t = u.replace(tzinfo=dt.timezone.utc).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
             KO[(code, r[0], r[1])] = u
             out.append((t, [code, f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[0], r[1]]))
-        print(code, "365 fixtures page", page, "games:", len(games), "kept so far:", len(out))
+        print(code, "365 fixtures page", page, "games:", len(games), "ours so far:", len(out))
         if pmax is None or (latest is not None and pmax <= latest) or pmax > today + dt.timedelta(days=15): break
         latest = pmax; url = (j.get("paging") or {}).get("nextPage")
         if not url: break
