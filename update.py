@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 import numpy as np, pandas as pd
 from scipy.optimize import minimize
 
-LEAGUES = ["E0", "SP1", "I1", "D1", "F1", "EGY"]
+LEAGUES = ["E0", "SP1", "I1", "D1", "F1", "EGY", "KSA", "UCL", "UEL"]
 BASE = "https://www.football-data.co.uk/"
 OUT = "data.json"
 XI, RIDGE, N = 0.0018, 1.0, 10          # time decay per day, ridge, goal grid
@@ -27,7 +27,7 @@ def seasons(today):
     return [f"{(y-i)%100:02d}{(y-i+1)%100:02d}" for i in range(3)], dt.datetime(y, 7, 1)
 
 def load_league(code, today):
-    if code == "EGY": return load_egy(today)
+    if code in ESPN_LEAGUES: return load_espn(code, today)
     frames = []
     for s in seasons(today)[0]:
         try:
@@ -170,18 +170,42 @@ def backtest(data, today, weeks=12):
 KO = {}
 
 
-# ---------------- Egyptian Premier League (ESPN public API, no key) ----------------
-ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer/egy.1/scoreboard"
+# ---------------- Extra leagues via ESPN public API (no key) ----------------
+# code -> (ESPN slug to try first, prefix used to search ESPN's league list if that slug fails)
+ESPN_LEAGUES = {"EGY": ("egy.1", "egy"), "KSA": ("ksa.1", "ksa"), "UCL": ("uefa.champions", "uefa.champions"), "UEL": ("uefa.europa", "uefa.europa")}
+ESPN_ROOT = "https://site.api.espn.com/apis/site/v2/sports/soccer/"
+_SLUG, _ALL = {}, []
 
-def espn_events(a, b):
-    """All events between dates a and b (inclusive), fetched in 30-day chunks."""
+def espn_slug(code):
+    if code in _SLUG: return _SLUG[code]
     import json as _j
+    first, prefix = ESPN_LEAGUES[code]; _SLUG[code] = None
+    try:
+        get(f"{ESPN_ROOT}{first}/scoreboard"); _SLUG[code] = first; print(code, "espn slug ok:", first); return first
+    except Exception as e: print(code, "espn slug failed:", first, e)
+    try:
+        if not _ALL:
+            j = _j.loads(get("https://sports.core.api.espn.com/v2/sports/soccer/leagues?limit=1000"))
+            _ALL.extend(it.get("$ref", "").split("/leagues/")[-1].split("?")[0] for it in j.get("items", []))
+        found = [x for x in _ALL if x.lower().startswith(prefix)]; print(code, "espn leagues found:", found)
+        for c in found:
+            try:
+                get(f"{ESPN_ROOT}{c}/scoreboard"); _SLUG[code] = c; print(code, "espn slug ok:", c); return c
+            except Exception as e: print(code, "espn slug failed:", c, e)
+    except Exception as e: print(code, "espn league list failed:", e)
+    return None
+
+def espn_events(code, a, b):
+    """All events of league `code` between dates a and b (inclusive), fetched in 28-day chunks."""
+    import json as _j
+    slug = espn_slug(code)
+    if not slug: return []
     out, cur = [], a
     while cur <= b:
-        end = min(cur + dt.timedelta(days=29), b)
-        url = f"{ESPN}?dates={cur:%Y%m%d}-{end:%Y%m%d}&limit=500"
+        end = min(cur + dt.timedelta(days=27), b)
+        url = f"{ESPN_ROOT}{slug}/scoreboard?dates={cur:%Y%m%d}-{end:%Y%m%d}"
         try: out += _j.loads(get(url)).get("events", [])
-        except Exception as e: print("espn skip", cur.date(), e)
+        except Exception as e: print(code, "espn skip", cur.date(), e)
         cur = end + dt.timedelta(days=1)
     return out
 
@@ -193,31 +217,31 @@ def espn_rows(ev):
     st = (ev.get("status") or {}).get("type") or {}
     return nm(h), nm(a), h.get("score"), a.get("score"), bool(st.get("completed")), ev.get("date")
 
-def load_egy(today):
+def load_espn(code, today):
     ss = seasons(today)[0]; y0 = 2000 + int(ss[-1][:2])        # oldest of the 3 seasons
-    evs = espn_events(dt.datetime(y0, 7, 1), today)
     rows = []
-    for ev in evs:
+    for ev in espn_events(code, dt.datetime(y0, 7, 1), today):
         r = espn_rows(ev)
-        if not r or not r[4] or r[2] in (None, "") or r[3] in (None, ""): continue
+        if not r or not r[0] or not r[1] or not r[4] or r[2] in (None, "") or r[3] in (None, ""): continue
         try: rows.append((pd.to_datetime(r[5]).tz_localize(None), r[0], r[1], int(r[2]), int(r[3])))
         except Exception: continue
+    print(code, "matches loaded:", len(rows))
     if not rows: return None
     d = pd.DataFrame(rows, columns=["Date","HomeTeam","AwayTeam","FTHG","FTAG"]).drop_duplicates(["Date","HomeTeam","AwayTeam"])
     return d.sort_values("Date").reset_index(drop=True)
 
-def egy_fixtures(today):
+def espn_fixtures(code, today):
     out = []
-    for ev in espn_events(today.replace(hour=0, minute=0), today + dt.timedelta(days=14)):
+    for ev in espn_events(code, today.replace(hour=0, minute=0), today + dt.timedelta(days=14)):
         r = espn_rows(ev)
-        if not r or r[4]: continue
+        if not r or not r[0] or not r[1] or r[4]: continue
         try: u = pd.to_datetime(r[5]).tz_localize(None).to_pydatetime()
         except Exception: continue
         if u < today - dt.timedelta(hours=3): continue
         t = u.replace(tzinfo=dt.timezone.utc).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
-        KO[("EGY", r[0], r[1])] = u
-        out.append((t, ["EGY", f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[0], r[1]]))
-    print("egy fixtures:", len(out)); return out
+        KO[(code, r[0], r[1])] = u
+        out.append((t, [code, f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[0], r[1]]))
+    print(code, "fixtures:", len(out)); return out
 
 def fixtures(today):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
@@ -235,8 +259,9 @@ def fixtures(today):
         KO[(r["Div"], r["HomeTeam"], r["AwayTeam"])] = d.replace(tzinfo=ZoneInfo("Europe/London")).astimezone(dt.timezone.utc).replace(tzinfo=None)
         if t.date() < today.date() or t.date() > today.date()+dt.timedelta(days=14): continue
         out.append((t, [r["Div"], f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r["HomeTeam"], r["AwayTeam"]]))
-    try: out += egy_fixtures(today)
-    except Exception as e: print("egy fixtures failed:", e)
+    for _c in ESPN_LEAGUES:
+        try: out += espn_fixtures(_c, today)
+        except Exception as e: print(_c, "fixtures failed:", e)
     out.sort(key=lambda x: x[0]); print("fixtures kept:", len(out)); return [x[1] for x in out]
 
 def build_league(code, d, today, fix_teams):
