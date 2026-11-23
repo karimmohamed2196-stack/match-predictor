@@ -432,13 +432,15 @@ main>p.mut{text-align:center;color:var(--mut);opacity:.85;border-top-color:color
 #list>*{animation:fi .45s cubic-bezier(.2,.7,.2,1) both}
 #list>:nth-child(2){animation-delay:.05s}#list>:nth-child(3){animation-delay:.1s}#list>:nth-child(4){animation-delay:.15s}#list>:nth-child(5){animation-delay:.2s}#list>:nth-child(n+6){animation-delay:.25s}
 </style>
+<style id="fix1">#bt,#ab{display:none!important}.od{grid-template-columns:repeat(3,1fr)!important}.dense .od div:nth-child(4){display:flex}</style>
 
 
-
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.init({appId:"9873ca1b-1cbb-4bad-a473-c4c8a0a4301c",safari_web_id:"web.onesignal.auto.33b67024-44c4-4b60-aec5-91af5568c874",serviceWorkerPath:"match-predictor/push/onesignal/OneSignalSDKWorker.js",serviceWorkerParam:{scope:"/match-predictor/push/onesignal/"},notifyButton:{enable:false}})}catch(e){}});</script>
 </head>
 <body>
 <div id="splash" aria-hidden="true"><svg class="sp-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 7.2l3.9 2.8-1.5 4.6H9.6L8.1 10z" fill="currentColor"/><path d="M12 7.2V1.7M15.9 10l5.2-1.7M14.4 14.6l3.2 4.4M9.6 14.6l-3.2 4.4M8.1 10L2.9 8.3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><div class="sp-t">متوقع المباريات</div><div class="sp-s">PRO</div></div>
-<header><h1><svg class="lgo" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 7.2l3.9 2.8-1.5 4.6H9.6L8.1 10z" fill="currentColor"/><path d="M12 7.2V1.7M15.9 10l5.2-1.7M14.4 14.6l3.2 4.4M9.6 14.6l-3.2 4.4M8.1 10L2.9 8.3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> متوقع المباريات <em>PRO</em><button id="gr" aria-label="الإعدادات" aria-expanded="false">⚙️</button><button id="tg" aria-label="تبديل المظهر">🌓</button><div id="gp" role="group" aria-label="الإعدادات"><button data-l="شكل القائمة" id="dn" aria-label="شكل القائمة">☰</button><button data-l="لغة الأسماء" id="ln" aria-label="لغة أسماء الفرق">EN</button><button data-l="عرض الأرقام" id="od2" aria-label="طريقة عرض الأرقام">٪</button><button data-l="حجم الخط" id="fs" aria-label="حجم الخط">A+</button><button data-l="شرح التطبيق" id="hp" aria-label="شرح التطبيق">؟</button><button data-l="تثبيت التطبيق" id="ins" aria-label="تثبيت التطبيق" hidden>📲</button></div></h1><p class="sub" id="sb">تحليل احتمالي بنموذج Dixon-Coles</p><div class="tb"><input id="q" type="search" placeholder="🔍 ابحث عن فريق" aria-label="بحث"><select id="so" aria-label="الترتيب"><option value="t">⏱ حسب الوقت</option><option value="c">🎯 الأعلى ثقة</option><option value="h">🎯 ثقة عالية فقط</option><option value="g">⚽ الأكثر أهدافاً</option></select></div></header><div id="stk"><div id="stale" hidden></div><div id="tabs"></div></div>
+<header><h1><svg class="lgo" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 7.2l3.9 2.8-1.5 4.6H9.6L8.1 10z" fill="currentColor"/><path d="M12 7.2V1.7M15.9 10l5.2-1.7M14.4 14.6l3.2 4.4M9.6 14.6l-3.2 4.4M8.1 10L2.9 8.3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> متوقع المباريات <em>PRO</em><button id="gr" aria-label="الإعدادات" aria-expanded="false">⚙️</button><button id="tg" aria-label="تبديل المظهر">🌓</button><div id="gp" role="group" aria-label="الإعدادات"><button data-l="شكل القائمة" id="dn" aria-label="شكل القائمة">☰</button><button data-l="لغة الأسماء" id="ln" aria-label="لغة أسماء الفرق">EN</button><button data-l="عرض الأرقام" id="od2" aria-label="طريقة عرض الأرقام">٪</button><button data-l="حجم الخط" id="fs" aria-label="حجم الخط">A+</button><button data-l="تنبيهات" id="nt" aria-label="تنبيهات المفضلة">🔔</button><button data-l="شرح التطبيق" id="hp" aria-label="شرح التطبيق">؟</button><button data-l="تثبيت التطبيق" id="ins" aria-label="تثبيت التطبيق" hidden>📲</button></div></h1><p class="sub" id="sb">تحليل احتمالي بنموذج Dixon-Coles</p><div class="tb"><input id="q" type="search" placeholder="🔍 ابحث عن فريق" aria-label="بحث"><select id="so" aria-label="الترتيب"><option value="t">⏱ حسب الوقت</option><option value="c">🎯 الأعلى ثقة</option><option value="h">🎯 ثقة عالية فقط</option><option value="g">⚽ الأكثر أهدافاً</option></select></div></header><div id="stk"><div id="stale" hidden></div><div id="tabs"></div></div>
 <main>
 <div id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
 <details class="card" id="cust"><summary>⚖️ مقارنة ومباراة مخصصة (أي فريقين)</summary>
@@ -511,7 +513,7 @@ function detail0(code,h,a,neu,x){
    '<div class="kv"><span>أرجح نتيجة</span><b dir="ltr">'+sc.slice(0,3).map(function(x){return x[0]+' ('+pc(x[1])+')'}).join(' • ')+'</b></div>'+
    G("النتيجة النهائية 1X2",[["1 مضيف",w],["X تعادل",d],["2 ضيف",l]])+
    G("الفرصة المزدوجة",[["1X",w+d],["12",w+l],["X2",d+l]])+
-   G("أهداف المباراة",[["أكثر 2.5",o25],["أقل 2.5",1-o25],["الفريقان يسجلان",bt]]);
+   G("أهداف المباراة",[["أكثر 2.5",o25],["أقل 2.5",1-o25],["الفريقان يسجلان",bt]])+'<p class="mut">⚠️ سوقا الأهداف والفريقان يسجلان دلالتهم التاريخية ضعيفة، اعتمد أكثر على 1X2 والفرصة المزدوجة.</p>';
   var T=[];[0.5,1.5,3.5,4.5].forEach(function(x){var v=P(o,function(i,j){return i+j>x});T.push(["أكثر "+x,v]);T.push(["أقل "+x,1-v])});
   var TH=[],TA=[];[0.5,1.5,2.5].forEach(function(x){TH.push(["أكثر "+x,P(o,function(i,j){return i>x})]);TA.push(["أكثر "+x,P(o,function(i,j){return j>x})])});
   s+='<details><summary>كل الأسواق</summary>'+G("إجمالي الأهداف",T)+G("الفريقان يسجلان",[["نعم",bt],["لا",1-bt]])+
@@ -531,7 +533,7 @@ function detail0(code,h,a,neu,x){
 }
 
 /* ---------- UI ---------- */
-function leagues(){return Object.keys(D).filter(function(k){return k[0]!=="_"})}
+function leagues(){return Object.keys(D).filter(function(k){return k[0]!=="_"}).sort(function(x,y){return(y==="EGY")-(x==="EGY")})}
 function setLeague(k){if(k===cur){window.scrollTo({top:0,behavior:"smooth"});return}SCR[cur]=window.scrollY||0;cur=k;try{localStorage.setItem("fb_tab",k)}catch(e){}tabs();list();if(leagues().indexOf(k)>=0&&$("cl").value!==k)fillCust(k);window.scrollTo(0,SCR[k]||0)}
 $("tabs").onclick=function(e){var b=e.target.closest(".tab");if(b)setLeague(b.getAttribute("data-k"))};
 function fillCust(keep){
@@ -565,10 +567,10 @@ function detailAdv(code,h,a,neu,k){
   var o=pr(code,h,a,neu,k);if(!o)return detail0(code,h,a,neu);
   var s="";
   if(k){var I=injs(k),LB={G:"🧤 حارس",D:"🛡 مدافع",M:"وسط",F:"مهاجم"};
-    s+='<details open><summary>🩹 الغيابات بالأسماء</summary>';
+    s+='<details><summary>🩹 الغيابات بالأسماء</summary>';
     [["h",h],["a",a]].forEach(function(t){s+='<div class="mut"><b>'+esc(tn(t[1]))+'</b></div>'+absH(k,t[1]);
       var X=xm(k),H_=t[0]==="h";s+='<div class="mut" dir="ltr">⚔ '+(H_?X.hA:X.aA).toFixed(2)+'  🛡 '+(H_?X.hC:X.aC).toFixed(2)+'</div>'});
-    s+='<p class="mut">🔴 غائب مؤكد • 🟡 مشكوك أو تعود في يوم المباراة. تدخل في الحساب تلقائياً الغيابات المؤكدة للاعبين المنتظمين (4 مشاركات فأكثر) فقط، التأثير تقريبي (غياب مهاجم أساسي ≈ -9% أهداف). المصدر: تقارير '+INJ_TS+' (sportsgambler وصحف الأندية)، وتغطي الدوريات الخمسة: الإنجليزي والإسباني والإيطالي والألماني والفرنسي.</p><button class="ib rs" data-k="'+esc(k)+'">↺ العودة للقائمة التلقائية</button></details>';
+    s+='<p class="mut">🔴 غائب مؤكد • 🟡 مشكوك. التأثير على الأرقام تقريبي. المصدر: '+INJ_TS+'.</p><button class="ib rs" data-k="'+esc(k)+'">↺ العودة للقائمة التلقائية</button></details>';
   }
   var mx=Math.max(o.w,o.d,o.l),dt=Math.min(o.H[3]||0,o.A[3]||0),cf=Math.round(100*(.5*Math.min(1,Math.max(0,(mx-.34)/.36))+.5*Math.min(1,dt/100)));
   s+='<div class="gt">🎯 التحليل</div><div class="g3">'+
@@ -583,7 +585,7 @@ function sgH(o,h,a){var m=o.m,n=act(m).length;
   return'<div class="gt">💪 قوة الفريقين</div><div class="sg">'+blk("⚔️ الهجوم (من يسجّل أكثر)",0,false)+blk("🛡 الدفاع (من يستقبل أقل)",1,true)+'<p class="mut" style="margin:8px 0 0">المركز 1 = الأفضل بين '+n+' فريق. الشريط الأطول = الأقوى.</p></div>'}
 function pbH(o){var mx=Math.max(o.w,o.d,o.l);function z(v,c,l){return'<i'+(v===mx?' class="mx"':'')+' style="width:'+v*100+'%;background:var('+c+')">'+(v>.12?pc(v)+" "+l:v>.04?l:'')+'</i>'}return z(o.w,'--g','م')+z(o.d,'--n','ت')+z(o.l,'--r','ض')}
 function slipLbl3(i,f){return i===0?"فوز "+tn(f[2]):i===1?"تعادل":i===2?"فوز "+tn(f[3]):"أكثر من 2.5 هدف"}
-function odH(o,k){var mx=Math.max(o.w,o.d,o.l),f=k&&fxOf(k);function z(l,v,p,i){var m=i===3?"مجموع الأهداف (2.5)":"نتيجة المباراة",lb=f?slipLbl3(i,f):"",q=!!f;return'<div class="'+(p&&v===mx?'pk ':'')+(q?'qp'+(slipOn(k,m,lb)?' on':''):'')+'"'+(q?' data-pk="1" role="button" tabindex="0" data-k="'+esc(k)+'" data-m="'+m+'" data-l="'+esc(lb)+'" data-q="'+v.toFixed(4)+'"':'')+'>'+l+'<b>'+od(v)+'</b><small>'+pc(v)+'</small></div>'}return z('مضيف',o.w,1,0)+z('تعادل',o.d,1,1)+z('ضيف',o.l,1,2)+z('أكثر 2.5',o.o25,0,3)}
+function odH(o,k){var mx=Math.max(o.w,o.d,o.l),f=k&&fxOf(k);function z(l,v,p,i){var m=i===3?"مجموع الأهداف (2.5)":"نتيجة المباراة",lb=f?slipLbl3(i,f):"",q=!!f;return'<div class="'+(p&&v===mx?'pk ':'')+(q?'qp'+(slipOn(k,m,lb)?' on':''):'')+'"'+(q?' data-pk="1" role="button" tabindex="0" data-k="'+esc(k)+'" data-m="'+m+'" data-l="'+esc(lb)+'" data-q="'+v.toFixed(4)+'"':'')+'>'+l+'<b>'+od(v)+'</b><small>'+pc(v)+'</small></div>'}return z('مضيف',o.w,1,0)+z('تعادل',o.d,1,1)+z('ضيف',o.l,1,2)}
 function bd(n){return n?'<span class="inj">🩹 '+n+'</span>':''}
 function cairoOff(ms){try{var v=new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",timeZoneName:"shortOffset"}).formatToParts(new Date(ms)).filter(function(x){return x.type==="timeZoneName"})[0].value,m=/GMT([+-]\d+)/.exec(v);return m?+m[1]:2}catch(e){return 2}}
 function kick(f){var p=f[1].split(" ");if(!p[3])return null;var t=p[3].split(":"),m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].indexOf(p[2]),WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],now=Date.now(),y0=new Date(now).getUTCFullYear(),b=null,b2=null;if(m<0)return null;
@@ -647,15 +649,17 @@ function emptyMsg(){if($("q").value)return"لا توجد مباريات مطاب
 function list(){
   if(cur==="RES"){resView();return}if(cur==="LOG"){logView();return}if(cur==="TBL"){tblView();return}
   (D._fix||[]).forEach(function(f){var k=fk(f);if(ST[k]&&ST[k].inj&&past(f)){delete ST[k].inj;sv()}});
-  var F=items(),s="",last="";F.forEach(logSnap);
+  var F=items(),s="",last="",TOPN=0;F.forEach(logSnap);
+  if(cur==="TODAY"&&SORT==="t"&&!$("q").value&&F.length>3){var SC=F.map(function(f){var o=pr(f[0],f[2],f[3],false,fk(f));return{f:f,v:(o?cfOf(o):0)+(f[0]==="EGY"?15:0)}});SC.sort(function(a,b){return b.v-a.v});var top=SC.slice(0,3).map(function(x){return x.f});F=top.concat(F.filter(function(f){return top.indexOf(f)<0}));TOPN=3}
   if(!F.length)s='<p class="mut" style="padding:14px">'+(cur==="FAV"?"لا توجد مباريات مفضلة. اضغط ☆ على أي مباراة.":(SORT==="h"?"مفيش مباريات بثقة عالية دلوقتي. جرّب الترتيب حسب الوقت.":emptyMsg()))+($("q").value?'<br><button class="go clr">مسح البحث</button>':'')+'</p>';
   F.forEach(function(f,i){var k=fk(f),p=f[1].split(" "),day=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);
-    if(SORT==="t"&&day!==last){s+='<div class="day" data-d="'+esc(day)+'">'+esc(dpl(f)+day)+'</div>';last=day}
+    if(TOPN){if(i===0)s+='<div class="day">⭐ أقوى توقعات اليوم</div>';if(i===TOPN){s+='<div class="day">باقي مباريات اليوم</div>';last=day}}
+    if(SORT==="t"&&!TOPN&&day!==last){s+='<div class="day" data-d="'+esc(day)+'">'+esc(dpl(f)+day)+'</div>';last=day}
     var o=pr(f[0],f[2],f[3],false,k);
     s+='<div class="m" data-i="'+i+'"><span class="fav" role="button" tabindex="0" aria-label="مفضلة" data-k="'+esc(k)+'">'+((ST[k]||{}).fav?"★":"☆")+'</span><div class="mt" role="button" tabindex="0" aria-expanded="false"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+bdn(k,"h")+'</div><div class="mid">'+esc(p[3]||"")+'<b>VS</b>'+rel(f)+'</div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+bdn(k,"a")+'</div></div>'+
      '<div class="pb" dir="ltr">'+pbH(o)+'</div><div class="smw">'+smI(o,f)+'</div><div class="od">'+odH(o,k)+'</div><div class="det"></div></div>';});
   
-  if(!$("q").value&&(cur==="TODAY"||leagues().indexOf(cur)>=0))s=(F.length>1?hero(F):"")+accH()+cmpH()+s;if(cur==="FAV"&&F.length&&!$("q").value)s='<button class="go remall" style="margin:0 0 12px">⏰ ذكّرني بكل المباريات المفضلة (ملف تقويم)</button>'+s;if(SORT==="t"&&!$("q").value&&F.length&&cur!=="FAV"||(SORT==="t"&&cur==="FAV"&&!$("q").value&&F.length)){var seen={},ch="";F.forEach(function(f){var p=f[1].split(" "),dd=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);if(!seen[dd]){seen[dd]=1;ch+='<button class="tab dchip" data-d="'+esc(dd)+'">'+esc((DAY[p[0]]||p[0])+" "+p[1])+'</button>'}});if(Object.keys(seen).length>1)s='<div id="ds">'+ch+'</div>'+s}$("list").innerHTML=s;$("list").F=F;want()}
+  if(!$("q").value&&(cur==="TODAY"||leagues().indexOf(cur)>=0))s=(F.length>1&&!TOPN?hero(F):"")+accH()+cmpH()+s;if(cur==="FAV"&&F.length&&!$("q").value)s='<button class="go remall" style="margin:0 0 12px">⏰ ذكّرني بكل المباريات المفضلة (ملف تقويم)</button>'+s;if(SORT==="t"&&!$("q").value&&F.length&&cur!=="FAV"||(SORT==="t"&&cur==="FAV"&&!$("q").value&&F.length)){var seen={},ch="";F.forEach(function(f){var p=f[1].split(" "),dd=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);if(!seen[dd]){seen[dd]=1;ch+='<button class="tab dchip" data-d="'+esc(dd)+'">'+esc((DAY[p[0]]||p[0])+" "+p[1])+'</button>'}});if(Object.keys(seen).length>1)s='<div id="ds">'+ch+'</div>'+s}$("list").innerHTML=s;$("list").F=F;want()}
 function rer(m){var f=$("list").F[+m.getAttribute("data-i")];m.querySelector(".det").innerHTML=detail(f[0],f[2],f[3],false,fk(f));var I2=injs(fk(f)),T=m.querySelectorAll(".mt .tm");m.querySelectorAll(".mt .inj").forEach(function(x){x.remove()});T[0].insertAdjacentHTML("beforeend",bdn(fk(f),"h"));T[1].insertAdjacentHTML("beforeend",bdn(fk(f),"a"));var q2=pr(f[0],f[2],f[3],false,fk(f));m.querySelector(".pb").innerHTML=pbH(q2);m.querySelector(".od").innerHTML=odH(q2,fk(f));m.querySelector(".smw").innerHTML=smI(q2,f)}
 var _qt;$("q").oninput=function(){clearTimeout(_qt);_qt=setTimeout(list,160)};
 $("list").onclick=function(e){
@@ -695,29 +699,21 @@ function logExtra(K){var H1={n:0,h:0},H0={n:0,h:0},G={},B=[0,0,0,0,0].map(functi
   return s}
 function btRows(t,A){var r=(A||[]).filter(function(x){return x.n&&x.acc!=null});if(!r.length)return"";return'<div class="gt">'+t+'</div>'+r.map(function(x){var l=x.hi>=1?"ثقة "+Math.round(x.lo*100)+"% فأكثر":"ثقة "+Math.round(x.lo*100)+"–"+Math.round(x.hi*100)+"%";return'<div class="kv"><span>'+l+'</span><b dir="ltr">'+pc(x.acc)+' ('+x.n+')</b></div>'}).join("")}
 function btMk(M,t){var T={dc:"الفرصة المزدوجة",o15:"أكثر من 1.5 هدف",o25:"أكثر من 2.5 هدف",btts:"الفريقان يسجلان"},K=Object.keys(M||{}).filter(function(k){return T[k]});if(!K.length)return"";return'<div class="gt">'+(t||"الدقة حسب نوع التوقع")+'</div>'+K.map(function(k){return'<div class="kv"><span>'+T[k]+'</span><b dir="ltr">'+pc(M[k].acc)+' ('+M[k].n+')</b></div>'}).join("")}
-function accPanel(){var b=D._bt,h='<div class="card" style="margin-top:0"><b>📈 دقتنا بصراحة</b>';
-  if(b&&b.n){h+='<div class="g3" style="margin-top:10px"><div class="c"><small>اختبار رجعي</small><b>'+pc(b.acc)+'</b><i>'+b.n+' مباراة</i></div><div class="c"><small>التخمين العشوائي</small><b>33%</b></div></div>';
-    var W=b.weeks||[];if(W.length>1){var pt=W.map(function(x,i){return(i*(300/(W.length-1))).toFixed(1)+","+(60-x.acc*60).toFixed(1)}).join(" ");h+='<svg viewBox="0 0 300 60" style="width:100%;height:70px;margin-top:10px;overflow:visible" role="img" aria-label="الدقة الأسبوعية"><line x1="0" x2="300" y1="40" y2="40" stroke="var(--bd)" stroke-dasharray="4"/><polyline points="'+pt+'" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linejoin="round"/></svg><p class="mut">الدقة أسبوعياً، والخط المتقطع هو التخمين العشوائي (33%).</p>'}}
-  if(b&&b.n)h+=btMk(b.mkts)+btRows("نتيجة المباراة 1X2: الدقة حسب مستوى الثقة",b.conf)+btRows("الفرصة المزدوجة: الدقة حسب مستوى الثقة",b.dc_conf)+'<p class="mut">الأرقام من اختبار رجعي على آخر 12 أسبوع، والرقم بين القوسين هو عدد المباريات. العيّنة الصغيرة معناها هامش خطأ كبير، وتوقع نتيجة المباراة بالظبط أصعب بكتير من التوقعات الأوسع.</p>';
-  var LG0=D._log,LS=LG0&&LG0.stats,T=0,H=0,B=[];
-  if(LS&&LS.n){T=LS.n;H=LS.hits;B=(LS.conf||[]).filter(function(x){return x.n&&x.acc!=null}).map(function(x){return{l:x.hi>=1?"ثقة "+Math.round(x.lo*100)+"% فأكثر":"ثقة "+Math.round(x.lo*100)+"–"+Math.round(x.hi*100)+"%",n:x.n,h:Math.round(x.acc*x.n)}})}
-  else{var BB=[[0,.45,"ثقة أقل من 45%"],[.45,.6,"ثقة 45 – 60%"],[.6,2,"ثقة 60% فأكثر"]].map(function(x){return{l:x[2],lo:x[0],hi:x[1],n:0,h:0}});
-    Object.keys(LG).forEach(function(k){var g=LG[k];if(!g||!g.r)return;var p=[g.w,g.d,g.l],mx=Math.max.apply(null,p),y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2,ok=p.indexOf(mx)===y?1:0;T++;H+=ok;BB.forEach(function(q){if(mx>=q.lo&&mx<q.hi){q.n++;q.h+=ok}})});B=BB.filter(function(q){return q.n})}
-  if(T){h+='<div class="gt">📡 سجل التوقعات الفعلي'+(LG0&&LG0.since?' منذ '+LG0.since:'')+': '+H+' من '+T+' ('+pc(H/T)+')</div>'+B.map(function(q){return'<div class="kv"><span>'+q.l+'</span><b dir="ltr">'+q.h+'/'+q.n+' ('+pc(q.h/q.n)+')</b></div>'}).join("")+(LS&&LS.n?btMk(LS.mkts,"الدقة الفعلية حسب نوع التوقع"):"")+(T<100?'<p class="mut">العيّنة لسه أقل من 100 مباراة، فالأرقام دي مؤشر مبدئي مش حكم نهائي.</p>':'')}
-  else if(!(b&&b.n))h+='<p class="mut">هنعرض هنا نسبة إصابتنا الفعلية أول ما المباريات تنتهي، وبتتسجّل لوحدها.</p>';
-  if(LG0&&LG0.pending)h+='<p class="mut">⏳ '+LG0.pending+' مباراة مسجّلة وبانتظار نتيجتها.</p>';
-  return h+'</div>'}
+function lgStat(){var L=D._log,S=(L&&L.stats)||{},lg=S.lg||{},pend={},R=(L&&L.open)||{},loc={};
+  Object.keys(R).forEach(function(k){var c=k.split("|")[0];pend[c]=(pend[c]||0)+1});
+  Object.keys(LG).forEach(function(k){var g=LG[k];if(!g||!g.r||!g.f)return;var c=g.f[0],q=loc[c]||(loc[c]={n:0,h:0}),p=[g.w,g.d,g.l],y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2;q.n++;if(p.indexOf(Math.max.apply(null,p))===y)q.h++});
+  return leagues().map(function(c){var s=lg[c],n=0,a=null;if(s&&s.n&&s.acc!=null){n=s.n;a=s.acc}else if(loc[c]){n=loc[c].n;a=loc[c].h/loc[c].n}return{c:c,n:n,a:a,p:pend[c]||0}})}
+function lgRowsH(){return'<div class="gt">الدقة حسب الدوري</div>'+lgStat().map(function(x){var v=x.n?pc(x.a)+' ('+x.n+')':'—';return'<div class="kv"><span>'+(NAMES[x.c]||x.c)+'</span><b dir="ltr" style="font-size:12.5px">'+v+(x.p?' • ⏳'+x.p:'')+'</b></div>'}).join("")+'<p class="mut">⏳ = مباريات متسجّلة وبانتظار نتيجتها. الدوري اللي رقمه «—» هيظهر رقمه أول ما تنتهي مباريات متسجّلة فيه.</p>'}
 function resRowsH(R){return R.map(function(g){var p=[g.w,g.d,g.l],mx=Math.max.apply(null,p),pi=p.indexOf(mx),y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2,ok=pi===y,lb=["فوز "+tn(g.f[2]),"تعادل","فوز "+tn(g.f[3])][pi];
   return'<div class="lr"><div class="rs2"><b>'+esc(tn(g.f[2]))+' – '+esc(tn(g.f[3]))+'</b><b class="sc">'+g.r[0]+' - '+g.r[1]+'</b></div><div class="mut">توقعنا: '+esc(lb)+' ('+pc(mx)+') <b class="'+(ok?"ok":"no")+'">'+(ok?"✅ أصبنا":"❌ لم نصب")+'</b></div></div>'}).join("")}
 function logRows(){var A=D._log&&D._log.recent;if(A&&A.length)return A.map(function(x){return{f:x.f,w:x.p[0],d:x.p[1],l:x.p[2],r:x.r}});
   return Object.keys(LG).filter(function(k){return LG[k]&&LG[k].r}).sort(function(a,b){return(kick(LG[b].f)||0)-(kick(LG[a].f)||0)}).slice(0,40).map(function(k){return LG[k]})}
 function autoLogH(){var L=D._log,S=L&&L.stats;if(!S)return"";var R=logRows(),h='<div class="card" style="margin-top:0"><b>📡 السجل التلقائي</b><p class="mut">كل مباراة بيتسجّل توقعها قبل ما تبدأ، والنتيجة بتتضاف لوحدها بعد ما تنتهي من غير أي تدخل منك.'+(L.since?' شغّال منذ '+L.since+'.':'')+'</p>';
   h+=S.n?'<div class="g3"><div class="c"><small>مباريات مُقيّمة</small><b>'+S.n+'</b></div><div class="c"><small>إصابة النتيجة</small><b>'+pc(S.acc)+'</b></div><div class="c"><small>Brier (أقل أفضل)</small><b>'+S.brier.toFixed(3)+'</b></div></div><p class="mut">مرجع: التخمين العشوائي 33% وBrier 0.667. العيّنة الأقل من 100 مباراة لا يُعتد بها.</p>':'<p class="mut">لسه مفيش مباريات انتهت. أول نتيجة هتظهر بعد أول مباراة مسجّلة.</p>';
-  h+=btRows("الدقة حسب مستوى الثقة",S.conf)+btMk(S.mkts,"الدقة حسب نوع التوقع");
-  var LK=Object.keys(S.lg||{}).filter(function(c){return S.lg[c].acc!=null});if(LK.length)h+='<div class="gt">الدقة حسب الدوري</div>'+LK.map(function(c){return'<div class="kv"><span>'+(NAMES[c]||c)+'</span><b dir="ltr">'+pc(S.lg[c].acc)+' ('+S.lg[c].n+')</b></div>'}).join("");
+  h+=lgRowsH()+'<details><summary>تفاصيل أكتر</summary>'+btRows("الدقة حسب مستوى الثقة",S.conf)+btMk(S.mkts,"الدقة حسب نوع التوقع")+'</details>';
   if(L.pending)h+='<p class="mut">⏳ '+L.pending+' مباراة مسجّلة وبانتظار نتيجتها.</p>';
   return h+'</div>'+(R.length?'<div class="gt">آخر المباريات المنتهية</div>'+resRowsH(R):'')}
-function resView(){autoRes();var R=logRows();$("list").innerHTML=accPanel()+(R.length?resRowsH(R):'<p class="mut" style="padding:14px">نتائج المباريات المنتهية هتظهر هنا مع توقعنا لكل مباراة، وبتتسجّل لوحدها.</p>');$("list").F=[]}
+function resView(){autoRes();var R=logRows();$("list").innerHTML=valCard()+(R.length?resRowsH(R.slice(0,8))+(R.length>8?'<details><summary>عرض الباقي ('+(R.length-8)+')</summary>'+resRowsH(R.slice(8))+'</details>':''):'<p class="mut" style="padding:14px">نتائج المباريات المنتهية هتظهر هنا مع توقعنا لكل مباراة، وبتتسجّل لوحدها.</p>');$("list").F=[]}
 function logView(){autoRes();
   var cs=seasonOf(Date.now()),K=Object.keys(LG).reverse().filter(function(k){return LGALL||gs(LG[k])===cs}),n=0,hit=0,br=0,s="";
   K.forEach(function(k){var g=LG[k];if(!g.r)return;n++;var y=g.r[0]>g.r[1]?[1,0,0]:g.r[0]===g.r[1]?[0,1,0]:[0,0,1],p=[g.w,g.d,g.l];
@@ -809,7 +805,7 @@ $("ln").onclick=function(){LANG=LANG==="ar"?"en":"ar";try{localStorage.setItem("
 $("ab").textContent="الإصدار 5.0"+(H2HE._ts?" • آخر تحديث للمواجهات: "+H2HE._ts:"");
 try{if(typeof navigator!=="undefined"&&"serviceWorker" in navigator&&typeof location!=="undefined"&&location.protocol.indexOf("http")===0)navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}
 (function(){try{var f=(D._fix||[])[0];if(!f)return;var o=pr(f[0],f[2],f[3],false,fk(f));if(!o)return;var t=0;o.M.forEach(function(v){t+=v});if(Math.abs(t-1)>1e-6||Math.abs(o.w+o.d+o.l-1)>1e-6)console.warn("selfTest: الاحتمالات لا تجمع 100%")}catch(e){console.warn("selfTest",e)}})();
-function abR(){fresh();var t=D._ts,old=t&&(Date.now()-Date.parse(t))/864e5>3;$("ab").textContent="الإصدار 5.4"+(t?" • آخر تحديث للبيانات: "+t+(old?" ⚠️ قديمة":""):"")+(H2HE._ts?" • آخر تحديث للمواجهات: "+H2HE._ts:"")}
+function abR(){fresh();var t=D._ts,old=t&&(Date.now()-Date.parse(t))/864e5>3;$("ab").textContent="الإصدار 5.5"+(t?" • آخر تحديث للبيانات: "+t+(old?" ⚠️ قديمة":""):"")+(H2HE._ts?" • آخر تحديث للمواجهات: "+H2HE._ts:"")}
 function btR(){abR();stl();var b=D._bt,e=$("bt");if(!e)return;if(!b||!b.weeks||!b.weeks.length){e.innerHTML="";return}
 var W=b.weeks,w=300,h=70,pt=W.map(function(x,i){return(W.length>1?i*(w/(W.length-1)):w/2).toFixed(1)+","+(h-x.acc*h).toFixed(1)}).join(" ");
 e.innerHTML='<div class="card"><div class="gt">📈 دقة النموذج (اختبار رجعي أسبوعي)</div><svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:80px;overflow:visible" role="img" aria-label="دقة النموذج"><line x1="0" x2="'+w+'" y1="'+(h-h/3)+'" y2="'+(h-h/3)+'" stroke="var(--bd)" stroke-dasharray="4"/><polyline points="'+pt+'" fill="none" stroke="var(--gold)" stroke-width="2.5"/></svg><div class="kv"><span>نسبة إصابة 1X2</span><b>'+pc(b.acc)+'</b></div><div class="kv"><span>RPS (الأقل أفضل) / خط الأساس</span><b dir="ltr">'+b.rps.toFixed(3)+' / '+b.base_rps.toFixed(3)+'</b></div><p class="mut">على '+b.n+' مباراة. الخط المنقط = 33% (تخمين عشوائي).</p></div>'}
@@ -825,12 +821,24 @@ function smI(o,f){var h=tn(f[2]),a=tn(f[3]),mx=Math.max(o.w,o.d,o.l),g=o.lh+o.la
   t+=g>=3?'، ومباراة هجومية':g<=2.2?'، ومباراة مغلقة':'، ومباراة متوازنة';
   var c=cfOf(o),B=[c>=82?'<span class="bd ok">ثقة عالية</span>':c>=68?'<span class="bd mid">ثقة متوسطة</span>':'<span class="bd low">ثقة منخفضة</span>'];
   if(mx<.40)B.push('<span class="bd low">مباراة متقاربة</span>');
-  if(o.o25>=.6)B.push('<span class="bd">أهداف كثيرة</span>');else if(o.o25<=.4)B.push('<span class="bd">أهداف قليلة</span>');
-  if(o.bt>=.6)B.push('<span class="bd">الفريقان يسجلان</span>');
   return'<div class="sm">'+t+'</div><div class="bdg">'+B.join("")+'</div>'}
 function actH(k){return k?'<div class="act"><button class="abtn sbtn" data-k="'+esc(k)+'">📤 شارك التوقع</button><button class="abtn rem" data-k="'+esc(k)+'">⏰ ذكّرني</button><button class="abtn imgb" data-k="'+esc(k)+'">🖼 صورة</button></div>':''}
+function empH(mx){var L=D._log&&D._log.stats&&D._log.stats.conf,B=D._bt&&D._bt.conf,src="الاختبار الرجعي",b=null;
+  function pick(A){return(A||[]).filter(function(x){return x.n>=30&&x.acc!=null&&mx>=x.lo&&mx<x.hi})[0]||null}
+  b=pick(L);if(b)src="سجلنا الفعلي";else b=pick(B);
+  if(!b)return"";return'<div class="mut" style="text-align:center;padding:0 14px 8px">📊 توقعات بنفس مستوى الثقة أصابت <b>'+pc(b.acc)+'</b> في '+src+' ('+b.n+' مباراة)</div>'}
+function valCard(){var b=D._bt,B=b&&b.conf,hi=B&&B.filter(function(x){return x.hi>=1&&x.n>=30&&x.acc!=null})[0];
+  function r(a,c){return'<div class="kv"><span>'+a+'</span><b dir="ltr" style="font-size:12px">'+c+'</b></div>'}
+  if(!b||!b.n)return"";
+  return'<div class="card" style="margin-top:0"><b>🧪 فحص المصداقية</b><p class="mut">اختبار مستقل: النموذج بيتدرّب على الماضي بس ويتوقع المباراة الجاية.</p>'+
+   r("إصابة النتيجة",pc(b.acc)+" (العشوائي 33%)")+
+   (hi?r("توقعات بثقة "+Math.round(hi.lo*100)+"%+",pc(hi.acc)+" ("+hi.n+")"):"")+
+   '<details><summary>تفاصيل أكتر</summary>'+
+   r("نتيجة المباراة 1X2 (RPS)",b.rps.toFixed(3)+" مقابل "+b.base_rps.toFixed(3)+" للتخمين بالنسب الثابتة")+
+   r("عدد المباريات المختبرة",b.n)+
+   '<p class="mut">RPS الأقل أفضل. اختبار خارجي مستقل على 965 مباراة (مصري وسعودي وأبطال وأوروبي) أكّد إن ضبط النموذج الحالي قريب من أفضل ما تقدر تديه بيانات الأهداف وحدها، وإن أي معايرة إضافية (تعادل، تنعيم، Elo) فرقها أقل من هامش الخطأ. سوقا «أكثر/أقل 2.5» و«الفريقان يسجلان» مفيهمش ميزة تُذكر عن المتوسط العام، فاتشالوا من الكروت. اعتمد على 1X2 والفرصة المزدوجة. هذه نسب احتمالية وليست ضماناً لأي نتيجة.</p></details></div>'}
 function KF(){var k=D&&D._cfg&&D._cfg.k;return k>=.6&&k<=1.3?k:1}
-function sw(T){var n=T[3]||60;return Math.min(1,(n/(n+20))/.75)}
+var SWC=10;function sw(T){var n=T[3]||60;return Math.min(1,(n/(n+SWC))/.75)}
 function wdl(lh,la,r){var p=pois(lh,N),q=pois(la,N),w=0,d=0,t=0,i,j,v;for(i=0;i<N;i++)for(j=0;j<N;j++){v=p[i]*q[j]*tau(i,j,lh,la,r||0);t+=v;if(i>j)w+=v;else if(i===j)d+=v}return[w/t,d/t,1-(w+d)/t]}
 function ciH(o,h,a){var nh=o.H[3],na=o.A[3];if(!nh||!na)return"";var sd=1.5*Math.sqrt(1/(nh*1.3)+1/(na*1.3)),seed=1,s=h+a,i,x;for(i=0;i<s.length;i++)seed=(seed*31+s.charCodeAt(i))|0;x=seed>>>0||1;
   function R(){x=(x*1664525+1013904223)>>>0;return x/4294967296}function g(){return Math.sqrt(-2*Math.log(R()+1e-12))*Math.cos(6.2831853*R())}
@@ -851,13 +859,13 @@ function eloH(o,h,a){var x=eloR(o.m,h),y=eloR(o.m,a);if(!x||!y)return"";
   return'<div class="gt">🏅 تصنيف القوة (يشبه Elo)</div>'+row(h,x)+row(a,y)+'<p class="mut">'+(df===0?'الفريقان متساويان في التصنيف.':'فرق التصنيف '+Math.abs(df)+' نقطة لصالح '+esc(tn(df>0?h:a))+'.')+' التقدير مبني على قوة الهجوم والدفاع، والسهم يوضح أثر آخر 10 مباريات. للمقارنة فقط ولا يغيّر الاحتمالات.</p>'}
 function simpleH(o,h,a,k){var sc=[],i,j;for(i=0;i<N;i++)for(j=0;j<N;j++)sc.push([i+"-"+j,o.M[i*N+j]]);sc.sort(function(x,y){return y[1]-x[1]});
   return'<div class="pb big" dir="ltr">'+pbH(o)+'</div><div class="lgd" dir="ltr"><span><i style="background:var(--g)"></i>فوز '+esc(tn(h))+'</span><span><i style="background:var(--n)"></i>تعادل</span><span><i style="background:var(--r)"></i>فوز '+esc(tn(a))+'</span></div>'+
-   '<div class="g3"><div class="c"><small>النتيجة الأرجح</small><b>'+sc[0][0]+'</b><i>'+pc(sc[0][1])+'</i></div><div class="c"><small>الأهداف المتوقعة</small><b>'+o.lh.toFixed(1)+' - '+o.la.toFixed(1)+'</b></div><div class="c"><small>الثقة</small><b>'+cfOf(o)+'/100</b></div></div>'+slipH(k)+actH(k)}
+   '<div class="g3"><div class="c"><small>النتيجة الأرجح</small><b>'+sc[0][0]+'</b><i>'+pc(sc[0][1])+'</i></div><div class="c"><small>الأهداف المتوقعة</small><b>'+o.lh.toFixed(1)+' - '+o.la.toFixed(1)+'</b></div><div class="c"><small>الثقة</small><b>'+cfOf(o)+'/100</b></div></div>'+empH(Math.max(o.w,o.d,o.l))+slipH(k)+actH(k)}
 function slipH(k){var f=fxOf(k);if(!f)return"";var o=pr(f[0],f[2],f[3],false,k);if(!o)return"";var P=[o.w,o.d,o.l];return'<div class="gt">🎫 أضف لقسيمتي</div><div class="t2row">'+[0,1,2].map(function(i){var l=slipLbl3(i,f);return'<button class="sp'+(slipOn(k,"نتيجة المباراة",l)?" on":"")+'" data-pk="1" data-k="'+esc(k)+'" data-m="نتيجة المباراة" data-l="'+esc(l)+'" data-q="'+P[i].toFixed(4)+'">'+esc(l)+'</button>'}).join("")+'</div>'}
-function analysisH(o,h,a){return ciH(o,h,a)+xchk(o,h,a)+sgH(o,h,a)+formH(o,h,a)}
+function analysisH(o,h,a){return ciH(o,h,a)+'<details><summary>المزيد من التحليل</summary>'+xchk(o,h,a)+sgH(o,h,a)+formH(o,h,a)+'</details>'}
 function detail(code,h,a,neu,k){var o=pr(code,h,a,neu,k);if(!o)return detail0(code,h,a,neu);
   return'<div class="dtabs"><div class="t2row" role="tablist"><button class="t2 on" data-t="0" role="tab">الملخص</button><button class="t2" data-t="1" role="tab">التحليل</button><button class="t2" data-t="2" role="tab">متقدم</button></div><div class="tp on">'+safeH(o,h,a,k)+simpleH(o,h,a,k)+'</div><div class="tp">'+analysisH(o,h,a)+'</div><div class="tp">'+eloH(o,h,a)+detailAdv(code,h,a,neu,k)+'</div></div>'}
 $("list").addEventListener("toggle",function(e){var d=e.target;if(d&&d.classList&&d.classList.contains("adv")){ADV=d.open;try{localStorage.setItem("fb_adv",ADV?"1":"0")}catch(x){}}},true);
-function accH(){var b=D._bt;if(!b||!b.n)return"";return'<div class="acc">📈 دقة النموذج الفعلية: <b>'+pc(b.acc)+'</b> في إصابة 1X2 على '+b.n+' مباراة سابقة (التخمين العشوائي 33%). ليست ضماناً لأي نتيجة.</div>'}
+function accH(){return""}
 function stl(){var e=$("stale");if(!e)return;var t=D._ts,old=t&&(Date.now()-Date.parse(t))/36e5>12,al=D._fix||[],allp=al.length&&al.every(past);
   if(old||allp){e.hidden=false;e.textContent="⚠️ "+(allp?"كل المباريات المحفوظة انتهت":"البيانات قديمة")+(t?" (آخر تحديث منذ "+Math.round((Date.now()-Date.parse(t))/36e5)+" ساعة)":"")+". التوقعات قد لا تعكس آخر الأخبار."}else e.hidden=true}
 var _tt;function toast(m){var e=$("ts");e.textContent=m;e.className="show";clearTimeout(_tt);_tt=setTimeout(function(){e.className=""},2800)}
@@ -880,7 +888,7 @@ function showOb(force){if(document.getElementById("ob"))return;var ok=false,done
   document.body.appendChild(g);draw()}
 $("hp").onclick=function(){showOb(true)};
 function ld(manual){var b=$("ldb");b.className="on";function fail(){b.className="";if(manual)toast("تعذّر التحديث، تأكد من الاتصال")}
-  try{fetch("data.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){b.className="";if(j&&j.E0&&j._fix){if(!j._fix.length&&D._fix)j._fix=D._fix;var ch=!D._ts||j._ts!==D._ts;D=j;tabs();list();fillCust();btR();(D._fix||[]).forEach(logSnap);if(manual)toast(ch?"تم تحديث البيانات ✓":"البيانات محدّثة بالفعل ✓")}else if(manual)toast("لا يوجد ملف بيانات للتحديث")}).catch(fail)}catch(e){fail()}}
+  try{fetch("data.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){b.className="";if(j&&j.E0&&j._fix){if(!j._fix.length&&D._fix)j._fix=D._fix;var ch=!D._ts||j._ts!==D._ts;D=j;tabs();list();fillCust();btR();(D._fix||[]).forEach(logSnap);rsCheck();if(manual)toast(ch?"تم تحديث البيانات ✓":"البيانات محدّثة بالفعل ✓")}else if(manual)toast("لا يوجد ملف بيانات للتحديث")}).catch(fail)}catch(e){fail()}}
 window.addEventListener("scroll",function(){$("up").hidden=(window.scrollY||0)<600},{passive:true});$("up").hidden=true;$("up").onclick=function(){window.scrollTo({top:0,behavior:"smooth"})};
 (function(){var y0=null,pl=0,p=$("ptr");document.addEventListener("touchstart",function(e){y0=(window.scrollY<=0&&e.touches.length===1)?e.touches[0].clientY:null;pl=0},{passive:true});
   document.addEventListener("touchmove",function(e){if(y0===null)return;var d=e.touches[0].clientY-y0;if(d>0&&window.scrollY<=0){pl=d;p.style.opacity=Math.min(d/90,1);p.style.transform="translate(-50%,"+(Math.min(d,110)/2-30)+"px) rotate("+d*3+"deg)"}},{passive:true});
@@ -932,8 +940,6 @@ document.addEventListener("click",function(e){if(e.target.closest&&e.target.clos
   hap();setLeague(L[j]);var l=$("list");l.classList.remove("swn","swp");void l.offsetWidth;l.classList.add(dx>0?"swn":"swp");
   var a=document.querySelector("#tabs .tab.on");if(a&&a.scrollIntoView)a.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})},{passive:true})})();
 function dpl(f){var k=kick(f);if(k===null)return"";var a=cd(k),n=Date.now();return a===cd(n)?"اليوم • ":a===cd(n+864e5)?"غداً • ":""}
-window.addEventListener("offline",function(){toast("أنت غير متصل — تعمل بالبيانات المحفوظة")});
-window.addEventListener("online",function(){toast("عاد الاتصال")});
 $("od2").onclick=function(){PCT=PCT?0:1;try{localStorage.setItem("fb_pct",PCT)}catch(e){}applyUI();toast(PCT?"عرض النسب المئوية فقط":"عرض النسب والأسعار")};
 $("fs").onclick=function(){BIG=BIG?0:1;try{localStorage.setItem("fb_big",BIG)}catch(e){}applyUI();toast(BIG?"خط أكبر":"الخط العادي")};
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();DIP=e;$("ins").hidden=false});
@@ -971,6 +977,34 @@ document.addEventListener("click",function(e){var t=e.target.closest&&e.target.c
  var q=e.target.closest&&e.target.closest("[data-pk]");if(!q)return;var k=q.getAttribute("data-k")||slipKey(q);if(!k)return;e.stopPropagation();slipPick(k,q.getAttribute("data-m")||slipMkt(q),q.getAttribute("data-l"),+q.getAttribute("data-q")||0)},true);
 var _ss;new MutationObserver(function(){clearTimeout(_ss);_ss=setTimeout(slipSync,30)}).observe($("list"),{childList:true,subtree:true});
 slipBar();
+
+/* ---------- تنبيهات المباريات المفضلة (تعمل والتطبيق مفتوح) ---------- */
+var NT=0,NSENT={};try{NT=localStorage.getItem("fb_nt")==="1"?1:0;NSENT=JSON.parse(localStorage.getItem("fb_nsent")||"{}")}catch(e){}
+function ntUI(){var b=$("nt");if(b)b.textContent=NT?"🔔":"🔕"}
+function ntShow(t,body){try{if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(function(r){if(r&&r.showNotification)r.showNotification(t,{body:body,icon:"icon-192.png",tag:t});else new Notification(t,{body:body})}).catch(function(){try{new Notification(t,{body:body})}catch(e){}});else new Notification(t,{body:body})}catch(e){}}
+function ntCheck(){if(!NT||typeof Notification==="undefined"||Notification.permission!=="granted")return;var now=Date.now(),ch=0;
+  (D._fix||[]).forEach(function(f){var k=fk(f);if(!(ST[k]&&ST[k].fav)||NSENT[k])return;var ms=kick(f);if(ms===null)return;var d=ms-now;if(d>0&&d<=30*6e4){var o=pr(f[0],f[2],f[3],false,k),b="";if(o){var mx=Math.max(o.w,o.d,o.l);b="الأرجح: "+(o.w===mx?"فوز "+tn(f[2]):o.l===mx?"فوز "+tn(f[3]):"تعادل")+" ("+pc(mx)+")"}ntShow("⚽ "+tn(f[2])+" × "+tn(f[3])+" بعد "+Math.max(1,Math.round(d/6e4))+" دقيقة",b);NSENT[k]=1;ch=1}});
+  if(ch)try{localStorage.setItem("fb_nsent",JSON.stringify(NSENT))}catch(e){}}
+$("nt").onclick=function(){if(NT){NT=0;try{localStorage.setItem("fb_nt","0")}catch(e){}try{if(window.OneSignal&&OneSignal.User)OneSignal.User.PushSubscription.optOut()}catch(e){}ntUI();toast("اتقفلت التنبيهات");return}
+  if(typeof Notification==="undefined"){toast("المتصفح ده مش بيدعم التنبيهات");return}
+  (window.OneSignal&&OneSignal.Notifications?OneSignal.Notifications.requestPermission().then(function(){try{OneSignal.User.PushSubscription.optIn()}catch(e){}return Notification.permission}):Notification.requestPermission()).then(function(p){if(p==="granted"){NT=1;try{localStorage.setItem("fb_nt","1")}catch(e){}ntUI();toast("اتفعّلت: هتتنبّه قبل مباريات مفضلتك بنص ساعة (والتطبيق مفتوح)");ntCheck()}else toast("لازم تسمح بالتنبيهات من إعدادات المتصفح")})};
+/* عرض النتائج تلقائياً بعد انتهاء المباريات */
+var RSEEN=null,LASTLD=Date.now();
+function rsLoad(){try{var s=localStorage.getItem("fb_rseen");RSEEN=s?JSON.parse(s):null}catch(e){RSEEN=null}}
+function rsSave(){try{localStorage.setItem("fb_rseen",JSON.stringify(RSEEN))}catch(e){}}
+function rsCheck(){autoRes();var ks=Object.keys(LG).filter(function(k){return LG[k]&&LG[k].r});
+  if(RSEEN===null){RSEEN=ks;rsSave();return}
+  var nw=ks.filter(function(k){return RSEEN.indexOf(k)<0});if(!nw.length)return;
+  RSEEN=RSEEN.concat(nw);rsSave();
+  var busy=document.hidden||document.querySelector(".m.open")||document.activeElement===$("q")||(document.getElementById("slipov")&&!document.getElementById("slipov").hidden);
+  if(cur==="RES"){list();toast("نزلت نتائج جديدة ✓");return}
+  if(busy){toast("نزلت نتائج "+nw.length+" مباراة، شوفها من تبويب النتائج");return}
+  toast("المباريات خلصت، دي النتائج ✅");setLeague("RES")}
+function rsWait(){var n=Date.now();if(document.hidden||n-LASTLD<3e5)return;
+  var w=(D._fix||[]).some(function(f){var k=fk(f),ms=kick(f);if(ms===null)return false;var R=D._res||{};return n>ms+105*6e4&&n<ms+108e5&&!R[k]&&!(LG[k]&&LG[k].r)});
+  if(w){LASTLD=n;ld(false)}}
+rsLoad();rsCheck();setInterval(function(){rsWait();rsCheck()},6e4);
+ntUI();setInterval(ntCheck,6e4);
 applyUI();
 ld(false);showOb();
 </script>
