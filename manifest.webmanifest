@@ -7,8 +7,8 @@
  "orientation": "portrait",
  "lang": "ar",
  "dir": "rtl",
- "background_color": "#0d1117",
- "theme_color": "#0d1117",
+ "background_color": "#08090c",
+ "theme_color": "#08090c",
  "icons": [
   {
    "src": "icon-192.png",
@@ -28,5 +28,10 @@
    "type": "image/png",
    "purpose": "maskable"
   }
+ ],
+ "id": "./",
+ "description": "توقعات مباريات كرة القدم بنموذج احتمالي Dixon-Coles للدوريات الكبرى والمصري والسعودي ودوري الأبطال",
+ "categories": [
+  "sports"
  ]
 }

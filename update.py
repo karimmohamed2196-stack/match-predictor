@@ -55,7 +55,8 @@ def est_rho(lh, la, gh, ga, w):
         if l > bl: bl, best = l, r
     return round(float(best), 2)
 
-def fit(d, asof, xi=None):
+def fit(d, asof, xi=None, ridge=None):
+    rg = RIDGE if ridge is None else ridge
     teams = sorted(set(d.HomeTeam) | set(d.AwayTeam)); ix = {t:i for i,t in enumerate(teams)}; T = len(teams)
     h = d.HomeTeam.map(ix).values; a = d.AwayTeam.map(ix).values
     gh = d.FTHG.values.astype(float); ga = d.FTAG.values.astype(float)
@@ -63,11 +64,11 @@ def fit(d, asof, xi=None):
     def f(p):
         mu, ha = p[0], p[1]; att = p[2:2+T]; de = p[2+T:]
         eh = mu+ha+att[h]+de[a]; ea = mu+att[a]+de[h]; lh = np.exp(eh); la = np.exp(ea)
-        nll = -(w*(gh*eh-lh+ga*ea-la)).sum() + RIDGE*((att**2).sum()+(de**2).sum())
+        nll = -(w*(gh*eh-lh+ga*ea-la)).sum() + rg*((att**2).sum()+(de**2).sum())
         rh = w*(lh-gh); ra = w*(la-ga); g = np.zeros_like(p)
         g[0] = rh.sum()+ra.sum(); g[1] = rh.sum()
         np.add.at(g, 2+h, rh); np.add.at(g, 2+a, ra); np.add.at(g, 2+T+a, rh); np.add.at(g, 2+T+h, ra)
-        g[2:2+T] += 2*RIDGE*att; g[2+T:] += 2*RIDGE*de
+        g[2:2+T] += 2*rg*att; g[2+T:] += 2*rg*de
         return nll, g
     p0 = np.zeros(2+2*T); p0[0] = math.log(max(0.5, (gh.mean()+ga.mean())/2))
     r = minimize(f, p0, jac=True, method="L-BFGS-B", options={"maxiter": 300})
@@ -114,39 +115,42 @@ def bucket(edges, v):
     return len(edges)-2
 
 XIS = [0.0010, 0.0018, 0.0030]      # time-decay candidates (per day)
-KS = [0.80, 0.90, 1.00, 1.10]       # global strength scale (<1 = less extreme probabilities)
-DEFAULT = (0.0018, 1.00)
+KS = [0.80, 0.90, 1.00, 1.10, 1.20, 1.30]   # global strength scale (<1 = less extreme probabilities); the app clamps k to 0.6-1.3
+RIDGES = [0.15, 0.40, 1.00]          # ridge strength on attack/defence (lower = teams may differ more; was fixed at 1.0)
+DEFAULT = (0.0018, 1.00, 1.00)       # (xi, ridge, k)
+DEFCFG = {"xi": 0.0018, "ridge": 1.0, "k": 1.0}
 
-def backtest(data, today, weeks=12):
+def backtest(data, today, weeks=16, min_train=300):
     """Fit once per (week, league, xi); score each (xi, k); keep the best only if it beats the default by a margin."""
-    pack = {xi: [] for xi in XIS}; W = {}
+    pack = {(xi, rg): [] for xi in XIS for rg in RIDGES}; W = {}
     for wk in range(weeks, 0, -1):
         end = today - dt.timedelta(days=7*(wk-1)); start = end - dt.timedelta(days=7)
         for code, d in data.items():
             tr = d[d.Date < start]; te = d[(d.Date >= start) & (d.Date < end)]
-            if len(te) == 0 or len(tr) < 300: continue
+            if len(te) == 0 or len(tr) < min_train: continue
             fr = [(tr.FTHG>tr.FTAG).mean(), (tr.FTHG==tr.FTAG).mean(), (tr.FTHG<tr.FTAG).mean()]
-            for xi in XIS: pack[xi].append((wk, fit(tr, start, xi), te, fr))
+            for xi in XIS:
+                for rg in RIDGES: pack[(xi, rg)].append((wk, fit(tr, start, xi, rg), te, fr))
     def yof(r): return 0 if r.FTHG > r.FTAG else 1 if r.FTHG == r.FTAG else 2
-    def score(xi, k):
+    def score(xi, rg, k):
         R = n = 0
-        for wk, m, te, fr in pack[xi]:
+        for wk, m, te, fr in pack[(xi, rg)]:
             for r in te.itertuples():
                 L = lams(m, r.HomeTeam, r.AwayTeam, k)
                 if L is None: continue
                 R += rps(wdl(L[0], L[1], m["rho"]), yof(r)); n += 1
         return R/n if n else None
-    sc = {(xi, k): score(xi, k) for xi in XIS for k in KS}
+    sc = {(xi, rg, k): score(xi, rg, k) for xi in XIS for rg in RIDGES for k in KS}
     ds = sc.get(DEFAULT)
     ok = [(v, c) for c, v in sc.items() if v is not None]
-    if not ok: return None, {"xi": DEFAULT[0], "k": DEFAULT[1]}
+    if not ok: return None, dict(DEFCFG)
     bv, bc = min(ok)
     if ds is None or bv > ds - 0.001: bc = DEFAULT          # not clearly better: keep the default
-    xi, k = bc
+    xi, rg, k = bc
     hits = n = 0; R = B = 0.0; byw = {}
     cf = [[0,0] for _ in CONF_EDGES[:-1]]; dcf = [[0,0] for _ in DC_EDGES[:-1]]
     mk = {q: [0,0] for q in ("dc","o15","o25","btts")}
-    for wk, m, te, fr in pack[xi]:
+    for wk, m, te, fr in pack[(xi, rg)]:
         wh = wn = 0
         for r in te.itertuples():
             L = lams(m, r.HomeTeam, r.AwayTeam, k)
@@ -162,11 +166,11 @@ def backtest(data, today, weeks=12):
                 mk[name][0] += 1; mk[name][1] += int((pr_ > 0.5) == bool(real))
         a_, b_ = byw.get(wk, (0, 0)); byw[wk] = (a_+wh, b_+wn)
     Wk = [{"acc": round(a/b, 3)} for wk, (a, b) in sorted(byw.items(), reverse=True) if b >= 10]
-    if not n: return None, {"xi": xi, "k": k}
+    if not n: return None, {"xi": xi, "ridge": rg, "k": k}
     tbl = lambda E, A: [{"lo": E[i], "hi": min(E[i+1], 1.0), "n": a[0], "acc": round(a[1]/a[0], 3) if a[0] else None} for i, a in enumerate(A)]
     return ({"n": n, "acc": round(hits/n, 3), "rps": round(R/n, 4), "base_rps": round(B/n, 4), "rps_default": round(ds, 4) if ds else None,
              "tuned": bc != DEFAULT, "weeks": Wk, "conf": tbl(CONF_EDGES, cf), "dc_conf": tbl(DC_EDGES, dcf),
-             "mkts": {q: {"n": v[0], "acc": round(v[1]/v[0], 3)} for q, v in mk.items() if v[0]}}, {"xi": xi, "k": k})
+             "mkts": {q: {"n": v[0], "acc": round(v[1]/v[0], 3)} for q, v in mk.items() if v[0]}}, {"xi": xi, "ridge": rg, "k": k})
 
 KO = {}
 
@@ -488,11 +492,11 @@ def main():
         d = load_league(code, today)
         if d is not None and len(d) >= 200: data[code] = d
     if not data: sys.exit("no league updated; keeping old data.json")
-    bt, cfg = None, {"xi": DEFAULT[0], "k": DEFAULT[1]}
+    bt, cfg = None, dict(DEFCFG)
     try: bt, cfg = backtest(data, today)
     except Exception as e: print("backtest failed:", e)
     print("model config:", cfg, "| tuned:", bool(bt and bt.get("tuned")))
-    globals()["XI"] = cfg["xi"]
+    globals()["XI"] = cfg["xi"]; globals()["RIDGE"] = cfg.get("ridge", RIDGE)
     out, last, res = {}, {}, {}
     for code in LEAGUES:
         if code not in data:
