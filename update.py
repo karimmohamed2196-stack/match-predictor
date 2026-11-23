@@ -332,7 +332,8 @@ def x365_diag(code, what, games):
     print(code, "365", what, "competitions in response:", c.most_common(4))
 
 def load_x365(code, today):
-    cid = X365[code]; old = xh_unpack(_OLD_XH.get(code)); rows = {(r[0], r[1], r[2]): r for r in old}
+    cid = X365[code]; _OLD_XH.pop(code, None)      # drop the early wrong cache (it held other leagues' matches)
+    xk = code + "365"; old = xh_unpack(_OLD_XH.get(xk)); rows = {(r[0], r[1], r[2]): r for r in old}
     start = (dt.datetime.strptime(max(r[0] for r in old), "%Y-%m-%d") - dt.timedelta(days=5)) if old else today - dt.timedelta(days=HISTORY_DAYS)
     cut_s = start.strftime("%Y-%m-%d"); first = None
     for key in ("nextPage", "previousPage"):          # we don't know which one goes back in time, so try both
@@ -355,7 +356,7 @@ def load_x365(code, today):
     cut = (today - dt.timedelta(days=1100)).strftime("%Y-%m-%d"); keep = [r for r in keep if r[0] >= cut]
     print(code, "matches loaded:", len(keep), "(from cache:", len(old), ")")
     if not keep: return None
-    _NEW_XH[code] = xh_pack(keep)
+    _NEW_XH[xk] = xh_pack(keep)
     d = pd.DataFrame(keep, columns=["Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG"]); d["Date"] = pd.to_datetime(d["Date"])
     return d.sort_values("Date").reset_index(drop=True)
 
