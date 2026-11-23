@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 import numpy as np, pandas as pd
 from scipy.optimize import minimize
 
-LEAGUES = ["E0", "SP1", "I1", "D1", "F1"]
+LEAGUES = ["E0", "SP1", "I1", "D1", "F1", "EGY"]
 BASE = "https://www.football-data.co.uk/"
 OUT = "data.json"
 XI, RIDGE, N = 0.0018, 1.0, 10          # time decay per day, ridge, goal grid
@@ -27,6 +27,7 @@ def seasons(today):
     return [f"{(y-i)%100:02d}{(y-i+1)%100:02d}" for i in range(3)], dt.datetime(y, 7, 1)
 
 def load_league(code, today):
+    if code == "EGY": return load_egy(today)
     frames = []
     for s in seasons(today)[0]:
         try:
@@ -168,6 +169,56 @@ def backtest(data, today, weeks=12):
 
 KO = {}
 
+
+# ---------------- Egyptian Premier League (ESPN public API, no key) ----------------
+ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer/egy.1/scoreboard"
+
+def espn_events(a, b):
+    """All events between dates a and b (inclusive), fetched in 30-day chunks."""
+    import json as _j
+    out, cur = [], a
+    while cur <= b:
+        end = min(cur + dt.timedelta(days=29), b)
+        url = f"{ESPN}?dates={cur:%Y%m%d}-{end:%Y%m%d}&limit=500"
+        try: out += _j.loads(get(url)).get("events", [])
+        except Exception as e: print("espn skip", cur.date(), e)
+        cur = end + dt.timedelta(days=1)
+    return out
+
+def espn_rows(ev):
+    c = (ev.get("competitions") or [{}])[0]; tm = c.get("competitors") or []
+    h = next((x for x in tm if x.get("homeAway") == "home"), None); a = next((x for x in tm if x.get("homeAway") == "away"), None)
+    if not h or not a: return None
+    nm = lambda x: (x.get("team") or {}).get("shortDisplayName") or (x.get("team") or {}).get("displayName")
+    st = (ev.get("status") or {}).get("type") or {}
+    return nm(h), nm(a), h.get("score"), a.get("score"), bool(st.get("completed")), ev.get("date")
+
+def load_egy(today):
+    ss = seasons(today)[0]; y0 = 2000 + int(ss[-1][:2])        # oldest of the 3 seasons
+    evs = espn_events(dt.datetime(y0, 7, 1), today)
+    rows = []
+    for ev in evs:
+        r = espn_rows(ev)
+        if not r or not r[4] or r[2] in (None, "") or r[3] in (None, ""): continue
+        try: rows.append((pd.to_datetime(r[5]).tz_localize(None), r[0], r[1], int(r[2]), int(r[3])))
+        except Exception: continue
+    if not rows: return None
+    d = pd.DataFrame(rows, columns=["Date","HomeTeam","AwayTeam","FTHG","FTAG"]).drop_duplicates(["Date","HomeTeam","AwayTeam"])
+    return d.sort_values("Date").reset_index(drop=True)
+
+def egy_fixtures(today):
+    out = []
+    for ev in espn_events(today.replace(hour=0, minute=0), today + dt.timedelta(days=14)):
+        r = espn_rows(ev)
+        if not r or r[4]: continue
+        try: u = pd.to_datetime(r[5]).tz_localize(None).to_pydatetime()
+        except Exception: continue
+        if u < today - dt.timedelta(hours=3): continue
+        t = u.replace(tzinfo=dt.timezone.utc).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
+        KO[("EGY", r[0], r[1])] = u
+        out.append((t, ["EGY", f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r[0], r[1]]))
+    print("egy fixtures:", len(out)); return out
+
 def fixtures(today):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
     df.columns = [str(c).strip().lstrip("\ufeff") for c in df.columns]
@@ -184,6 +235,8 @@ def fixtures(today):
         KO[(r["Div"], r["HomeTeam"], r["AwayTeam"])] = d.replace(tzinfo=ZoneInfo("Europe/London")).astimezone(dt.timezone.utc).replace(tzinfo=None)
         if t.date() < today.date() or t.date() > today.date()+dt.timedelta(days=14): continue
         out.append((t, [r["Div"], f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", r["HomeTeam"], r["AwayTeam"]]))
+    try: out += egy_fixtures(today)
+    except Exception as e: print("egy fixtures failed:", e)
     out.sort(key=lambda x: x[0]); print("fixtures kept:", len(out)); return [x[1] for x in out]
 
 def build_league(code, d, today, fix_teams):
