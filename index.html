@@ -1004,6 +1004,20 @@ function rsWait(){var n=Date.now();if(document.hidden||n-LASTLD<3e5)return;
   var w=(D._fix||[]).some(function(f){var k=fk(f),ms=kick(f);if(ms===null)return false;var R=D._res||{};return n>ms+105*6e4&&n<ms+108e5&&!R[k]&&!(LG[k]&&LG[k].r)});
   if(w){LASTLD=n;ld(false)}}
 rsLoad();rsCheck();setInterval(function(){rsWait();rsCheck()},6e4);
+/* بانر طلب تفعيل التنبيهات عند الدخول */
+function ntAsk(tries){
+  if(typeof Notification==="undefined"||Notification.permission!=="default"||NT)return;
+  try{var d=+localStorage.getItem("fb_ntask")||0;if(Date.now()-d<6048e5)return}catch(e){}
+  if(document.getElementById("ntb"))return;
+  if(document.getElementById("ob")||document.getElementById("splash")||document.querySelector(".m.open")){if((tries||0)<12)setTimeout(function(){ntAsk((tries||0)+1)},5e3);return}
+  var b=document.createElement("div");b.id="ntb";
+  b.style.cssText="position:fixed;left:12px;right:12px;bottom:104px;z-index:9999;background:#1b1a17;color:#f3e7c9;border:1px solid #c9a24b;border-radius:16px;padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.35);font-size:14px;line-height:1.5";
+  b.innerHTML='<span style="flex:1 1 100%">🔔 فعّل التنبيهات عشان توصلك تنبيهات مباريات مفضلتك</span><button id="ntbY" style="flex:1;padding:10px;border:0;border-radius:12px;background:#c9a24b;color:#1b1a17;font-weight:700;font-size:14px">تفعيل</button><button id="ntbN" style="flex:1;padding:10px;border:1px solid #6b5a2e;border-radius:12px;background:transparent;color:#f3e7c9;font-size:14px">مش دلوقتي</button>';
+  document.body.appendChild(b);
+  function cl(){try{localStorage.setItem("fb_ntask",String(Date.now()))}catch(e){}if(b.parentNode)b.parentNode.removeChild(b)}
+  document.getElementById("ntbN").onclick=cl;
+  document.getElementById("ntbY").onclick=function(){cl();var n=$("nt");if(n)n.onclick()}}
+setTimeout(function(){ntAsk(0)},4000);
 ntUI();setInterval(ntCheck,6e4);
 applyUI();
 ld(false);showOb();
