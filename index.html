@@ -828,11 +828,7 @@ $("list").onclick=function(e){
   if(b){var k=b.getAttribute("data-k"),sd=b.getAttribute("data-s"),p=b.getAttribute("data-p"),I=injs(k),c=I[sd].split(p).length-1;I[sd]=c>=3?I[sd].split(p).join(""):I[sd]+p;S(k).inj=I;sv();rer(b.closest(".m"));return}
   if(e.target.closest(".det"))return;
   var m=e.target.closest(".m");if(!m)return;
-  var t0=m.getBoundingClientRect().top;var was=m.classList.contains("open");
-  document.querySelectorAll(".m.open").forEach(function(x){x.classList.remove("open");var t=x.querySelector(".mt");if(t)t.setAttribute("aria-expanded","false")});
-  if(was)return;
-  var box=m.querySelector(".det");if(!box.innerHTML)rer(m);
-  m.classList.add("open");m.querySelector(".mt").setAttribute("aria-expanded","true");var d0=m.getBoundingClientRect().top-t0;if(d0)window.scrollBy(0,d0);var r0=m.getBoundingClientRect().top,sh=($("stk")||{}).offsetHeight||60;if(r0<sh+8)window.scrollBy(0,r0-sh-12)};
+  if(window.xdTap)window.xdTap(m,function(){var box=m.querySelector(".det");if(!box.innerHTML)rer(m)})};
 $("list").addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".mt,.fav")){e.preventDefault();e.target.click()}});
 
 
@@ -855,7 +851,7 @@ function logExtra(K){var H1={n:0,h:0},H0={n:0,h:0},G={},B=[0,0,0,0,0].map(functi
   s+='<div class="gt">معايرة النسب</div>'+B.map(function(b,i){return b.n?'<div class="kv"><span>'+i*20+'–'+(i*20+20)+'%</span><b dir="ltr">'+Math.round(b.p/b.n*100)+'% → '+Math.round(b.y/b.n*100)+'% ('+b.n+')</b></div>':''}).join("")+'<p class="mut">كل صف: متوسط ما توقعه النموذج ← ما حدث فعلاً. كلما تقاربا كانت النسب أدق. الصفوف الأقل من 30 حالة غير حاسمة.</p>';
   return s}
 function btRows(t,A){var r=(A||[]).filter(function(x){return x.n&&x.acc!=null});if(!r.length)return"";return'<div class="gt">'+t+'</div>'+r.map(function(x){var l=x.hi>=1?"ثقة "+Math.round(x.lo*100)+"% فأكثر":"ثقة "+Math.round(x.lo*100)+"–"+Math.round(x.hi*100)+"%";return'<div class="kv"><span>'+l+'</span><b dir="ltr">'+pc(x.acc)+' ('+x.n+')</b></div>'}).join("")}
-function btMk(M,t){var T={dc:"الفرصة المزدوجة",o15:"أكثر من 1.5 هدف",o25:"أكثر من 2.5 هدف",btts:"الفريقان يسجلان"},K=Object.keys(M||{}).filter(function(k){return T[k]});if(!K.length)return"";return'<div class="gt">'+(t||"الدقة حسب نوع التوقع")+'</div>'+K.map(function(k){return'<div class="kv"><span>'+T[k]+'</span><b dir="ltr">'+pc(M[k].acc)+' ('+M[k].n+')</b></div>'}).join("")}
+function btMk(M,t){var T={dc:"الفرصة المزدوجة",o15:"أكثر من 1.5 هدف",o25:"أكثر من 2.5 هدف",btts:"الفريقان يسجلان"},K=Object.keys(M||{}).filter(function(k){return T[k]});if(!K.length)return"";return'<div class="gt">'+(t||"الدقة حسب نوع التوقع")+'</div>'+K.map(function(k){return'<div class="kv"><span>'+T[k]+'</span><b dir="ltr">'+(M[k].acc==null?"—":pc(M[k].acc))+' ('+M[k].n+')</b></div>'}).join("")}
 function lgStat(){var L=D._log,S=(L&&L.stats)||{},lg=S.lg||{},pend={},R=(L&&L.open)||{},loc={};
   Object.keys(R).forEach(function(k){var c=k.split("|")[0];pend[c]=(pend[c]||0)+1});
   Object.keys(LG).forEach(function(k){var g=LG[k];if(!g||!g.r||!g.f)return;var c=g.f[0],q=loc[c]||(loc[c]={n:0,h:0}),p=[g.w,g.d,g.l],y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2;q.n++;if(p.indexOf(Math.max.apply(null,p))===y)q.h++});
@@ -1557,6 +1553,139 @@ o.addEventListener("click",function(e){var i=e.target.closest&&e.target.closest(
 .tab{min-height:44px}
 details.card>summary{min-height:50px;display:flex;align-items:center;font-weight:700}
 .go,.sp{min-height:44px}
+</style>
+<style id="ux3">
+/* 1) ترتيب الفريقين: المضيف يمين والضيف شمال (اتجاه القراءة العربي) */
+.mt,.pb,.od,.bar,.g3,.hm,.lgd,.lvs,.rs2 b.sc{direction:rtl}
+/* 2) شاشة التفاصيل كاملة */
+html.dopen{overflow:hidden}
+.m.open{position:fixed;inset:0;z-index:90;max-width:720px;margin:0 auto;border:0;border-radius:0!important;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);box-shadow:none;padding:calc(62px + env(safe-area-inset-top)) 0 calc(32px + env(safe-area-inset-bottom));animation:dsl .28s cubic-bezier(.2,.8,.2,1) both}
+@keyframes dsl{from{opacity:0;transform:translateY(36px)}}
+.m.open>.fav{display:none}
+.m.open .mt{cursor:default;padding-top:8px}.m.open .tm{font-size:16px}.m.open .lg{width:52px;height:52px}
+#dbr{position:fixed;top:0;inset-inline:0;max-width:720px;margin:0 auto;z-index:91;display:none;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd)}
+html.dopen #dbr{display:flex}
+#dbr b{flex:1;text-align:center;font-size:15px}
+#dbr button{height:40px;min-width:40px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;font-size:18px;cursor:pointer}
+#dbr button:active{transform:scale(.92)}
+/* 3) النتائج والسجل والترتيب */
+.rh{display:flex;align-items:center;gap:14px;margin:4px 0 12px;padding:14px;background:linear-gradient(145deg,rgba(56,189,248,.16),transparent 60%),var(--card);border:1px solid var(--gold);border-radius:20px;box-shadow:var(--sh)}
+.ring{flex:none;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;background:radial-gradient(closest-side,var(--card) 74%,transparent 76%),conic-gradient(var(--g) calc(var(--p)*1%),var(--bd) 0)}
+.rh .rt{flex:1;min-width:0}.rh b{font-size:15px}.rh small{display:block;color:var(--mut);font-size:12px;margin-top:2px}
+.rd{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}.rd i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:800}
+.rd i.ok{background:rgba(34,197,94,.18);color:var(--g)}.rd i.no{background:rgba(239,68,68,.16);color:var(--r)}
+.rc{margin-bottom:10px;padding:12px 12px 10px;background:var(--card);border:1px solid var(--bd);border-inline-start:4px solid var(--n);border-radius:16px;box-shadow:var(--sh)}
+.rc.ok{border-inline-start-color:var(--g)}.rc.no{border-inline-start-color:var(--r)}
+.rct{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--mut);margin-bottom:8px}
+.rcm{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;direction:rtl}
+.rcm .tm{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12.5px;font-weight:700;text-align:center}
+.rsc{font-size:22px;font-weight:800;padding:4px 12px;background:var(--c2);border-radius:12px;direction:rtl;letter-spacing:1px;white-space:nowrap}
+.rcp{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:12px;color:var(--mut)}
+.rc.ok .rcp b{color:var(--g)}.rc.no .rcp b{color:var(--r)}
+.tbr{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:8px 10px;padding:10px 12px;margin-bottom:6px;background:var(--card);border:1px solid var(--bd);border-radius:14px}
+.tbr .rk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;background:var(--c2);color:var(--mut)}
+.tbr.z1{border-color:var(--gold)}.tbr.z1 .rk{background:var(--gold);color:#031321}
+.tbr.z2 .rk{background:rgba(34,197,94,.18);color:var(--g)}.tbr.z3 .rk{background:rgba(239,68,68,.16);color:var(--r)}
+.tbn{display:flex;align-items:center;gap:8px;min-width:0}.tbn b{font-size:13.5px}.tbn small{display:block;color:var(--mut);font-size:11px}
+.tbs{text-align:center}.tbs b{font-size:18px;color:var(--gold)}.tbs small{display:block;font-size:10.5px;color:var(--mut)}
+.tbp{grid-column:2/4;display:flex;gap:6px;flex-wrap:wrap}.tbp span{font-size:11px;padding:2px 8px;border:1px solid var(--bd);border-radius:999px;color:var(--mut)}
+</style>
+<script id="ux3-js">
+(function(){try{
+var H=document.documentElement,bar=document.createElement("div"),cm=null,y0=0;
+bar.id="dbr";bar.innerHTML='<button type="button" data-d="bk" aria-label="رجوع">→</button><b>تفاصيل المباراة</b><button type="button" data-d="fv" aria-label="مفضلة">☆</button><button type="button" data-d="sh" aria-label="مشاركة">📤</button>';
+document.body.appendChild(bar);
+function key(){var f=cm&&cm.querySelector(".fav");return f?f.getAttribute("data-k"):""}
+function star(){bar.querySelector('[data-d="fv"]').textContent=(ST[key()]||{}).fav?"★":"☆"}
+function closeD(){if(!cm)return;cm.classList.remove("open");var t=cm.querySelector(".mt");if(t)t.setAttribute("aria-expanded","false");cm=null;H.classList.remove("dopen");window.scrollTo(0,y0)}
+window.xdTap=function(m,prep){if(m===cm)return;if(cm)closeD();prep();cm=m;y0=window.scrollY||0;m.classList.add("open");m.querySelector(".mt").setAttribute("aria-expanded","true");H.classList.add("dopen");m.scrollTop=0;star();try{history.pushState({dt:1},"")}catch(e){}};
+function back(){if(history.state&&history.state.dt){history.back()}else closeD()}
+bar.onclick=function(e){var b=e.target.closest("button");if(!b||!cm)return;var a=b.getAttribute("data-d"),k=key();
+ if(a==="bk")back();
+ else if(a==="fv"){S(k).fav=S(k).fav?0:1;sv();var f=cm.querySelector(".fav");if(f)f.textContent=S(k).fav?"★":"☆";star();toast(S(k).fav?"اتضافت للمفضلة":"اتشالت من المفضلة")}
+ else if(a==="sh"){var x=shareTxt(k);if(!x)return;if(navigator.share)navigator.share({text:x}).catch(function(){});else cp(x,"تم نسخ التوقع")}};
+window.addEventListener("popstate",function(){if(cm&&!(history.state&&history.state.dt))closeD()});
+document.addEventListener("keydown",function(e){var o=document.getElementById("slipov");if(e.key==="Escape"&&cm&&!(o&&!o.hidden))back()});
+/* 3) نتائج وسجل وترتيب */
+function okR(g){var p=[g.w,g.d,g.l];return p.indexOf(Math.max.apply(null,p))===(g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2)}
+resRowsH=function(R){return R.map(function(g){var p=[g.w,g.d,g.l],mx=Math.max.apply(null,p),pi=p.indexOf(mx),ok=okR(g),lb=["فوز "+tn(g.f[2]),"تعادل","فوز "+tn(g.f[3])][pi],pp=String(g.f[1]).split(" ");
+ return'<div class="rc '+(ok?"ok":"no")+'"><div class="rct"><span>'+esc(NAMES[g.f[0]]||g.f[0])+'</span><span>'+esc((DAY[pp[0]]||pp[0])+" "+pp[1]+" "+(MON[pp[2]]||pp[2]))+'</span></div><div class="rcm"><div class="tm">'+logo(g.f[2])+esc(tn(g.f[2]))+'</div><b class="rsc">'+g.r[0]+' - '+g.r[1]+'</b><div class="tm">'+logo(g.f[3])+esc(tn(g.f[3]))+'</div></div><div class="rcp"><span>توقعنا: '+esc(lb)+' ('+pc(mx)+')</span><b>'+(ok?"✅ أصبنا":"❌ لم نصب")+'</b></div></div>'}).join("")};
+var SK={};try{SK=JSON.parse(localStorage.getItem("fb_streak")||"{}")}catch(e){}
+var td=new Date().toISOString().slice(0,10);
+if(SK.d!==td){var yd=new Date(Date.now()-864e5).toISOString().slice(0,10);SK.n=SK.d===yd?(SK.n||0)+1:1;SK.d=td;try{localStorage.setItem("fb_streak",JSON.stringify(SK))}catch(e){}if(SK.n>=2)setTimeout(function(){toast("🔥 "+SK.n+" أيام متتالية معانا!")},3500)}
+function heroH(){var R=[];try{R=logRows()||[]}catch(e){}if(!R.length)return"";var ok=R.filter(okR).length,pct=Math.round(ok/R.length*100);
+ return'<div class="rh"><div class="ring" style="--p:'+pct+'">'+pct+'%</div><div class="rt"><b>أصبنا '+ok+' من '+R.length+' مباراة</b><small>🔥 '+(SK.n||1)+' يوم متتالي معانا</small><div class="rd">'+R.slice(0,10).map(function(g){return'<i class="'+(okR(g)?"ok":"no")+'">'+(okR(g)?"✓":"✕")+'</i>'}).join("")+'</div></div></div>'}
+["resView","logView"].forEach(function(n){var o=window[n];if(typeof o!=="function")return;window[n]=function(){o.apply(this,arguments);try{$("list").insertAdjacentHTML("afterbegin",heroH())}catch(e){}}});
+var TL=null;
+tblView=function(){var T=D._tab;if(!T){setLeague(leagues()[0]);return}
+ var ks=leagues().filter(function(c){return T[c]});if(!ks.length){$("list").innerHTML='<p class="mut" style="padding:14px">الترتيب المتوقع يظهر بعد أول تحديث للبيانات.</p>';$("list").F=[];return}
+ if(!TL||ks.indexOf(TL)<0)TL=ks[0];var t=T[TL],R=Object.keys(t).sort(function(x,y){return t[y][2]-t[x][2]}),n=R.length;
+ var s='<div class="xf">'+ks.map(function(c){return'<button data-tl="'+c+'" class="'+(c===TL?"on":"")+'">'+(NAMES[c]||c)+'</button>'}).join("")+'</div>';
+ s+=R.map(function(x,i){var v=t[x],z=i===0?"z1":i<4?"z2":i>=n-3?"z3":"",P=[];
+  if(v[3]>=1)P.push("🏆 "+v[3]+"%");if(v[4]>=1)P.push("⭐ أول 4: "+v[4]+"%");if(v[5]>=1)P.push("⬇ هبوط: "+v[5]+"%");
+  return'<div class="tbr '+z+'"><i class="rk">'+(i+1)+'</i><div class="tbn">'+logo(x)+'<div><b>'+esc(tn(x))+'</b><small>لعب '+v[1]+' • نقاط '+v[0]+'</small></div></div><div class="tbs"><b>'+v[2]+'</b><small>متوقع</small></div>'+(P.length?'<div class="tbp">'+P.map(function(q){return'<span>'+q+'</span>'}).join("")+'</div>':'')+'</div>'}).join("");
+ s+='<p class="mut">محاكاة 4000 مرة لباقي الموسم. «متوقع» = متوسط النقاط النهائية.</p>';
+ $("list").innerHTML=s;$("list").F=[];try{want(TL)}catch(e){}};
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-tl]");if(b&&cur==="TBL"){TL=b.getAttribute("data-tl");tblView();window.scrollTo(0,0)}});
+}catch(err){console.error("ux3",err)}})();
+</script>
+<style id="ux6">
+/* ===== هوية "ليلة الملعب": داكن عميق + لون أخضر نيون واحد للتركيز ===== */
+html:root:root{--bg:#07090d;--card:#0f131a;--c2:#161b25;--bd:#212836;--tx:#f3f6fb;--mut:#8b95aa;--gold:#c8f542;--on:#0a0f05;--g:#c8f542;--n:#4a5468;--r:#7aa2ff;--rad:20px;--sh:none}
+html:root[data-theme=light]{--bg:#f4f6f9;--card:#fff;--c2:#eef1f6;--bd:#e0e5ee;--tx:#0d1320;--mut:#5c6678;--gold:#3d7a00;--on:#fff;--g:#3d7a00;--n:#a9b2c3;--r:#2f5fd8}
+body{background:radial-gradient(700px 380px at 85% -120px,rgba(200,245,66,.09),transparent),var(--bg)!important;font-family:"IBM Plex Sans Arabic","Segoe UI",system-ui,Tahoma,sans-serif}
+:root[data-theme=light] body{background:var(--bg)!important}
+/* ترويسة أخف */
+#sb,.sub{font-size:11px;opacity:.75}
+h1 em{background:var(--gold);color:var(--on);border-radius:6px;font-size:10.5px;letter-spacing:1px}
+#q,#so{border-radius:14px;border-color:transparent;background:var(--c2)}
+#q:focus{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 22%,transparent)}
+#stale{font-size:11.5px;padding:7px 12px;border-radius:10px;margin:6px 14px}
+/* تبويبات نصية بخط سفلي */
+#tabs{gap:20px;padding:4px 16px 0;border-bottom:1px solid var(--bd);-webkit-mask-image:none;mask-image:none}
+html:root .tab{min-height:44px;padding:0 2px;border:0;border-bottom:2px solid transparent;border-radius:0;background:none;box-shadow:none;color:var(--mut);font-weight:600;font-size:14.5px}
+html:root .tab.on{color:var(--tx);border-bottom-color:var(--gold);background:none;box-shadow:none;font-weight:800}
+/* الكروت */
+.m{border:0;border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 1px var(--bd)}
+.m.open{box-shadow:none}
+.mt{padding:18px 8px 6px}
+.tm{font-size:14px;font-weight:700}
+.mid{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.mid small,.mid b{font-size:10.5px;font-weight:600;color:var(--mut);letter-spacing:1.5px}
+.lg{width:48px;height:48px}
+.fav{color:var(--mut)}
+/* شريط الاحتمالات: الأرجح فقط ملوّن */
+.pb{height:30px;gap:3px;margin:8px 14px 10px}
+.pb i{background:var(--c2)!important;color:var(--mut);font-size:11.5px;font-weight:700}
+.pb i.mx{background:var(--gold)!important;color:var(--on);font-weight:800;font-size:13px}
+.m .sm,.sm{font-size:12.5px;color:var(--mut);line-height:1.6}.sm em{font-style:normal;color:var(--tx);font-weight:800}
+.bd{border-radius:8px;border:0;font-size:10.5px;font-weight:700;padding:3px 9px;background:var(--c2);color:var(--mut)}
+.bd.ok{background:color-mix(in srgb,var(--gold) 16%,transparent);color:var(--gold)}
+.od{gap:6px;padding:0 14px 14px}
+.od div{border:0;background:var(--c2);border-radius:12px}
+.od div small{font-size:10.5px;color:var(--mut)}.od div b{font-size:14.5px}
+.od div.hi,.od .on{background:color-mix(in srgb,var(--gold) 15%,transparent);box-shadow:inset 0 0 0 1px var(--gold)}
+.day{font-size:12px;font-weight:700;color:var(--mut);letter-spacing:.4px}.day:after{background:var(--bd)}
+/* أزرار وشارات */
+.go,.hb,.hero .go{background:var(--gold)!important;color:var(--on)!important;border:0!important;border-radius:14px;font-weight:800;box-shadow:none!important}
+.hero{border:0;border-radius:24px;box-shadow:inset 0 0 0 1px var(--bd)}
+.hx-t,.hx-c,.hx-r,.card,.rc,.tbr,.rh{border:0;box-shadow:inset 0 0 0 1px var(--bd);border-radius:20px}
+.hx-c:first-child{box-shadow:inset 0 0 0 1px var(--gold)}
+.hx-t b{color:var(--tx);font-size:21px}
+.rsc{background:var(--c2)}.tbr.z1 .rk,.ring{--g:var(--gold)}
+/* شريط سفلي: أيقونات فقط والنشط يعرض اسمه */
+#bn{border-radius:26px;border:0;box-shadow:inset 0 0 0 1px var(--bd),0 14px 40px rgba(0,0,0,.45);background:color-mix(in srgb,var(--card) 88%,transparent)}
+#bn button{font-size:clamp(9px,2.5vw,10.5px);font-weight:600;min-height:56px;gap:3px;justify-content:center;color:var(--mut)}
+#bn button span{background:none!important;width:auto;height:26px;display:grid;place-items:center}
+#bn button.on{color:var(--gold);font-weight:800}
+#bn button.on span{background:none!important}
+#bn button.on:before{content:"";position:absolute;top:2px;width:18px;height:3px;border-radius:3px;background:var(--gold)}
+#bn button{position:relative}
+#stale,.xrm{color:#e9a93a;background:rgba(233,169,58,.10);border:1px solid rgba(233,169,58,.35)}
+:root[data-theme=light] #stale,:root[data-theme=light] .xrm{color:#8a5a00}
+.bd.low,.bd.mid{background:var(--c2);color:var(--mut)}
+.m.open{background:var(--bg)}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </body>
 </html>
