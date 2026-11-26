@@ -919,7 +919,7 @@ function simpleH(o,h,a,k){var sc=[],i,j;for(i=0;i<N;i++)for(j=0;j<N;j++)sc.push(
 function slipH(k){var f=fxOf(k);if(!f)return"";var o=pr(f[0],f[2],f[3],false,k);if(!o)return"";var P=[o.w,o.d,o.l];return'<div class="gt">🎫 أضف لقسيمتي</div><div class="t2row">'+[0,1,2].map(function(i){var l=slipLbl3(i,f);return'<button class="sp'+(slipOn(k,"نتيجة المباراة",l)?" on":"")+'" data-pk="1" data-k="'+esc(k)+'" data-m="نتيجة المباراة" data-l="'+esc(l)+'" data-q="'+P[i].toFixed(4)+'">'+esc(l)+'</button>'}).join("")+'</div>'}
 function analysisH(o,h,a){return ciH(o,h,a)+'<details><summary>المزيد من التحليل</summary>'+xchk(o,h,a)+sgH(o,h,a)+formH(o,h,a)+'</details>'}
 function detail(code,h,a,neu,k){var o=pr(code,h,a,neu,k);if(!o)return detail0(code,h,a,neu);
-  return'<div class="dtabs"><div class="t2row" role="tablist"><button class="t2 on" data-t="0" role="tab">الملخص</button><button class="t2" data-t="1" role="tab">التحليل</button><button class="t2" data-t="2" role="tab">متقدم</button></div><div class="tp on">'+safeH(o,h,a,k)+simpleH(o,h,a,k)+'</div><div class="tp">'+analysisH(o,h,a)+'</div><div class="tp">'+eloH(o,h,a)+detailAdv(code,h,a,neu,k)+'</div></div>'}
+  return'<div class="dtabs"><div class="t2row" role="tablist"><button class="t2 on" data-t="0" role="tab">الملخص</button><button class="t2" data-t="1" role="tab">التحليل</button><button class="t2" data-t="2" role="tab">متقدم</button></div><div class="tp on">'+safeH(o,h,a,k)+simpleH(o,h,a,k)+t5H(code,h,a)+'</div><div class="tp">'+analysisH(o,h,a)+'</div><div class="tp">'+eloH(o,h,a)+detailAdv(code,h,a,neu,k)+'</div></div>'}
 $("list").addEventListener("toggle",function(e){var d=e.target;if(d&&d.classList&&d.classList.contains("adv")){ADV=d.open;try{localStorage.setItem("fb_adv",ADV?"1":"0")}catch(x){}}},true);
 function accH(){return""}
 function stl(){var e=$("stale");if(!e)return;var t=D._ts,old=t&&(Date.now()-Date.parse(t))/36e5>12,al=D._fix||[],allp=al.length&&al.every(past);
@@ -951,7 +951,15 @@ window.addEventListener("scroll",function(){$("up").hidden=(window.scrollY||0)<6
   document.addEventListener("touchend",function(){if(y0===null)return;p.style.opacity=0;p.style.transform="translate(-50%,-40px)";if(pl>90)ld(true);y0=null;pl=0})})();
 
 /* ---------- v9: مقارنة، شكل الفريق، صورة المشاركة ---------- */
-function formH(o,h,a){if(!o.H[2]||!o.A[2])return"";
+function lgBoth(c,a,b){var L=[c].concat(leagues().filter(function(x){return x!==c})),i,m;for(i=0;i<L.length;i++){m=D[L[i]];if(m&&m.teams&&m.teams[a]&&m.teams[b])return L[i]}return null}
+  function t5(c,t){var R=((D._last||{})[t]||[]).slice(0,5),out=[];R.forEach(function(r){var opp=r[0],home=r[1]==="H",lg=lgBoth(c,t,opp);if(!lg)return;var o=pr(lg,home?t:opp,home?opp:t,false,null);if(!o)return;
+      var w=home?o.w:o.l,l=home?o.l:o.w,d=o.d,mx=Math.max(w,d,l),pk=w===mx?"W":l===mx?"L":"D",ac=r[2]>r[3]?"W":r[2]<r[3]?"L":"D";out.push({opp:opp,home:home,gf:r[2],ga:r[3],pk:pk,ac:ac,ok:pk===ac})});return out}
+  function t5H(c,h,a){function blk(t,col){var R=t5(c,t);if(!R.length)return"";var n=R.filter(function(x){return x.ok}).length,PL={W:"فوز",D:"تعادل",L:"خسارة"};
+      return'<div class="t5"><div class="fr"><span class="sn">'+esc(tn(t))+'</span><span class="fbw" dir="ltr" style="gap:4px;align-items:center">'+R.map(function(x){return'<b style="font-size:15px">'+(x.ok?"✅":"❌")+'</b>'}).join("")+'</span><span class="rk"><b style="color:'+col+'">'+n+'</b><small>/'+R.length+'</small></span></div>'+
+      '<details><summary style="font-size:12px;color:var(--mut)">تفاصيل توقعاتنا</summary>'+R.map(function(x){return'<div class="kv"><span>'+(x.ok?"✅":"❌")+' '+(x.home?"ضد ":"عند ")+esc(tn(x.opp))+' • '+x.gf+'-'+x.ga+'</span><b style="font-size:12px">توقعنا: '+PL[x.pk]+'</b></div>'}).join("")+'</details></div>'}
+    var b1=blk(h,"var(--gold)"),b2=blk(a,"#a78bfa");if(!b1&&!b2)return"";
+    return'<div class="gt">🎯 توقعاتنا للفريقين في آخر 5 مباريات</div><div class="sg">'+b1+b2+'<p class="mut" style="margin:8px 0 0">✅ = النموذج كان يرجّح نتيجة الفريق صح. التقييم رجعي بنفس النموذج الحالي، فهو مؤشر مش توقعات اتسجّلت قبل المباراة.</p></div>'}
+  function formH(o,h,a){if(!o.H[2]||!o.A[2])return"";
   function row(t,f,c){var pts=0,bars=f.split("").map(function(x){pts+=x==="W"?3:x==="D"?1:0;return'<i class="fb f'+x+'" style="height:'+(x==="W"?100:x==="D"?55:25)+'%"></i>'}).join("");return'<div class="fr"><span class="sn">'+esc(tn(t))+'</span><span class="fbw" dir="ltr">'+bars+'</span><span class="rk" dir="ltr"><b style="color:'+c+'">'+pts+'</b><small>/15</small></span></div>'}
   return'<div class="gt">📈 الشكل في آخر 5 مباريات</div><div class="sg">'+row(h,o.H[2],'var(--gold)')+row(a,o.A[2],'#a78bfa')+'<p class="mut" style="margin:8px 0 0">العمود الأعلى = فوز، المتوسط = تعادل، الأقصر = خسارة. الرقم = نقاط من 15.</p></div>'}
 function cmpH(){return'<div class="qa"><button class="cmpb">⚖️ قارن فريقين</button><button class="go dayb">📤 شارك أقوى التوقعات</button></div>'}
