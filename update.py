@@ -386,7 +386,66 @@ def x365_fixtures(code, today):
         if not url: break
     print(code, "fixtures:", len(out)); return out
 
-def fixtures(today):
+
+# ---------------- Big-five fixtures via ESPN (football-data's fixtures.csv only lists ~1 round, often stale) ----------------
+import re, unicodedata, difflib
+BIG5_ESPN = {"E0": "eng.1", "SP1": "esp.1", "I1": "ita.1", "D1": "ger.1", "F1": "fra.1"}
+BIG5_ALIAS = {
+    "manchester united": "Man United", "man utd": "Man United", "manchester city": "Man City", "newcastle united": "Newcastle",
+    "nottingham forest": "Nott'm Forest", "nottm forest": "Nott'm Forest", "tottenham hotspur": "Tottenham", "spurs": "Tottenham",
+    "wolverhampton wanderers": "Wolves", "brighton hove albion": "Brighton", "west ham united": "West Ham", "leeds united": "Leeds",
+    "ipswich town": "Ipswich", "hull city": "Hull", "coventry city": "Coventry",
+    "atletico madrid": "Ath Madrid", "atletico": "Ath Madrid", "athletic club": "Ath Bilbao", "athletic bilbao": "Ath Bilbao",
+    "real sociedad": "Sociedad", "rayo vallecano": "Vallecano", "celta vigo": "Celta", "espanyol": "Espanol",
+    "deportivo la coruna": "La Coruna", "racing santander": "Santander", "real racing club": "Santander",
+    "inter milan": "Inter", "internazionale": "Inter", "hellas verona": "Verona",
+    "borussia dortmund": "Dortmund", "eintracht frankfurt": "Ein Frankfurt", "frankfurt": "Ein Frankfurt",
+    "borussia monchengladbach": "M'gladbach", "gladbach": "M'gladbach", "bayer leverkusen": "Leverkusen", "vfb stuttgart": "Stuttgart",
+    "bayern": "Bayern Munich", "paris saint germain": "Paris SG", "psg": "Paris SG", "olympique marseille": "Marseille",
+    "olympique lyonnais": "Lyon", "stade rennais": "Rennes", "stade brestois": "Brest", "losc lille": "Lille", "lille osc": "Lille",
+}
+
+def _norm(s):
+    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode().lower()
+    s = re.sub(r"[^a-z0-9 ]", " ", s)
+    s = re.sub(r"\b(fc|afc|cf|sc|ac|as|ss|us|ssc|rc|rcd|ud|1|04|05|1913|calcio)\b", " ", s)
+    return " ".join(s.split())
+
+def map_team(name, known):
+    """ESPN team name -> the name used in football-data (None if no safe match)."""
+    if name in known: return name
+    n = _norm(name); idx = {_norm(k): k for k in known}
+    if n in idx: return idx[n]
+    a = BIG5_ALIAS.get(n)
+    if a in known: return a
+    c = [k for nk, k in idx.items() if nk and (nk in n or n in nk)]
+    if len(c) == 1: return c[0]
+    m = difflib.get_close_matches(n, list(idx), n=1, cutoff=0.82)
+    return idx[m[0]] if m else None
+
+def big5_espn_fixtures(today, known, have):
+    out = []
+    for code, slug in BIG5_ESPN.items():
+        kn = set(known.get(code) or [])
+        if not kn: print(code, "big5 espn: no known teams yet, skipped"); continue
+        added, miss, seen = 0, set(), set()
+        for ev in espn_days(code, slug, [today + dt.timedelta(days=i) for i in range(15)]):
+            r = espn_rows(ev)
+            if not r or not r[0] or not r[1] or r[4] or r[6]: continue
+            h, a = map_team(r[0], kn), map_team(r[1], kn)
+            if not h or not a:
+                miss |= {x for x, y in ((r[0], h), (r[1], a)) if not y}; continue
+            try: u = pd.to_datetime(r[5]).tz_localize(None).to_pydatetime()
+            except Exception: continue
+            if u < today - dt.timedelta(hours=3) or (code, h, a) in have or (code, h, a) in seen: continue
+            seen.add((code, h, a))
+            t = u.replace(tzinfo=dt.timezone.utc).astimezone(ZoneInfo("Africa/Cairo")).replace(tzinfo=None)
+            KO[(code, h, a)] = u
+            out.append((t, [code, f"{WD[t.weekday()]} {t.day} {MON[t.month-1]} {t:%H:%M}", h, a])); added += 1
+        print(code, "big5 espn fixtures added:", added, "| unmatched names:", sorted(miss) or "none")
+    return out
+
+def fixtures(today, known=None):
     df = pd.read_csv(io.StringIO(get(BASE+"fixtures.csv")), on_bad_lines="skip")
     df.columns = [str(c).strip().lstrip("\ufeff") for c in df.columns]
     if "Div" not in df.columns:
@@ -405,10 +464,14 @@ def fixtures(today):
     for _c in ESPN_LEAGUES:
         try: out += espn_fixtures(_c, today)
         except Exception as e: print(_c, "fixtures failed:", e)
+    try: out += big5_espn_fixtures(today, known or {}, {(f[0], f[2], f[3]) for _, f in out})
+    except Exception as e: print("big5 espn fixtures failed:", e)
     for _c in X365:
         try: out += x365_fixtures(_c, today)
         except Exception as e: print(_c, "365 fixtures failed:", e)
     out.sort(key=lambda x: x[0]); print("fixtures kept:", len(out)); return [x[1] for x in out]
+
+HA_CAP = {"UCL": 0.15, "UEL": 0.12}; HA_CAP_DEFAULT = 0.22   # max home advantage (log goals)
 
 def build_league(code, d, today, fix_teams):
     m = fit(d, today); start = seasons(today)[1]
@@ -425,7 +488,8 @@ def build_league(code, d, today, fix_teams):
     teams = {t: [round(m["att"][t],3), round(m["def"][t],3), form[t], m["n"][t]] for t in cur}
     res = {f"{code}|{r.HomeTeam}|{r.AwayTeam}": [int(r.FTHG), int(r.FTAG)]
            for r in d[d.Date >= today-dt.timedelta(days=21)].itertuples()}
-    return {"mu": round(m["mu"],4), "ha": round(m["ha"],4), "rho": m["rho"], "teams": teams}, last, res
+    ha = min(m["ha"], HA_CAP.get(code, HA_CAP_DEFAULT))
+    return {"mu": round(m["mu"],4), "ha": round(ha,4), "rho": m["rho"], "teams": teams}, last, res
 
 
 def blk_pred(blk, h, a, k):
@@ -485,7 +549,8 @@ def main():
     today = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)
     old = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
     _OLD_XH.update(old.get("_xh") or {})
-    try: fx = fixtures(today)
+    known = {c: list((old.get(c) or {}).get("teams", {}).keys()) for c in BIG5_ESPN}
+    try: fx = fixtures(today, known)
     except Exception as e: print("fixtures failed:", e); fx = old.get("_fix", [])
     data = {}
     for code in LEAGUES:
