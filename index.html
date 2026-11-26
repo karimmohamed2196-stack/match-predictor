@@ -460,6 +460,12 @@ main>p.mut{text-align:center;color:var(--mut);opacity:.85;border-top-color:color
 .hero .xrm{margin:8px 0}
 .xfw{flex-wrap:wrap;overflow:visible}
 </style>
+<style id="t5css">.t5w{padding:12px}.t5top{display:flex;align-items:baseline;gap:8px;justify-content:center;margin:2px 0 12px}.t5top b{font-size:30px;font-weight:800;color:var(--g)}.t5top span{color:var(--mut);font-size:13px}
+.t5{padding:10px 0;border-top:1px solid var(--bd)}.t5h{display:flex;justify-content:space-between;align-items:center}.t5h b{font-size:14.5px}.t5s{font-size:12.5px;font-weight:800;color:var(--c);border:1px solid var(--c);border-radius:999px;padding:2px 10px}
+.t5d{display:flex;gap:6px;justify-content:center;margin:10px 0 8px}.t5d i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:14px}
+.t5d i.ok,.t5m.ok{background:rgba(34,197,94,.16);color:var(--g)}.t5d i.no,.t5m.no{background:rgba(239,68,68,.14);color:var(--r)}
+.t5b{height:5px;border-radius:99px;background:var(--bd);overflow:hidden}.t5b span{display:block;height:100%;border-radius:99px}
+.t5 details summary{font-size:12px;color:var(--mut);margin-top:8px;cursor:pointer}.t5r{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--bd);font-size:12.5px}.t5r small{color:var(--mut);margin-inline-start:auto}.t5m{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}</style>
 </head>
 <body>
 <div id="splash" aria-hidden="true"><svg class="sp-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 7.2l3.9 2.8-1.5 4.6H9.6L8.1 10z" fill="currentColor"/><path d="M12 7.2V1.7M15.9 10l5.2-1.7M14.4 14.6l3.2 4.4M9.6 14.6l-3.2 4.4M8.1 10L2.9 8.3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><div class="sp-t">متوقع المباريات</div><div class="sp-s">PRO</div></div>
@@ -880,7 +886,8 @@ function smI(o,f){var h=tn(f[2]),a=tn(f[3]),mx=Math.max(o.w,o.d,o.l),g=o.lh+o.la
   if(mx<.40)B.push('<span class="bd low">مباراة متقاربة</span>');
   return'<div class="sm">'+t+'</div><div class="bdg">'+B.join("")+'</div>'}
 function actH(k){return k?'<div class="act"><button class="abtn sbtn" data-k="'+esc(k)+'">📤 شارك التوقع</button><button class="abtn rem" data-k="'+esc(k)+'">⏰ ذكّرني</button><button class="abtn imgb" data-k="'+esc(k)+'">🖼 صورة</button></div>':''}
-function empH(mx){var L=D._log&&D._log.stats&&D._log.stats.conf,B=D._bt&&D._bt.conf,src="الاختبار الرجعي",b=null;
+function empH(mx){return""}
+function empH_old(mx){var L=D._log&&D._log.stats&&D._log.stats.conf,B=D._bt&&D._bt.conf,src="الاختبار الرجعي",b=null;
   function pick(A){return(A||[]).filter(function(x){return x.n>=30&&x.acc!=null&&mx>=x.lo&&mx<x.hi})[0]||null}
   b=pick(L);if(b)src="سجلنا الفعلي";else b=pick(B);
   if(!b)return"";return'<div class="mut" style="text-align:center;padding:0 14px 8px">📊 توقعات بنفس مستوى الثقة أصابت <b>'+pc(b.acc)+'</b> في '+src+' ('+b.n+' مباراة)</div>'}
@@ -954,11 +961,13 @@ window.addEventListener("scroll",function(){$("up").hidden=(window.scrollY||0)<6
 function lgBoth(c,a,b){var L=[c].concat(leagues().filter(function(x){return x!==c})),i,m;for(i=0;i<L.length;i++){m=D[L[i]];if(m&&m.teams&&m.teams[a]&&m.teams[b])return L[i]}return null}
   function t5(c,t){var R=((D._last||{})[t]||[]).slice(0,5),out=[];R.forEach(function(r){var opp=r[0],home=r[1]==="H",lg=lgBoth(c,t,opp);if(!lg)return;var o=pr(lg,home?t:opp,home?opp:t,false,null);if(!o)return;
       var w=home?o.w:o.l,l=home?o.l:o.w,d=o.d,mx=Math.max(w,d,l),pk=w===mx?"W":l===mx?"L":"D",ac=r[2]>r[3]?"W":r[2]<r[3]?"L":"D";out.push({opp:opp,home:home,gf:r[2],ga:r[3],pk:pk,ac:ac,ok:pk===ac})});return out}
-  function t5H(c,h,a){function blk(t,col){var R=t5(c,t);if(!R.length)return"";var n=R.filter(function(x){return x.ok}).length,PL={W:"فوز",D:"تعادل",L:"خسارة"};
-      return'<div class="t5"><div class="fr"><span class="sn">'+esc(tn(t))+'</span><span class="fbw" dir="ltr" style="gap:4px;align-items:center">'+R.map(function(x){return'<b style="font-size:15px">'+(x.ok?"✅":"❌")+'</b>'}).join("")+'</span><span class="rk"><b style="color:'+col+'">'+n+'</b><small>/'+R.length+'</small></span></div>'+
-      '<details><summary style="font-size:12px;color:var(--mut)">تفاصيل توقعاتنا</summary>'+R.map(function(x){return'<div class="kv"><span>'+(x.ok?"✅":"❌")+' '+(x.home?"ضد ":"عند ")+esc(tn(x.opp))+' • '+x.gf+'-'+x.ga+'</span><b style="font-size:12px">توقعنا: '+PL[x.pk]+'</b></div>'}).join("")+'</details></div>'}
-    var b1=blk(h,"var(--gold)"),b2=blk(a,"#a78bfa");if(!b1&&!b2)return"";
-    return'<div class="gt">🎯 توقعاتنا للفريقين في آخر 5 مباريات</div><div class="sg">'+b1+b2+'<p class="mut" style="margin:8px 0 0">✅ = النموذج كان يرجّح نتيجة الفريق صح. التقييم رجعي بنفس النموذج الحالي، فهو مؤشر مش توقعات اتسجّلت قبل المباراة.</p></div>'}
+  function t5H(c,h,a){function blk(t,col){var R=t5(c,t);if(!R.length)return null;var n=R.filter(function(x){return x.ok}).length,PL={W:"فوز",D:"تعادل",L:"خسارة"},AL={W:"فاز",D:"تعادل",L:"خسر"},pct=Math.round(n/R.length*100);
+      return{n:n,t:R.length,h:'<div class="t5"><div class="t5h"><b>'+esc(tn(t))+'</b><span class="t5s" style="--c:'+col+'">'+n+' من '+R.length+'</span></div>'+
+      '<div class="t5d" dir="ltr">'+R.slice().reverse().map(function(x){return'<i class="'+(x.ok?"ok":"no")+'">'+(x.ok?"✓":"✕")+'</i>'}).join("")+'</div>'+
+      '<div class="t5b"><span style="width:'+pct+'%;background:'+col+'"></span></div>'+
+      '<details><summary>تفاصيل كل مباراة</summary>'+R.map(function(x){return'<div class="t5r"><span class="t5m '+(x.ok?"ok":"no")+'">'+(x.ok?"✓":"✕")+'</span><span class="t5t">'+(x.home?"ضد ":"عند ")+esc(tn(x.opp))+' • '+AL[x.ac]+' <bdi dir="ltr">'+x.gf+'-'+x.ga+'</bdi></span><small>توقعنا: '+PL[x.pk]+'</small></div>'}).join("")+'</details></div>'}}
+    var b1=blk(h,"var(--gold)"),b2=blk(a,"#a78bfa");if(!b1&&!b2)return"";var N=(b1?b1.n:0)+(b2?b2.n:0),T=(b1?b1.t:0)+(b2?b2.t:0);
+    return'<div class="gt">🎯 توقعاتنا للفريقين في آخر 5 مباريات</div><div class="sg t5w"><div class="t5top"><b>'+N+'</b><span>من '+T+' توقعات صح</span></div>'+(b1?b1.h:"")+(b2?b2.h:"")+'<p class="mut" style="margin:8px 0 0">✓ = النموذج كان يرجّح نتيجة الفريق صح. التقييم رجعي بنفس النموذج الحالي، مؤشر مش توقعات اتسجّلت قبل المباراة.</p></div>'}
   function formH(o,h,a){if(!o.H[2]||!o.A[2])return"";
   function row(t,f,c){var pts=0,bars=f.split("").map(function(x){pts+=x==="W"?3:x==="D"?1:0;return'<i class="fb f'+x+'" style="height:'+(x==="W"?100:x==="D"?55:25)+'%"></i>'}).join("");return'<div class="fr"><span class="sn">'+esc(tn(t))+'</span><span class="fbw" dir="ltr">'+bars+'</span><span class="rk" dir="ltr"><b style="color:'+c+'">'+pts+'</b><small>/15</small></span></div>'}
   return'<div class="gt">📈 الشكل في آخر 5 مباريات</div><div class="sg">'+row(h,o.H[2],'var(--gold)')+row(a,o.A[2],'#a78bfa')+'<p class="mut" style="margin:8px 0 0">العمود الأعلى = فوز، المتوسط = تعادل، الأقصر = خسارة. الرقم = نقاط من 15.</p></div>'}
