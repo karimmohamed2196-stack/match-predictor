@@ -1,0 +1,32 @@
+
+name: update-seo
+on:
+  workflow_run:
+    workflows: ["update-data"]
+    types: [completed]
+  schedule:
+    - cron: "40 */6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: seo-update
+  cancel-in-progress: false
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node seo.js
+      - name: commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A m sitemap.xml
+          git diff --cached --quiet && exit 0
+          git commit -m "seo pages"
+          git pull --rebase
+          git push
