@@ -1151,7 +1151,7 @@ function calH(){var R=rows(),B=[],i,N=0,tot=0,bias=0,bn=0;for(i=0;i<10;i++)B.pus
  if(R.length<10)return h+'<p class="mut">محتاجين 10 مباريات منتهية على الأقل. دلوقتي: '+R.length+'.</p></div>';
  B.forEach(function(b,i){if(b.n<3)return;var p=b.p/b.n,a=b.y/b.n;tot+=b.n*Math.abs(a-p);if(i>=5){bias+=b.n*(a-p);bn+=b.n}
   h+='<div class="cal-r"><span dir="ltr">'+i*10+'–'+(i+1)*10+'%</span><div class="cal-b"><i style="width:'+Math.round(a*100)+'%;background:'+(Math.abs(a-p)<.07?'var(--g)':'var(--gold)')+'"></i><u style="left:'+Math.round(p*100)+'%"></u></div><b dir="ltr">'+Math.round(a*100)+'% <small class="mut">('+b.n+')</small></b></div>'});
- var ece=tot/N,v=bn?bias/bn:0,txt=R.length<30?'العينة لسه صغيرة، خد الأرقام بحذر.':v<-.05?'⚠️ النموذج واثق أكتر من اللازم في التوقعات العالية.':v>.05?'النموذج متحفظ شوية، توقعاته العالية بتتحقق أكتر من المتوقع.':'✅ المعايرة كويسة، التوقعات العالية قريبة من الواقع.';
+ var ece=tot/N,v=bn?bias/bn:0,txt=bn<30?'📊 العينة لسه بتكبر، والصورة بتبقى أدق مع كل مباراة بتنتهي.':v<-.05?'التوقعات العالية بتتحقق أقل شوية من نسبتها، وبتتحسّن المعايرة مع زيادة البيانات.':v>.05?'التوقعات العالية بتتحقق أكتر من نسبتها.':'✅ التوقعات قريبة من الواقع.';
  return h+'<p>متوسط الانحراف: <b>'+(ece*100).toFixed(1)+'%</b> <small class="mut">(أقل أفضل) • '+R.length+' مباراة</small></p><p>'+txt+'</p></div>'}
 var _al=autoLogH;autoLogH=function(){var s="";try{s=_al()}catch(e){}return calH()+s};
 var _av=aiView;aiView=function(){_av();try{var R=aiRounds(),h="";R.forEach(function(r){if(AIL!=="ALL"&&AIL!==r.lg)return;
