@@ -867,7 +867,7 @@ function valCard(){var b=D._bt,B=b&&b.conf,hi=B&&B.filter(function(x){return x.h
   return'<div class="card" style="margin-top:0"><b>🧪 فحص المصداقية</b><p class="mut">اختبار مستقل: النموذج بيتدرّب على الماضي بس ويتوقع المباراة الجاية.</p>'+
    r("إصابة النتيجة",pc(b.acc)+" (العشوائي 33%)")+
    (hi?r("توقعات بثقة "+Math.round(hi.lo*100)+"%+",pc(hi.acc)+" ("+hi.n+")"):"")+
-   '<details><summary>تفاصيل أكتر</summary>'+
+   '<button class="shb" data-vs="1" style="width:100%;margin:10px 0">📤 شارك نتيجة الفحص كصورة</button><details><summary>تفاصيل أكتر</summary>'+
    r("نتيجة المباراة 1X2 (RPS)",b.rps.toFixed(3)+" مقابل "+b.base_rps.toFixed(3)+" للتخمين بالنسب الثابتة")+
    r("عدد المباريات المختبرة",b.n)+
    '<p class="mut">RPS الأقل أفضل. اختبار خارجي مستقل على 965 مباراة (مصري وسعودي وأبطال وأوروبي) أكّد إن ضبط النموذج الحالي قريب من أفضل ما تقدر تديه بيانات الأهداف وحدها، وإن أي معايرة إضافية (تعادل، تنعيم، Elo) فرقها أقل من هامش الخطأ. سوقا «أكثر/أقل 2.5» و«الفريقان يسجلان» مفيهمش ميزة تُذكر عن المتوسط العام، فاتشالوا من الكروت. اعتمد على 1X2 والفرصة المزدوجة. هذه نسب احتمالية وليست ضماناً لأي نتيجة.</p></details></div>'}
@@ -1187,6 +1187,16 @@ function teamSheet(lg,t){var NXF=[],T=D[lg].teams,d=T[t],h='<div class="tsh-h"><
 document.addEventListener("click",function(e){var g=e.target.closest&&e.target.closest(".lg");if(!g||$$("tsh"))return;var tm=g.closest(".tm");if(!tm||!$$("list").contains(tm)&&!tm.closest(".hero"))return;
  var n="";for(var i=0;i<tm.childNodes.length;i++)if(tm.childNodes[i].nodeType===3&&tm.childNodes[i].textContent.trim()){n=tm.childNodes[i].textContent.trim();break}
  var r=n&&findTeam(n);if(!r)return;e.stopPropagation();e.preventDefault();teamSheet(r[0],r[1])},true);
+document.addEventListener("click",function(e){var bt=e.target.closest&&e.target.closest("[data-vs]");if(!bt)return;e.stopPropagation();
+ var b=D._bt,B=b&&b.conf,hi=B&&B.filter(function(x){return x.hi>=1&&x.n>=30&&x.acc!=null})[0];if(!b||!b.n)return;
+ var c=document.createElement("canvas");c.width=c.height=1080;var x=c.getContext("2d"),ff=getComputedStyle(document.body).fontFamily;
+ x.fillStyle="#0b0d12";x.fillRect(0,0,1080,1080);x.fillStyle="#c9a24b";x.fillRect(0,0,1080,12);x.direction="rtl";x.textAlign="center";
+ x.font="700 40px "+ff;x.fillText("متوقع المباريات PRO",540,105);x.fillStyle="#fff";x.font="800 62px "+ff;x.fillText("🧪 فحص المصداقية",540,230);
+ function big(y,v,l,s){x.fillStyle="#2ecc71";x.font="900 190px "+ff;x.fillText(v,540,y);x.fillStyle="#fff";x.font="700 44px "+ff;x.fillText(l,540,y+70);x.fillStyle="#8a8f9a";x.font="500 32px "+ff;x.fillText(s,540,y+118)}
+ big(450,pc(b.acc),"إصابة نتيجة المباراة","التخمين العشوائي 33% • "+b.n+" مباراة مختبرة");
+ if(hi)big(780,pc(hi.acc),"توقعات بثقة "+Math.round(hi.lo*100)+"%+","على "+hi.n+" مباراة");
+ x.fillStyle="#8a8f9a";x.font="500 28px "+ff;x.fillText("اختبار مستقل: النموذج يتدرّب على الماضي فقط ويتوقع الجاية",540,1005);x.fillText(location.host+location.pathname.replace(/index\.html$/,""),540,1045);
+ c.toBlob(function(bl){var fl=new File([bl],"credibility.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[fl]}))navigator.share({files:[fl],title:"فحص المصداقية"}).catch(function(){});else{var a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download="credibility.png";a.click()}})},true);
 }catch(err){console.error("plus",err)}})();
 </script>
 <script id="grow-js">
