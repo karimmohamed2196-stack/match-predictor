@@ -437,6 +437,8 @@ main>p.mut{text-align:center;color:var(--mut);opacity:.85;border-top-color:color
 
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>window.OneSignalDeferred=window.OneSignalDeferred||[];OneSignalDeferred.push(async function(OneSignal){try{await OneSignal.init({appId:"9873ca1b-1cbb-4bad-a473-c4c8a0a4301c",safari_web_id:"web.onesignal.auto.33b67024-44c4-4b60-aec5-91af5568c874",serviceWorkerPath:"match-predictor/push/onesignal/OneSignalSDKWorker.js",serviceWorkerParam:{scope:"/match-predictor/push/onesignal/"},notifyButton:{enable:false}})}catch(e){window.OSERR=String(e&&e.message||e)}});</script>
+<meta name="description" content="متوقع المباريات PRO: توقعات مباريات كرة القدم بنموذج Dixon-Coles، نسب فوز وتعادل وإحصائيات لـ10 دوريات ودوري الأبطال والدوري السعودي والمصري.">
+<meta property="og:type" content="website"><meta property="og:title" content="متوقع المباريات PRO"><meta property="og:description" content="تحليل احتمالي لمباريات كرة القدم بنموذج Dixon-Coles، محدّث يومياً."><meta property="og:locale" content="ar_AR"><meta name="twitter:card" content="summary">
 </head>
 <body>
 <div id="splash" aria-hidden="true"><svg class="sp-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 7.2l3.9 2.8-1.5 4.6H9.6L8.1 10z" fill="currentColor"/><path d="M12 7.2V1.7M15.9 10l5.2-1.7M14.4 14.6l3.2 4.4M9.6 14.6l-3.2 4.4M8.1 10L2.9 8.3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><div class="sp-t">متوقع المباريات</div><div class="sp-s">PRO</div></div>
@@ -1136,6 +1138,72 @@ betSettle();aiWatch();
 ntUI();setInterval(ntCheck,6e4);
 applyUI();
 ld(false);showOb();
+</script>
+<script id="plus-js">
+(function(){try{
+var st=document.createElement("style");st.textContent="#tsh{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);display:block}.tsp{position:fixed;left:0;right:0;bottom:0;margin:0 auto;width:100%;max-width:640px;box-sizing:border-box;max-height:84vh;max-height:84dvh;overflow-y:auto;overflow-x:hidden;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:20px 20px 0 0;padding:16px 14px calc(20px + env(safe-area-inset-bottom))}.tsh-h{display:flex;align-items:center;justify-content:space-between;font-size:18px;font-weight:800;margin-bottom:4px}.tsh-x{border:0;background:var(--card);color:var(--tx);width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer}.fd{display:inline-flex;flex-wrap:wrap;gap:5px;direction:ltr}.fd i{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;font-weight:800;color:#fff}.cal-r{display:grid;grid-template-columns:58px 1fr 44px;gap:8px;align-items:center;margin:7px 0;font-size:12px}.cal-b{position:relative;height:14px;background:var(--c2);border-radius:7px;overflow:hidden;direction:ltr}.cal-b i{position:absolute;inset:0 auto 0 0;border-radius:7px}.cal-b u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--tx);opacity:.8}.shb{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:12px;padding:6px 10px;font:inherit;cursor:pointer}.rk{padding:11px;font-weight:700}.nx{align-items:center;display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--bd);font-size:13px}";document.head.appendChild(st);
+function $$(i){return document.getElementById(i)}
+function rows(){var M={},k;Object.keys(LG).forEach(function(k){var g=LG[k];if(g&&g.r&&g.f)M[k]={f:g.f,p:[g.w,g.d,g.l],r:g.r}});
+ ((D._log&&D._log.recent)||[]).forEach(function(x){if(x&&x.r&&x.f&&x.p)M[fk(x.f)]={f:x.f,p:x.p,r:x.r}});return Object.keys(M).map(function(k){return M[k]})}
+function calH(){var R=rows(),B=[],i,N=0,tot=0,bias=0,bn=0;for(i=0;i<10;i++)B.push({n:0,p:0,y:0});
+ R.forEach(function(g){var y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2;g.p.forEach(function(p,j){var b=B[Math.min(9,Math.floor(p*10))];b.n++;b.p+=p;if(j===y)b.y++;N++})});
+ var h='<div class="card" style="margin-top:0"><b>🎯 معايرة النموذج</b><p class="mut">لما النموذج يقول 60%، المفروض الحاجة دي تحصل في 60% من المرات. الخط الأبيض = توقعنا، والشريط = اللي حصل فعلاً.</p>';
+ if(R.length<10)return h+'<p class="mut">محتاجين 10 مباريات منتهية على الأقل. دلوقتي: '+R.length+'.</p></div>';
+ B.forEach(function(b,i){if(b.n<3)return;var p=b.p/b.n,a=b.y/b.n;tot+=b.n*Math.abs(a-p);if(i>=5){bias+=b.n*(a-p);bn+=b.n}
+  h+='<div class="cal-r"><span dir="ltr">'+i*10+'–'+(i+1)*10+'%</span><div class="cal-b"><i style="width:'+Math.round(a*100)+'%;background:'+(Math.abs(a-p)<.07?'var(--g)':'var(--gold)')+'"></i><u style="left:'+Math.round(p*100)+'%"></u></div><b dir="ltr">'+Math.round(a*100)+'% <small class="mut">('+b.n+')</small></b></div>'});
+ var ece=tot/N,v=bn?bias/bn:0,txt=R.length<30?'العينة لسه صغيرة، خد الأرقام بحذر.':v<-.05?'⚠️ النموذج واثق أكتر من اللازم في التوقعات العالية.':v>.05?'النموذج متحفظ شوية، توقعاته العالية بتتحقق أكتر من المتوقع.':'✅ المعايرة كويسة، التوقعات العالية قريبة من الواقع.';
+ return h+'<p>متوسط الانحراف: <b>'+(ece*100).toFixed(1)+'%</b> <small class="mut">(أقل أفضل) • '+R.length+' مباراة</small></p><p>'+txt+'</p></div>'}
+var _al=autoLogH;autoLogH=function(){var s="";try{s=_al()}catch(e){}return calH()+s};
+var _av=aiView;aiView=function(){_av();try{var R=aiRounds(),h="";R.forEach(function(r){if(AIL!=="ALL"&&AIL!==r.lg)return;
+ var C=r.C.slice().sort(function(a,b){return(kick(a.res.f)||0)-(kick(b.res.f)||0)});
+ h+='<details class="card"><summary style="cursor:pointer"><b>📋 كل مباريات '+esc(NAMES[r.lg]||r.lg)+' ('+C.length+')</b></summary>'+C.map(function(c){var g=c.res,p=g.f[1].split(" ");
+  return'<div class="sl-r"><div><b>'+esc(tn(g.f[2]))+' × '+esc(tn(g.f[3]))+'</b><div class="mut">'+esc(g.l)+' • '+pc(g.q)+' • '+esc(p.slice(0,4).join(" "))+'</div></div><b>'+bOdds(g.q).toFixed(2)+'</b></div>'}).join("")+'</details>'});
+ if(h)$$("list").insertAdjacentHTML("beforeend",h)}catch(e){console.error(e)}};
+/* صفحة الفريق: اضغط على شعار الفريق */
+function shareImg(f){var o=null;try{o=pr(f[0],f[2],f[3],false,fk(f))}catch(e){}if(!o)return;var c=document.createElement("canvas");c.width=c.height=1080;var x=c.getContext("2d"),ff=getComputedStyle(document.body).fontFamily;
+ x.fillStyle="#0b0d12";x.fillRect(0,0,1080,1080);x.fillStyle="#c9a24b";x.fillRect(0,0,1080,12);x.direction="rtl";x.textAlign="center";
+ x.font="700 40px "+ff;x.fillText("متوقع المباريات PRO",540,105);x.fillStyle="#fff";x.font="800 70px "+ff;x.fillText(tn(f[2]),540,285);x.fillStyle="#8a8f9a";x.font="600 44px "+ff;x.fillText("×",540,370);x.fillStyle="#fff";x.font="800 70px "+ff;x.fillText(tn(f[3]),540,470);
+ [["فوز "+tn(f[2]),o.w,"#2ecc71"],["تعادل",o.d,"#9aa0ab"],["فوز "+tn(f[3]),o.l,"#e5534b"]].forEach(function(r,i){var y=600+i*125;x.textAlign="right";x.fillStyle="#d6d9df";x.font="600 36px "+ff;x.fillText(r[0],940,y);x.textAlign="left";x.fillStyle="#fff";x.font="800 40px "+ff;x.fillText(Math.round(r[1]*100)+"%",140,y);x.fillStyle="#1d212b";x.fillRect(140,y+18,800,22);x.fillStyle=r[2];x.fillRect(140+800*(1-r[1]),y+18,800*r[1],22)});
+ x.textAlign="center";x.fillStyle="#8a8f9a";x.font="500 30px "+ff;x.fillText(f[1].split(" ").slice(0,4).join(" ")+" (توقيت القاهرة)",540,1000);x.fillText(location.host+location.pathname.replace(/index\.html$/,""),540,1045);
+ c.toBlob(function(b){var fl=new File([b],"prediction.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[fl]}))navigator.share({files:[fl],title:"توقع مباراة"}).catch(function(){});else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="prediction.png";a.click()}})}
+function rankSheet(lg){var T=D[lg]&&D[lg].teams;if(!T)return;var a=Object.keys(T).map(function(n){return[n,T[n][0]-T[n][1]]}).sort(function(p,q){return q[1]-p[1]});
+ var o=document.createElement("div");o.id="tsh";o.innerHTML='<div class="tsp"><div class="tsh-h"><span>📈 تصنيف القوة</span><button class="tsh-x">✕</button></div><p class="mut" style="margin:0 0 8px">'+esc(NAMES[lg]||lg)+' • حسب قوة الهجوم والدفاع في النموذج (مش جدول النقاط)</p><div class="card" style="margin-top:0">'+a.map(function(r,i){return'<div class="nx" data-t="'+esc(r[0])+'" style="cursor:pointer"><span><b dir="ltr">'+(i+1)+'.</b> '+esc(tn(r[0]))+'</span><b dir="ltr">'+(r[1]>0?"+":"")+r[1].toFixed(2)+'</b></div>'}).join("")+'</div></div>';document.body.appendChild(o);
+ o.addEventListener("click",function(e){var n=e.target.closest("[data-t]");if(e.target===o||e.target.closest(".tsh-x")){o.remove()}else if(n){o.remove();teamSheet(lg,n.getAttribute("data-t"))}})}
+function findTeam(n){var c=leagues(),pick=null,i,k;if(leagues().indexOf(cur)>=0)c=[cur].concat(c);
+ for(i=0;i<c.length;i++){k=c[i];var T=D[k]&&D[k].teams;if(!T)continue;for(var t in T){if(t===n||tn(t)===n)return[k,t]}}return null}
+function rk(T,t,ix,asc){var a=Object.keys(T).map(function(x){return[x,T[x][ix]]}).sort(function(x,y){return asc?x[1]-y[1]:y[1]-x[1]});for(var i=0;i<a.length;i++)if(a[i][0]===t)return(i+1)+' من '+a.length;return"—"}
+function teamSheet(lg,t){var NXF=[],T=D[lg].teams,d=T[t],h='<div class="tsh-h"><span>'+esc(tn(t))+'</span><button class="tsh-x" aria-label="إغلاق">✕</button></div><p class="mut" style="margin:0 0 10px">'+esc(NAMES[lg]||lg)+'</p>';
+ var C={W:"var(--g)",D:"var(--n)",L:"var(--r)"};
+ h+='<div class="card" style="margin-top:0"><b>الفورمة (آخر 5)</b><div style="margin-top:8px"><span class="fd">'+String(d[2]||"").split("").map(function(c){return'<i style="background:'+(C[c]||"var(--n)")+'">'+c+'</i>'}).join("")+'</span></div>'
+  +'<div class="kv"><span>ترتيب الهجوم</span><b>'+rk(T,t,0,false)+'</b></div><div class="kv"><span>ترتيب الدفاع</span><b>'+rk(T,t,1,true)+'</b></div><div class="kv"><span>مباريات في النموذج</span><b>'+(d[3]||0)+'</b></div></div>';
+ var nx=(D._fix||[]).filter(function(f){return f[0]===lg&&(f[2]===t||f[3]===t)&&!past(f)&&kick(f)!==null}).sort(function(a,b){return kick(a)-kick(b)}).slice(0,3);
+ if(nx.length){h+='<div class="card"><b>المباريات الجاية</b>'+nx.map(function(f){var o=null;try{o=pr(f[0],f[2],f[3],false,fk(f))}catch(e){}var home=f[2]===t,opp=home?f[3]:f[2],w=o?(home?o.w:o.l):0,dr=o?o.d:0,l=o?(home?o.l:o.w):0;
+   NXF.push(f);return'<div class="nx"><span>'+(home?'🏠':'✈️')+' '+esc(tn(opp))+'<div class="mut">'+esc(f[1].split(" ").slice(0,3).join(" "))+'</div></div>'+(o?'<b dir="ltr">'+pc(w)+' • '+pc(dr)+' • '+pc(l)+'</b>':'')+'<button class="shb" data-i="'+(NXF.length-1)+'" aria-label="مشاركة صورة">📤</button></div>'}).join("")+'<p class="mut">الأرقام: فوزه • تعادل • خسارته</p></div>'}
+ var rs=rows().filter(function(g){return g.f[2]===t||g.f[3]===t}).slice(-5).reverse();
+ if(rs.length)h+='<div class="card"><b>نتايج متسجّلة</b>'+rs.map(function(g){return'<div class="nx"><span>'+esc(tn(g.f[2]))+' – '+esc(tn(g.f[3]))+'</span><b dir="ltr">'+g.r[0]+' - '+g.r[1]+'</b></div>'}).join("")+'</div>';
+ h+='<button class="shb rk" data-lg="'+lg+'" style="width:100%;margin-top:6px">📈 تصنيف قوة '+esc(NAMES[lg]||lg)+'</button>';var o=document.createElement("div");o.id="tsh";var sp=document.createElement("div");sp.className="tsp";sp.innerHTML=h;o.appendChild(sp);document.body.appendChild(o);
+ function cl(){o.remove();document.removeEventListener("keydown",ek)}function ek(e){if(e.key==="Escape")cl()}document.addEventListener("keydown",ek);
+ o.addEventListener("click",function(e){if(e.target===o||e.target.closest(".tsh-x"))return cl();var b=e.target.closest(".shb");if(!b)return;if(b.classList.contains("rk")){cl();rankSheet(b.getAttribute("data-lg"))}else shareImg(NXF[+b.getAttribute("data-i")])})}
+document.addEventListener("click",function(e){var g=e.target.closest&&e.target.closest(".lg");if(!g||$$("tsh"))return;var tm=g.closest(".tm");if(!tm||!$$("list").contains(tm)&&!tm.closest(".hero"))return;
+ var n="";for(var i=0;i<tm.childNodes.length;i++)if(tm.childNodes[i].nodeType===3&&tm.childNodes[i].textContent.trim()){n=tm.childNodes[i].textContent.trim();break}
+ var r=n&&findTeam(n);if(!r)return;e.stopPropagation();e.preventDefault();teamSheet(r[0],r[1])},true);
+}catch(err){console.error("plus",err)}})();
+</script>
+<script id="grow-js">
+(function(){try{
+var s=document.createElement("style");s.textContent="#gw{position:fixed;inset-inline:12px;bottom:calc(104px + env(safe-area-inset-bottom));z-index:900;display:flex;gap:8px;justify-content:center;animation:fi .3s ease both}#gw button{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:22px;padding:10px 16px;font:inherit;font-size:13px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25);cursor:pointer}#gw .x{padding:10px 12px;opacity:.7}";document.head.appendChild(s);
+var ip=null,K="gw_seen";function seen(){try{return localStorage.getItem(K)}catch(e){return 1}}function mark(){try{localStorage.setItem(K,"1")}catch(e){}}
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();ip=e});
+function show(){if(seen()||document.getElementById("gw"))return;var d=document.createElement("div");d.id="gw";var h="";
+ if(ip)h+='<button data-a="i">📲 ثبّت التطبيق</button>';
+ if(navigator.share)h+='<button data-a="s">📤 شارك التطبيق</button>';
+ if(!h)return;d.innerHTML=h+'<button class="x" data-a="x" aria-label="إغلاق">✕</button>';document.body.appendChild(d);
+ d.onclick=function(e){var a=e.target.getAttribute("data-a");if(!a)return;
+  if(a==="i"&&ip){ip.prompt();ip=null}
+  if(a==="s")navigator.share({title:"متوقع المباريات PRO",text:"توقعات المباريات بنموذج Dixon-Coles بنسب فوز وتعادل لكل دوري",url:location.href.split("#")[0]}).catch(function(){});
+  mark();d.remove()}}
+setTimeout(show,25000);
+}catch(err){console.error("grow",err)}})();
 </script>
 <script id="lux-js">
 (function(){var s=document.getElementById("splash");if(!s)return;var seen=0;try{seen=sessionStorage.getItem("fb_sp")}catch(e){}
