@@ -441,7 +441,7 @@ main>p.mut{text-align:center;color:var(--mut);opacity:.85;border-top-color:color
 <meta property="og:type" content="website"><meta property="og:title" content="متوقع المباريات PRO"><meta property="og:description" content="تحليل احتمالي لمباريات كرة القدم بنموذج Dixon-Coles، محدّث يومياً."><meta property="og:locale" content="ar_AR"><meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://karimmohamed2196-stack.github.io/match-predictor/">
 <style id="x-css">
-#bn{overflow-x:auto;scrollbar-width:none;justify-content:flex-start}#bn::-webkit-scrollbar{display:none}#bn button{flex:1 0 58px}
+#bn{left:6px;right:6px;padding:5px 2px;justify-content:stretch;overflow:visible}#bn button{flex:1 1 0;min-width:0;min-height:50px;padding:4px 0;gap:0;font-size:clamp(8.5px,2.45vw,10.5px);letter-spacing:0;white-space:nowrap;overflow:visible}#bn button span{font-size:clamp(16px,4.6vw,20px)}#bn .bgn{inset-inline-start:calc(50% + 2px)}
 .xf{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}.xf::-webkit-scrollbar{display:none}
 .xf button{flex:none;min-height:36px;padding:0 13px;font:inherit;font-size:13px;font-weight:700;color:var(--mut);background:var(--card);border:1px solid var(--bd);border-radius:999px;cursor:pointer}
 .xf button.on{color:var(--gold);border-color:var(--gold);background:rgba(56,189,248,.12)}
@@ -458,6 +458,7 @@ main>p.mut{text-align:center;color:var(--mut);opacity:.85;border-top-color:color
 .xw{color:var(--r);font-size:11px}
 .xrm{margin:6px 14px 8px;padding:7px 10px;font-size:12px;line-height:1.5;color:var(--gold);background:rgba(245,158,11,.12);border:1px solid var(--gold);border-radius:10px}
 .hero .xrm{margin:8px 0}
+.xfw{flex-wrap:wrap;overflow:visible}
 </style>
 </head>
 <body>
@@ -1283,29 +1284,33 @@ setTimeout(show,25000);
 function nz(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\b(fc|cf|ac|afc)\b/g,"").replace(/[^a-z0-9\u0600-\u06ff]/g,"")}
 function eq(a,b){return!!a&&!!b&&(a===b||(a.length>=4&&b.length>=4&&(a.indexOf(b)===0||b.indexOf(a)===0)))}
 function same(a,b){return eq(nz(a),nz(b))||eq(nz(tn(a)),nz(tn(b)))}
-var memo={},mk="";
-function RM(f){try{var key=f[0]+"|"+f[2]+"|"+f[3];if(mk!==(D._ts||"")){memo={};mk=D._ts||""}if(key in memo)return memo[key];var r=(D._res||{})[key],o=null,now=Date.now();
- if(r)o={t:"المباراة دي موجودة في النتائج المنتهية ("+r[0]+"-"+r[1]+")"};
- else[[f[2],f[3]],[f[3],f[2]]].some(function(p){var L=null;Object.keys(D._last||{}).some(function(n){if(same(n,p[0])){L=D._last[n];return true}});
-  return(L||[]).some(function(e){var d=(now-Date.parse(e[4]))/864e5;if(same(e[0],p[1])&&d>=0&&d<=25){o={t:"الفريقين لعبوا قبل "+Math.max(1,Math.round(d))+" يوم ("+tn(p[0])+" "+e[2]+"-"+e[3]+" "+tn(p[1])+")"};return true}})});
+var DOM={E0:1,SP1:1,I1:1,D1:1,F1:1,EGY:1,KSA:1},memo={},mk="";
+function prune(){try{var R=D._res||{},F=D._fix||[],K=F.filter(function(f){return!(DOM[f[0]]&&R[f[0]+"|"+f[3]+"|"+f[2]])});if(K.length!==F.length){D._fix=K;return 1}}catch(e){}return 0}
+function RM(f){try{var key=f[0]+"|"+f[2]+"|"+f[3];if(mk!==(D._ts||"")){memo={};mk=D._ts||""}if(key in memo)return memo[key];var r=(D._res||{})[f[0]+"|"+f[3]+"|"+f[2]],o=null,now=Date.now();
+ if(r)o={t:"الفريقين لعبوا قريب ("+r[0]+"-"+r[1]+")"};
+ else[[f[2],f[3]],[f[3],f[2]]].some(function(p){var Ls=[];Object.keys(D._last||{}).forEach(function(n){if(same(n,p[0]))Ls.push(D._last[n])});
+  return Ls.some(function(L){return(L||[]).some(function(e){var d=(now-Date.parse(e[4]))/864e5;if(same(e[0],p[1])&&d>=0&&d<=25){o={t:"الفريقين لعبوا قبل "+Math.max(1,Math.round(d))+" يوم"};return true}})})});
  return memo[key]=o}catch(e){return null}}
 window.xRM=RM;
 var _h=hero;hero=function(F){if(!F.some(function(f){return!RM(f)}))return _h(F);var m=mat;mat=function(a,h,b){return RM([a,"",h,b])?null:m(a,h,b)};try{return _h(F)}finally{mat=m}};
+var _t=tabs;tabs=function(){prune();_t()};
+var _l=list;list=function(){prune();_l()};
+if(prune()){try{tabs();list()}catch(e){}}
 })();
 </script>
 <script id="x-pro">
 (function(){
-var XMIN=.65,XMK="all",XL=[],XS=1;
+var XMIN=.65,XMK="all",XL=[],XS=1,XLG="ALL",XSO="q",XN=0;try{var sv=localStorage.getItem("fb_xlg");if(sv){XLG=sv;if(sv!=="ALL")XMIN=0}}catch(e){}
 function bt(){return D._bt||{}}
 function bin(a,q){var r=null;(a||[]).forEach(function(b){if(q>=b.lo&&q<=b.hi&&b.n>=30&&b.acc!=null)r=b});return r}
 function rest(f){var w=[],t=kick(f);if(t===null)return"";[f[2],f[3]].forEach(function(n){var L=(D._last||{})[n];if(!L||!L[0])return;var d=(t-Date.parse(L[0][4]))/864e5;if(d>0&&d<=3.6)w.push(tn(n)+" لعب من "+Math.round(d)+" يوم")});return w.length?'<span class="xn">😮‍💨 '+esc(w.join(" • "))+'</span>':""}
-function cands(){var o=[];(D._fix||[]).forEach(function(f){if(past(f)||(window.xRM&&xRM(f)))return;var k=fk(f),p=pr(f[0],f[2],f[3],false,k);if(!p)return;
+function cands(){var o=[];(D._fix||[]).forEach(function(f){if(past(f)||(window.xRM&&xRM(f))||(XLG!=="ALL"&&f[0]!==XLG))return;var k=fk(f),p=pr(f[0],f[2],f[3],false,k);if(!p)return;
  var mx=Math.max(p.w,p.d,p.l),i=p.w===mx?0:p.d===mx?1:2,dc=[["1X",p.w+p.d],["12",p.w+p.l],["X2",p.d+p.l]].sort(function(a,b){return b[1]-a[1]})[0],o15=P(p,function(a,b){return a+b>1}),B=bt();
  var c={f:f,k:k,p:p,res:{t:"نتيجة المباراة",l:slipLbl3(i,f),q:mx,h:bin(B.conf,mx),add:{k:k,f:f,m:BM[0],l:slipLbl3(i,f),q:mx}},
   dc:{t:"الفرصة المزدوجة",l:slipNorm(k,BM[1],dc[0])[1],q:dc[1],h:bin(B.dc_conf,dc[1]),add:{k:k,f:f,m:BM[1],l:slipNorm(k,BM[1],dc[0])[1],q:dc[1]}},
   o15:{t:"إجمالي الأهداف",l:"أكثر من 1.5 هدف",q:o15,h:B.mkts&&B.mkts.o15?{acc:B.mkts.o15.acc,n:B.mkts.o15.n,all:1}:null}};
  var pk=XMK==="all"?[c.res,c.dc,c.o15].sort(function(a,b){return b.q-a.q})[0]:c[XMK];c.pk=pk;o.push(c)});
- return o.filter(function(c){return c.pk.q>=XMIN}).sort(function(a,b){return b.pk.q-a.pk.q})}
+ XN=o.length;return o.filter(function(c){return c.pk.q>=XMIN}).sort(function(a,b){return XSO==="t"?(kick(a.f)||0)-(kick(b.f)||0):b.pk.q-a.pk.q})}
 function badge(h,q){if(!h)return'<span class="xb">بدون سجل تاريخي كافٍ</span>';var a=Math.round(h.acc*100),c=a>=80?"hi":a>=65?"mid":"lo";return'<span class="xb '+c+'">'+(h.all?"نجاح السوق عموماً ":"نجاح تاريخي لنفس الثقة ")+a+'% ('+h.n+')</span>'}
 function card(c,i){var f=c.f,p=f[1].split(" "),pk=c.pk,can=pk.add;return'<div class="xc" data-i="'+i+'"><div class="xr"><div class="xt"><b>'+esc(tn(f[2]))+' × '+esc(tn(f[3]))+'</b><small>'+esc(NAMES[f[0]]||f[0])+' • '+esc((DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2])+" "+(p[3]||""))+'</small></div><div class="xq"><b>'+pc(pk.q)+'</b><small class="xn">'+od(pk.q)+'</small></div></div><div class="xp">'+pk.t+': <b>'+esc(pk.l)+'</b></div><div class="xm">'+badge(pk.h,pk.q)+rest(f)+'</div><div class="xa">'+(can?'<button class="sp" data-xa="'+i+'">➕ للقسيمة</button>':'')+'<button class="sp" data-xh="'+i+'">🔥 توزيع النتائج</button></div><div class="xhm"></div></div>'}
 function heat(p){var m=0,j,k,s='<i></i>';for(j=0;j<6;j++)s+='<i>'+j+'</i>';for(k=0;k<36;k++)m=Math.max(m,p.M[Math.floor(k/6)*N+k%6]);
@@ -1315,23 +1320,23 @@ function base(){var R=D._res||{},n=0,h=0,d=0,o15=0,o25=0,bt=0;Object.keys(R).for
  return'<div class="card"><b>📏 النموذج مقابل خط الأساس</b><p class="mut">خط الأساس = اختيار ثابت على آخر '+n+' نتيجة مسجلة (عينة صغيرة). لو النموذج قريب منه، السوق ده مش مضمون.</p><table class="xbs"><tr><th>السوق</th><th>النموذج</th><th>الأساس</th></tr>'+rows.map(function(r){var a=r[1],b=r[3],w=a!=null&&a-b<.03;return'<tr><td>'+r[0]+(w?' <span class="xw">⚠️ قريب من الأساس</span>':'')+'</td><td>'+(a==null?"—":Math.round(a*100)+"%")+'</td><td>'+Math.round(b*100)+'% <small class="xn">'+r[2]+'</small></td></tr>'}).join("")+'</table></div>'}
 function bt_(){return bt()}
 function chip(g,v,l,on){return'<button data-x'+g+'="'+v+'" class="'+(on?"on":"")+'">'+l+'</button>'}
-window.topView=function(){var C=cands(),s='<div class="card" style="margin-top:0"><b>🎯 أفضل الاختيارات</b><p class="mut">كل اختيار معاه نسبة نجاح النموذج تاريخياً لما كانت ثقته في نفس الشريحة. للتحليل والتسلية، ومفيش ضمان لأي نتيجة.</p></div>';
- s+='<div class="xf">'+[["all","الأقوى"],["res","1X2"],["dc","مزدوجة"],["o15","فوق 1.5"]].map(function(x){return chip("m",x[0],x[1],XMK===x[0])}).join("")+'</div><div class="xf">'+[[.55,"≥55%"],[.65,"≥65%"],[.75,"≥75%"],[.85,"≥85%"]].map(function(x){return chip("t",x[0],x[1],XMIN===x[0])}).join("")+'</div>';
- XL=C.slice(0,30);var sf=XL.filter(function(c){return c.pk.add}).slice(0,3);
+window.topView=function(){if(XLG!=="ALL"&&leagues().indexOf(XLG)<0)XLG="ALL";var C=cands(),s='<div class="card" style="margin-top:0"><b>🎯 أفضل الاختيارات</b><p class="mut">كل اختيار معاه نسبة نجاح النموذج تاريخياً لما كانت ثقته في نفس الشريحة. للتحليل والتسلية، ومفيش ضمان لأي نتيجة.</p></div>';
+ s+='<div class="xf xfw">'+[["ALL","🌍 كل الدوريات"]].concat(leagues().map(function(k){return[k,NAMES[k]||k]})).map(function(g){return chip("g",esc(g[0]),esc(g[1]),XLG===g[0])}).join("")+'</div><div class="xf">'+[["all","الأقوى"],["res","1X2"],["dc","مزدوجة"],["o15","فوق 1.5"]].map(function(x){return chip("m",x[0],x[1],XMK===x[0])}).join("")+'</div><div class="xf">'+[[0,"الكل"],[.55,"≥55%"],[.65,"≥65%"],[.75,"≥75%"],[.85,"≥85%"]].map(function(x){return chip("t",x[0],x[1],XMIN===x[0])}).join("")+'</div><div class="xf">'+[["q","⭐ الأعلى ثقة"],["t","🕒 الأقرب موعداً"]].map(function(x){return chip("o",x[0],x[1],XSO===x[0])}).join("")+'</div>';
+ XL=XLG==="ALL"?C.slice(0,30):C;s+='<p class="mut" style="margin:0 0 8px">'+(XLG==="ALL"?"":esc(NAMES[XLG]||XLG)+" • ")+XL.length+" من "+XN+" مباراة جاية</p>";var sf=XL.filter(function(c){return c.pk.add}).slice(0,3);
  if(sf.length>1){var pp=sf.reduce(function(a,c){return a*c.pk.q},1);s+='<div class="card"><b>🛡️ قسيمة آمنة من '+sf.length+'</b><p class="mut">احتمال نجاحهم كلهم '+pc(pp)+'. كل اختيار زيادة بيقلّل الرقم ده بسرعة.</p><div class="xa"><button class="go" data-xs="1" style="margin:0">أضف للقسيمة</button><button class="sp" data-xi="1">🖼️ صورة للمشاركة</button></div></div>'}
- s+=XL.length?XL.map(card).join(""):'<p class="mut" style="padding:14px">مفيش اختيارات بالنسبة دي دلوقتي. جرّب تخفّض الحد الأدنى.</p>';
+ s+=XL.length?XL.map(card).join(""):'<p class="mut" style="padding:14px">'+(XN?"مفيش اختيارات بالنسبة دي. جرّب تخفّض الحد الأدنى.":"مفيش مباريات جاية في الدوري ده دلوقتي.")+'</p>';
  s+=base();$("list").innerHTML=s;$("list").F=[]};
 function add(g){Object.keys(SLIP).forEach(function(id){if(SLIP[id]&&SLIP[id].k===g.k)delete SLIP[id]});SLIP[g.k+"#"+g.m]={k:g.k,f:g.f,m:g.m,l:g.l,q:g.q}}
 function img(L){var c=document.createElement("canvas"),W=1080,H=240+L.length*170,x=c.getContext("2d");c.width=W;c.height=H;x.fillStyle="#070b1a";x.fillRect(0,0,W,H);x.direction="rtl";x.textAlign="right";x.fillStyle="#38bdf8";x.font="700 60px sans-serif";x.fillText("أفضل اختيارات اليوم",W-50,110);
  L.forEach(function(g,i){var y=200+i*170;x.fillStyle="#101831";x.fillRect(40,y,W-80,150);x.fillStyle="#eef3ff";x.font="600 38px sans-serif";x.fillText(tn(g.f[2])+" × "+tn(g.f[3]),W-70,y+60);x.fillStyle="#8e9bbd";x.font="500 32px sans-serif";x.fillText(g.pk.l,W-70,y+112);x.textAlign="left";x.fillStyle="#22c55e";x.font="800 54px sans-serif";x.fillText(pc(g.pk.q),70,y+95);x.textAlign="right"});
  c.toBlob(function(b){var f=new File([b],"picks.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f]}).catch(function(){});else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="picks.png";a.click()}})}
-document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("[data-xm],[data-xt],[data-xa],[data-xh],[data-xs],[data-xi]");if(!t||cur!=="TOP")return;
- if(t.dataset.xm){XMK=t.dataset.xm;topView();return}if(t.dataset.xt){XMIN=+t.dataset.xt;topView();return}
+document.addEventListener("click",function(e){var t=e.target.closest&&e.target.closest("[data-xg],[data-xo],[data-xm],[data-xt],[data-xa],[data-xh],[data-xs],[data-xi]");if(!t||cur!=="TOP")return;
+ if(t.dataset.xg){XLG=t.dataset.xg;XMIN=XLG==="ALL"?.65:0;try{localStorage.setItem("fb_xlg",XLG)}catch(e){}topView();window.scrollTo(0,0);return}if(t.dataset.xo){XSO=t.dataset.xo;topView();return}if(t.dataset.xm){XMK=t.dataset.xm;topView();return}if(t.dataset.xt){XMIN=+t.dataset.xt;topView();return}
  if(t.dataset.xa){var c=XL[+t.dataset.xa];add(c.pk.add);svs();slipBar();if(typeof slipSync==="function")slipSync();toast("اتضافت للقسيمة");return}
  if(t.dataset.xh){var h=t.closest(".xc").querySelector(".xhm");if(!h.innerHTML)h.innerHTML=heat(XL[+t.dataset.xh].p);h.classList.toggle("on");return}
  var sf=XL.filter(function(c){return c.pk.add}).slice(0,3);if(t.dataset.xs){sf.forEach(function(c){add(c.pk.add)});svs();slipBar();if(typeof slipSync==="function")slipSync();toast("اتضافت القسيمة");slipOpen()}else img(sf)});
 var _l=list;list=function(){if(cur==="TOP"){topView();return}_l()};
-var _b=bnav;bnav=function(){_b();var bn=$("bn"),b=document.createElement("button");b.setAttribute("data-k","TOP");b.className=cur==="TOP"?"on":"";b.innerHTML='<span>🎯</span>الأفضل';bn.insertBefore(b,bn.children[1]);if(cur==="TOP")$("tabs").style.display="none";var on=bn.querySelector(".on");if(on)bn.scrollLeft=on.offsetLeft-bn.clientWidth/2+on.offsetWidth/2};
+var _b=bnav;bnav=function(){_b();var bn=$("bn"),b=document.createElement("button");b.setAttribute("data-k","TOP");b.className=cur==="TOP"?"on":"";b.innerHTML='<span>🎯</span>الأفضل';bn.insertBefore(b,bn.children[1]);if(cur==="TOP")$("tabs").style.display="none";};
 var _s=svs;svs=function(){_s();try{var L=slipList();if(L.length>3&&L.length>XS){var p=L.reduce(function(a,g){return a*g.q},1);toast("⚠️ "+L.length+" اختيارات: احتمال نجاحهم كلهم "+pc(p)+" بس. الأفضل 2–3")}XS=L.length}catch(e){}};
 bnav();
 if(document.querySelector("#list .sk"))try{list()}catch(e){}
