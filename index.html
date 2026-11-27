@@ -1612,7 +1612,7 @@ resRowsH=function(R){return R.map(function(g){var p=[g.w,g.d,g.l],mx=Math.max.ap
 var SK={};try{SK=JSON.parse(localStorage.getItem("fb_streak")||"{}")}catch(e){}
 var td=new Date().toISOString().slice(0,10);
 if(SK.d!==td){var yd=new Date(Date.now()-864e5).toISOString().slice(0,10);SK.n=SK.d===yd?(SK.n||0)+1:1;SK.d=td;try{localStorage.setItem("fb_streak",JSON.stringify(SK))}catch(e){}if(SK.n>=2)setTimeout(function(){toast("🔥 "+SK.n+" أيام متتالية معانا!")},3500)}
-function heroH(){if(cur==="RES")return"";var R=[];try{R=logRows()||[]}catch(e){}if(!R.length)return"";var ok=R.filter(okR).length,pct=Math.round(ok/R.length*100);
+function heroH(){return"";var R=[];try{R=logRows()||[]}catch(e){}if(!R.length)return"";var ok=R.filter(okR).length,pct=Math.round(ok/R.length*100);
  return'<div class="rh"><div class="ring" style="--p:'+pct+'">'+pct+'%</div><div class="rt"><b>أصبنا '+ok+' من '+R.length+' مباراة</b><small>🔥 '+(SK.n||1)+' يوم متتالي معانا</small><div class="rd">'+R.slice(0,10).map(function(g){return'<i class="'+(okR(g)?"ok":"no")+'">'+(okR(g)?"✓":"✕")+'</i>'}).join("")+'</div></div></div>'}
 ["resView","logView"].forEach(function(n){var o=window[n];if(typeof o!=="function")return;window[n]=function(){o.apply(this,arguments);try{$("list").insertAdjacentHTML("afterbegin",heroH())}catch(e){}}});
 var TL=null;
