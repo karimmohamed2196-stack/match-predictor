@@ -18,6 +18,9 @@ jobs:
           python-version: "3.11"
       - run: pip install pandas numpy scipy
       - run: python update.py
+      - name: Add extra leagues
+        continue-on-error: true
+        run: python add_leagues.py data.json
       - name: Commit changes
         run: |
           git config user.name "github-actions"
