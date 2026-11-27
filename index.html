@@ -1609,6 +1609,7 @@ document.addEventListener("keydown",function(e){var o=document.getElementById("s
 function okR(g){var p=[g.w,g.d,g.l];return p.indexOf(Math.max.apply(null,p))===(g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2)}
 resRowsH=function(R){return R.map(function(g){var p=[g.w,g.d,g.l],mx=Math.max.apply(null,p),pi=p.indexOf(mx),ok=okR(g),lb=["فوز "+tn(g.f[2]),"تعادل","فوز "+tn(g.f[3])][pi],pp=String(g.f[1]).split(" ");
  return'<div class="rc '+(ok?"ok":"no")+'"><div class="rct"><span>'+esc(NAMES[g.f[0]]||g.f[0])+'</span><span>'+esc((DAY[pp[0]]||pp[0])+" "+pp[1]+" "+(MON[pp[2]]||pp[2]))+'</span></div><div class="rcm"><div class="tm">'+logo(g.f[2])+esc(tn(g.f[2]))+'</div><b class="rsc">'+g.r[0]+' - '+g.r[1]+'</b><div class="tm">'+logo(g.f[3])+esc(tn(g.f[3]))+'</div></div><div class="rcp"><span>توقعنا: '+esc(lb)+' ('+pc(mx)+')</span><b>'+(ok?"✅ أصبنا":"❌ لم نصب")+'</b></div></div>'}).join("")};
+var _rrh=resRowsH;resRowsH=function(R){var H=R.filter(okR);return H.length?_rrh(H):""};
 var SK={};try{SK=JSON.parse(localStorage.getItem("fb_streak")||"{}")}catch(e){}
 var td=new Date().toISOString().slice(0,10);
 if(SK.d!==td){var yd=new Date(Date.now()-864e5).toISOString().slice(0,10);SK.n=SK.d===yd?(SK.n||0)+1:1;SK.d=td;try{localStorage.setItem("fb_streak",JSON.stringify(SK))}catch(e){}if(SK.n>=2)setTimeout(function(){toast("🔥 "+SK.n+" أيام متتالية معانا!")},3500)}
