@@ -959,7 +959,7 @@ function rnd1(F){var by={},ord=[],o=[];F.forEach(function(f){if(!by[f[0]]){by[f[
 function heroes(F){var h=leagues().map(function(c){return hero(F.filter(function(f){return f[0]===c}))}).join("");return h?'<div class="day">أبرز الماتشات • اسحب للدوري التالي</div><div class="tops" data-noswipe>'+h+'</div>':""}
 function hero(F){F=rnd1(F);if(!F.length)return"";var bi=0,bq=-1e9;F.forEach(function(f,i){var o=mat(f[0],f[2],f[3]);if(!o)return;var q=o.H[0]-o.H[1]+o.A[0]-o.A[1];if(q>bq){bq=q;bi=i}});
   var f=F[bi],o=pr(f[0],f[2],f[3],false,fk(f));if(!o)return"";var p=f[1].split(" "),day=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);
-  return'<section class="hero"><div class="hk">🔥 أبرز ماتش <span>'+esc(NAMES[f[0]]||f[0])+'</span></div><div class="hm"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+'</div><div class="hc"><b>'+esc(p[3]||"")+'</b><small>'+esc(day)+'</small></div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+'</div></div><div class="pb" dir="ltr">'+pbH(o)+'</div><button class="go hb" data-i="'+bi+'" data-k="'+esc(fk(f))+'">عرض التحليل الكامل ›</button></section>'}
+  return'<section class="hero"><div class="hk">🔥 أبرز ماتش <span>'+esc(NAMES[f[0]]||f[0])+'</span></div><div class="hm"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+'</div><div class="hc"><b>'+esc(p[3]||"")+'</b><small>'+esc(day)+'</small></div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+'</div></div><div class="od">'+odH(o,fk(f))+'</div><button class="go hb" data-i="'+bi+'" data-k="'+esc(fk(f))+'">عرض التحليل الكامل ›</button></section>'}
 $("list").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".hb");if(!b)return;var k=b.getAttribute("data-k")||"";
  function find(){var a=$("list").querySelectorAll(".fav");for(var i=0;i<a.length;i++){if(a[i].getAttribute("data-k")===k)return a[i].closest(".m")}return null}
  var m=find();if(!m&&k){try{setLeague(k.split("|")[0])}catch(x){}m=find()}
@@ -1254,19 +1254,18 @@ function cmpH(){return'<div class="qa"><button class="cmpb">⚖️ قارن فر
 function rrect(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
 function shareImg(k){var f=fxOf(k);if(!f)return;var o=pr(f[0],f[2],f[3],false,k);if(!o)return;var sc=[],i,j;for(i=0;i<N;i++)for(j=0;j<N;j++)sc.push([i+"-"+j,o.M[i*N+j]]);sc.sort(function(x,y){return y[1]-x[1]});var p=f[1].split(" ");
   var W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;var x=c.getContext("2d");if(!x){toast("المتصفح لا يدعم إنشاء الصورة");return}
-  var g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,"#0b1330");g.addColorStop(1,"#070b1a");x.fillStyle=g;x.fillRect(0,0,W,H);
-  var gl=x.createRadialGradient(W*.8,0,0,W*.8,0,720);gl.addColorStop(0,"rgba(255,200,61,.38)");gl.addColorStop(1,"rgba(255,200,61,0)");x.fillStyle=gl;x.fillRect(0,0,W,H);
+  var g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,"#0f5a46");g.addColorStop(1,"#06231f");x.fillStyle=g;x.fillRect(0,0,W,H);x.fillStyle="rgba(255,255,255,.04)";for(var si=0;si<W;si+=120)x.fillRect(si,0,60,H);x.strokeStyle="rgba(255,255,255,.12)";x.lineWidth=4;x.beginPath();x.arc(W/2,520,180,0,7);x.stroke();x.beginPath();x.moveTo(0,520);x.lineTo(W,520);x.stroke();x.strokeStyle="#ffd83d";x.lineWidth=6;x.strokeRect(30,30,W-60,H-60);
+  var gl=x.createRadialGradient(W*.8,0,0,W*.8,0,720);gl.addColorStop(0,"rgba(255,216,61,.25)");gl.addColorStop(1,"rgba(255,200,61,0)");x.fillStyle=gl;x.fillRect(0,0,W,H);
   x.direction="rtl";x.textAlign="center";var FF='"Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif';
   function T(t,y,sz,col,w){x.font=(w||"bold")+" "+sz+"px "+FF;x.textAlign="center";x.fillStyle=col;x.fillText(t,W/2,y)}
-  T("متوقع المباريات PRO",110,46,"#7dd3fc");
-  T(String(NAMES[f[0]]||f[0]).replace(/[^؀-ۿA-Za-z ]/g,"").trim(),175,38,"#94a3b8","600");
-  T(tn(f[2]),380,76,"#ffffff");T("×",468,56,"#ffc83d");T(tn(f[3]),556,76,"#ffffff");
-  T((DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2])+" • "+(p[3]||"")+" (القاهرة)",640,34,"#94a3b8","600");
-  var bx=90,bw=W-180,by=710,bh=72,cx=bx;[[o.w,"#22c55e"],[o.d,"#64748b"],[o.l,"#ef4444"]].forEach(function(v){var w=bw*v[0];x.fillStyle=v[1];rrect(x,cx,by,Math.max(w-4,6),bh,16);x.fill();if(v[0]>.1){x.font="bold 38px "+FF;x.fillStyle="#fff";x.textAlign="center";x.fillText(pc(v[0]),cx+w/2,by+50)}cx+=w});
-  T("فوز "+tn(f[2])+"  |  تعادل  |  فوز "+tn(f[3]),by+135,28,"#94a3b8","600");
-  T("النتيجة الأرجح",by+250,34,"#94a3b8","600");T(sc[0][0],by+360,130,"#ffc83d");
-  T("الأهداف المتوقعة  "+o.lh.toFixed(1)+" - "+o.la.toFixed(1),by+450,42,"#e2e8f0");
-  T("تحليل إحصائي للتسلية وليس ضماناً لأي نتيجة",H-92,28,"#64748b","600");T(SITE.replace(/^https?:\/\//,"").replace(/\/$/,""),H-42,30,"#7dd3fc","bold");
+  T("🔥 متوقع المباريات PRO",110,46,"#ffd83d");
+  T(String(NAMES[f[0]]||f[0]).replace(/[^؀-ۿA-Za-z ]/g,"").trim(),175,38,"#cfe6da","600");
+  T(tn(f[2]),380,76,"#ffffff");T("VS",468,56,"#ffd83d");T(tn(f[3]),556,76,"#ffffff");
+  T((DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2])+" • "+(p[3]||"")+" (القاهرة)",640,34,"#cfe6da","600");
+  var by=710,mxp=Math.max(o.w,o.d,o.l);[[tn(f[3]),o.l],["تعادل",o.d],[tn(f[2]),o.w]].forEach(function(r,i){var X=60+i*330,top=r[1]===mxp;x.fillStyle=top?"rgba(255,216,61,.22)":"rgba(255,255,255,.10)";x.strokeStyle=top?"#ffd83d":"rgba(255,255,255,.22)";x.lineWidth=top?5:3;rrect(x,X,by,300,170,26);x.fill();x.stroke();x.font="bold 32px "+FF;x.textAlign="center";x.fillStyle=top?"#ffd83d":"#e6f3ec";x.fillText((top?"⭐ ":"")+r[0],X+150,by+58,270);x.font="800 80px "+FF;x.fillStyle="#fff";x.fillText(pc(r[1]),X+150,by+138)});
+  T("النتيجة الأرجح",by+270,34,"#cfe6da","600");T(sc[0][0],by+380,130,"#ffd83d");
+  T("الأهداف المتوقعة  "+o.lh.toFixed(1)+" - "+o.la.toFixed(1),by+470,42,"#ffffff");
+  T("تحليل إحصائي للتسلية وليس ضماناً لأي نتيجة",H-92,28,"#a3c5b9","600");T(SITE.replace(/^https?:\/\//,"").replace(/\/$/,""),H-42,30,"#ffd83d","bold");
   c.toBlob(function(b){if(!b){toast("تعذّر إنشاء الصورة");return}var file=new File([b],"prediction.png",{type:"image/png"});
     if(navigator.canShare&&navigator.canShare({files:[file]}))navigator.share({files:[file]}).catch(function(){});
     else{var u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="prediction.png";document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(u)},1500);toast("تم تجهيز الصورة، افتحها من التنزيلات")}},"image/png")}
@@ -1570,10 +1569,15 @@ var _ls=list;list=function(){if(cur==="NEWS"){newsView();return}_ls()};
 var _bn=bnav;bnav=function(){_bn();try{if(cur==="NEWS")$$("tabs").style.display="none"}catch(e){}};
 /* صفحة الفريق: اضغط على شعار الفريق */
 function shareImg(f){var o=null;try{o=pr(f[0],f[2],f[3],false,fk(f))}catch(e){}if(!o)return;var c=document.createElement("canvas");c.width=c.height=1080;var x=c.getContext("2d"),ff=getComputedStyle(document.body).fontFamily;
- x.fillStyle="#0b0d12";x.fillRect(0,0,1080,1080);x.fillStyle="#c9a24b";x.fillRect(0,0,1080,12);x.direction="rtl";x.textAlign="center";
- x.font="700 40px "+ff;x.fillText("متوقع المباريات PRO",540,105);x.fillStyle="#fff";x.font="800 70px "+ff;x.fillText(tn(f[2]),540,285);x.fillStyle="#8a8f9a";x.font="600 44px "+ff;x.fillText("×",540,370);x.fillStyle="#fff";x.font="800 70px "+ff;x.fillText(tn(f[3]),540,470);
- [["فوز "+tn(f[2]),o.w,"#2ecc71"],["تعادل",o.d,"#9aa0ab"],["فوز "+tn(f[3]),o.l,"#e5534b"]].forEach(function(r,i){var y=600+i*125;x.textAlign="right";x.fillStyle="#d6d9df";x.font="600 36px "+ff;x.fillText(r[0],940,y);x.textAlign="left";x.fillStyle="#fff";x.font="800 40px "+ff;x.fillText(Math.round(r[1]*100)+"%",140,y);x.fillStyle="#1d212b";x.fillRect(140,y+18,800,22);x.fillStyle=r[2];x.fillRect(140+800*(1-r[1]),y+18,800*r[1],22)});
- x.textAlign="center";x.fillStyle="#8a8f9a";x.font="500 30px "+ff;x.fillText(f[1].split(" ").slice(0,4).join(" ")+" (توقيت القاهرة)",540,1000);x.fillText(location.host+location.pathname.replace(/index\.html$/,""),540,1045);
+ var g=x.createLinearGradient(0,0,1080,1080);g.addColorStop(0,"#0f5a46");g.addColorStop(1,"#06231f");x.fillStyle=g;x.fillRect(0,0,1080,1080);
+ x.fillStyle="rgba(255,255,255,.04)";for(var i=0;i<1080;i+=120)x.fillRect(i,0,60,1080);
+ x.strokeStyle="rgba(255,255,255,.12)";x.lineWidth=4;x.beginPath();x.arc(540,470,170,0,7);x.stroke();x.beginPath();x.moveTo(0,470);x.lineTo(1080,470);x.stroke();
+ x.strokeStyle="#ffd83d";x.lineWidth=6;x.strokeRect(30,30,1020,1020);
+ x.direction="rtl";x.textAlign="center";x.fillStyle="#ffd83d";x.font="800 44px "+ff;x.fillText("🔥 متوقع المباريات PRO",540,120);
+ x.fillStyle="#cfe6da";x.font="600 34px "+ff;x.fillText(NAMES[f[0]]||f[0],540,175);
+ x.fillStyle="#fff";x.font="800 78px "+ff;x.fillText(tn(f[2]),540,400,900);x.fillStyle="#ffd83d";x.font="700 44px "+ff;x.fillText("VS",540,490);x.fillStyle="#fff";x.font="800 78px "+ff;x.fillText(tn(f[3]),540,590,900);
+ var mx=Math.max(o.w,o.d,o.l);[[tn(f[3]),o.l],["تعادل",o.d],[tn(f[2]),o.w]].forEach(function(r,i){var X=60+i*330,Y=680,top=r[1]===mx;x.fillStyle=top?"rgba(255,216,61,.22)":"rgba(255,255,255,.10)";x.strokeStyle=top?"#ffd83d":"rgba(255,255,255,.22)";x.lineWidth=top?5:3;x.beginPath();if(x.roundRect)x.roundRect(X,Y,300,200,28);else x.rect(X,Y,300,200);x.fill();x.stroke();x.fillStyle=top?"#ffd83d":"#e6f3ec";x.font="700 34px "+ff;x.fillText((top?"⭐ ":"")+r[0],X+150,Y+70,270);x.fillStyle="#fff";x.font="800 84px "+ff;x.fillText(Math.round(r[1]*100)+"%",X+150,Y+160)});
+ x.fillStyle="#cfe6da";x.font="500 28px "+ff;x.fillText(f[1].split(" ").slice(0,4).join(" ")+" (توقيت القاهرة)",540,965);x.fillText(location.host+location.pathname.replace(/index\.html$/,""),540,1005);
  c.toBlob(function(b){var fl=new File([b],"prediction.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[fl]}))navigator.share({files:[fl],title:"توقع مباراة"}).catch(function(){});else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="prediction.png";a.click()}})}
 function rankSheet(lg){var T=D[lg]&&D[lg].teams;if(!T)return;var a=Object.keys(T).map(function(n){return[n,T[n][0]-T[n][1]]}).sort(function(p,q){return q[1]-p[1]});
  var o=document.createElement("div");o.id="tsh";o.innerHTML='<div class="tsp"><div class="tsh-h"><span>📈 تصنيف القوة</span><button class="tsh-x">✕</button></div><p class="mut" style="margin:0 0 8px">'+esc(NAMES[lg]||lg)+' • حسب قوة الهجوم والدفاع في النموذج (مش جدول النقاط)</p><div class="card" style="margin-top:0">'+a.map(function(r,i){return'<div class="nx" data-t="'+esc(r[0])+'" style="cursor:pointer"><span><b dir="ltr">'+(i+1)+'.</b> '+esc(tn(r[0]))+'</span><b dir="ltr">'+(r[1]>0?"+":"")+r[1].toFixed(2)+'</b></div>'}).join("")+'</div></div>';document.body.appendChild(o);
@@ -2227,16 +2231,16 @@ html:root .m.open .card{margin-bottom:10px}
 /* حقول الإدخال داخل الكروت تفضل مقروءة */
 html:root :is(.card,.xc,.rc) :is(input,select,textarea){background:rgba(0,0,0,.28);color:#fff;border-color:rgba(255,255,255,.2)}
 html:root :is(.rc,.xc,.m,.hero,.card) :is(b.ok,.ok){color:#5cf2a4}html:root :is(.rc,.xc,.m,.hero,.card) :is(b.no,.no){color:#ff9a86}
-html:root .m:not(.open) .od{direction:rtl;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 12px}
-html:root .m:not(.open) .od div:nth-child(4){display:none}
-html:root .m:not(.open) .od div{min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:400}
-html:root .m:not(.open) .od small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;font-weight:400;color:#cfe6da}
-html:root .m:not(.open) .od b,html:root .pct .m:not(.open) .od b{display:block;margin:0;font-size:15px;font-weight:700;color:#fff}
-html:root .m:not(.open) .od div.pk{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
-html:root .m:not(.open) .od div.pk b,html:root .m:not(.open) .od div.pk small{color:#fff}
-html:root .m:not(.open) .od div.pk small{color:#cfe6da}
-html:root .m:not(.open) .od div.on{background:#ffd83d;border-color:#ffd83d}
-html:root .m:not(.open) .od div.on b,html:root .m:not(.open) .od div.on small{color:#1c1600}
+html:root :is(.m:not(.open),.hero) .od{direction:rtl;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 12px}
+html:root :is(.m:not(.open),.hero) .od div:nth-child(4){display:none}
+html:root :is(.m:not(.open),.hero) .od div{min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:400}
+html:root :is(.m:not(.open),.hero) .od small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;font-weight:400;color:#cfe6da}
+html:root :is(.m:not(.open),.hero) .od b,html:root .pct .m:not(.open) .od b{display:block;margin:0;font-size:15px;font-weight:700;color:#fff}
+html:root :is(.m:not(.open),.hero) .od div.pk{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+html:root :is(.m:not(.open),.hero) .od div.pk b,html:root :is(.m:not(.open),.hero) .od div.pk small{color:#fff}
+html:root :is(.m:not(.open),.hero) .od div.pk small{color:#cfe6da}
+html:root :is(.m:not(.open),.hero) .od div.on{background:#ffd83d;border-color:#ffd83d}
+html:root :is(.m:not(.open),.hero) .od div.on b,html:root :is(.m:not(.open),.hero) .od div.on small{color:#1c1600}
 /* ===== تصغير كارت المباراة + خط أوضح لأسماء الفرق ===== */
 html:root .m:not(.open){margin-bottom:8px}
 html:root .m:not(.open)>.fav{position:absolute;top:2px;inset-inline-end:4px;padding:6px 8px;font-size:20px}
@@ -2253,11 +2257,12 @@ html:root .m:not(.open) .u4l{display:none}
 html:root .m:not(.open) .smw .sm{padding:0 12px 4px;font-size:12px;line-height:1.4}
 html:root .m:not(.open) .bdg{padding:0 12px 6px}
 html:root .m:not(.open) .bd{font-size:11px;padding:2px 8px}
-html:root .m:not(.open) .od{gap:6px;padding:0 12px 8px}
-html:root .m:not(.open) .od div{min-height:38px;padding:3px}
-html:root .m:not(.open) .od small,html:root .hvg-pk small{font-size:12px;font-weight:700;color:#e6f3ec}
-html:root .m:not(.open) .od b{font-size:15px;font-weight:800}
+html:root :is(.m:not(.open),.hero) .od{gap:6px;padding:0 12px 8px}
+html:root :is(.m:not(.open),.hero) .od div{min-height:38px;padding:3px}
+html:root :is(.m:not(.open),.hero) .od small,html:root .hvg-pk small{font-size:12px;font-weight:700;color:#e6f3ec}
+html:root :is(.m:not(.open),.hero) .od b{font-size:15px;font-weight:800}
 html:root .m:not(.open) .u4b{min-height:32px;margin:0 12px 10px;width:calc(100% - 24px);font-size:12.5px;font-weight:700}
+html:root .card+.card,html:root .card+.xc,html:root .xc+.card{margin-top:10px!important}
 </style>
 </body>
 </html>
