@@ -897,7 +897,7 @@ function sgH(o,h,a){var m=o.m,n=act(m).length;
   return'<div class="gt">💪 قوة الفريقين</div><div class="sg">'+blk("⚔️ الهجوم (من يسجّل أكثر)",0,false)+blk("🛡 الدفاع (من يستقبل أقل)",1,true)+'<p class="mut" style="margin:8px 0 0">المركز 1 = الأفضل بين '+n+' فريق. الشريط الأطول = الأقوى.</p></div>'}
 function pbH(o){var mx=Math.max(o.w,o.d,o.l);function z(v,c,l){return'<i'+(v===mx?' class="mx"':'')+' style="width:'+v*100+'%;background:var('+c+')">'+(v>.1?pc(v):'')+'</i>'}return z(o.w,'--g','م')+z(o.d,'--n','ت')+z(o.l,'--r','ض')}
 function slipLbl3(i,f){return i===0?"فوز "+tn(f[2]):i===1?"تعادل":i===2?"فوز "+tn(f[3]):"أكثر من 2.5 هدف"}
-function odH(o,k){var mx=Math.max(o.w,o.d,o.l),f=k&&fxOf(k);function z(l,v,p,i){var m=i===3?"مجموع الأهداف (2.5)":"نتيجة المباراة",lb=f?slipLbl3(i,f):"",q=!!f;return'<div class="'+(p&&v===mx?'pk ':'')+(q?'qp'+(slipOn(k,m,lb)?' on':''):'')+'"'+(q?' data-pk="1" role="button" tabindex="0" data-k="'+esc(k)+'" data-m="'+m+'" data-l="'+esc(lb)+'" data-q="'+v.toFixed(4)+'"':'')+'>'+l+'<b>'+od(v)+'</b><small>'+pc(v)+'</small></div>'}return z('مضيف',o.w,1,0)+z('تعادل',o.d,1,1)+z('ضيف',o.l,1,2)}
+function odH(o,k){var mx=Math.max(o.w,o.d,o.l),f=k&&fxOf(k);function z(l,v,p,i){var m=i===3?"مجموع الأهداف (2.5)":"نتيجة المباراة",lb=f?slipLbl3(i,f):"",q=!!f;return'<div class="'+(p&&v===mx?'pk ':'')+(q?'qp'+(slipOn(k,m,lb)?' on':''):'')+'"'+(q?' data-pk="1" role="button" tabindex="0" data-k="'+esc(k)+'" data-m="'+m+'" data-l="'+esc(lb)+'" data-q="'+v.toFixed(4)+'"':'')+'><small class="pn">'+(p&&v===mx?'⭐ ':'')+esc(f&&i<3?(i===1?'تعادل':tn(f[i?3:2])):l)+'</small><b>'+pc(v)+'</b></div>'}return z('مضيف',o.w,1,0)+z('تعادل',o.d,1,1)+z('ضيف',o.l,1,2)}
 function bd(n){return n?'<span class="inj">🩹 '+n+'</span>':''}
 function cairoOff(ms){try{var v=new Intl.DateTimeFormat("en-US",{timeZone:"Africa/Cairo",timeZoneName:"shortOffset"}).formatToParts(new Date(ms)).filter(function(x){return x.type==="timeZoneName"})[0].value,m=/GMT([+-]\d+)/.exec(v);return m?+m[1]:2}catch(e){return 2}}
 function kick(f){var p=f[1].split(" ");if(!p[3])return null;var t=p[3].split(":"),m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].indexOf(p[2]),WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],now=Date.now(),y0=new Date(now).getUTCFullYear(),b=null,b2=null;if(m<0)return null;
@@ -2201,5 +2201,63 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
 list();upd();
 }catch(err){console.error("hvg",err)}})();
 </script>
+<style id="card-unify">
+/* ===== توحيد شكل الكروت: نفس كارت "الأبرز" (الملعب الأخضر) على كل البرنامج ===== */
+html:root :is(.m:not(.open),.hero,.xc,.rc,.hv-g,.nw-mc,.nw-hero,.card){
+ --card:#0b3a30;--c2:rgba(255,255,255,.10);--bd:rgba(255,255,255,.16);
+ --tx:#f2f8f4;--mut:#cfe6da;--gold:#ffd83d;--win:#ffd83d;--on:#1c1600;
+ position:relative;color:#f2f8f4;border:0;border-radius:18px;
+ background:
+  radial-gradient(circle at 100% 50%,transparent 0 30px,rgba(255,255,255,.11) 30px 31px,transparent 31px),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 30px,transparent 30px 60px),
+  linear-gradient(160deg,#0f5a46,#06231f);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 4px 14px rgba(0,0,0,.14)}
+/* نفس تمييز "الأبرز" بالإطار الذهبي */
+html:root .hero{box-shadow:inset 0 0 0 1.5px #ffd83d,0 6px 18px rgba(0,0,0,.2)}
+/* شريط النسب بنفس شكل الأخضر */
+html:root :is(.m:not(.open),.hero,.nw-hero,.nw-mc) .pb i{background:rgba(255,255,255,.13);color:#e8f3ed}
+html:root :is(.m:not(.open),.hero,.nw-hero,.nw-mc) .pb i.mx{background:#ffd83d;color:#1c1600}
+/* أزرار وأقسام داخل الكروت */
+html:root :is(.hero,.nw-hero) :is(.go,.hb,.nw-go){color:#ffd83d!important;background:none!important;box-shadow:none!important;border:0!important}
+html:root .hv-g{overflow:hidden}
+html:root .hv-g>summary{color:#fff;background:none}
+html:root .hv-g .hv-r{border-top-color:rgba(255,255,255,.12)}
+/* كروت داخل شاشة تفاصيل المباراة المفتوحة */
+html:root .m.open .card{margin-bottom:10px}
+/* حقول الإدخال داخل الكروت تفضل مقروءة */
+html:root :is(.card,.xc,.rc) :is(input,select,textarea){background:rgba(0,0,0,.28);color:#fff;border-color:rgba(255,255,255,.2)}
+html:root :is(.rc,.xc,.m,.hero,.card) :is(b.ok,.ok){color:#5cf2a4}html:root :is(.rc,.xc,.m,.hero,.card) :is(b.no,.no){color:#ff9a86}
+html:root .m:not(.open) .od{direction:rtl;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 12px}
+html:root .m:not(.open) .od div:nth-child(4){display:none}
+html:root .m:not(.open) .od div{min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:400}
+html:root .m:not(.open) .od small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;font-weight:400;color:#cfe6da}
+html:root .m:not(.open) .od b,html:root .pct .m:not(.open) .od b{display:block;margin:0;font-size:15px;font-weight:700;color:#fff}
+html:root .m:not(.open) .od div.pk{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+html:root .m:not(.open) .od div.pk b,html:root .m:not(.open) .od div.pk small{color:#fff}
+html:root .m:not(.open) .od div.pk small{color:#cfe6da}
+html:root .m:not(.open) .od div.on{background:#ffd83d;border-color:#ffd83d}
+html:root .m:not(.open) .od div.on b,html:root .m:not(.open) .od div.on small{color:#1c1600}
+/* ===== تصغير كارت المباراة + خط أوضح لأسماء الفرق ===== */
+html:root .m:not(.open){margin-bottom:8px}
+html:root .m:not(.open)>.fav{position:absolute;top:2px;inset-inline-end:4px;padding:6px 8px;font-size:20px}
+html:root .m:not(.open) .lgn{padding:7px 40px 0;font-size:11.5px;line-height:1.2}
+html:root .m:not(.open) .mt{padding:6px 8px 2px}
+html:root .m:not(.open) .mt .tm{font-size:13px;font-weight:700;line-height:1.25}
+html:root .m:not(.open) .mt .lg{width:36px;height:36px;font-size:11px;margin:0 auto 3px}
+html:root .m:not(.open) .mt .lg img{width:28px;height:28px}
+html:root .m:not(.open) .mid{margin-top:0;font-size:18px;line-height:1.2}
+html:root .m:not(.open) .mid b{margin-top:2px;font-size:11px}
+html:root .m:not(.open) .pb{height:20px;margin:6px 12px 4px}
+html:root .m:not(.open) .pb i{font-size:11px;font-weight:700}
+html:root .m:not(.open) .u4l{display:none}
+html:root .m:not(.open) .smw .sm{padding:0 12px 4px;font-size:12px;line-height:1.4}
+html:root .m:not(.open) .bdg{padding:0 12px 6px}
+html:root .m:not(.open) .bd{font-size:11px;padding:2px 8px}
+html:root .m:not(.open) .od{gap:6px;padding:0 12px 8px}
+html:root .m:not(.open) .od div{min-height:38px;padding:3px}
+html:root .m:not(.open) .od small,html:root .hvg-pk small{font-size:12px;font-weight:700;color:#e6f3ec}
+html:root .m:not(.open) .od b{font-size:15px;font-weight:800}
+html:root .m:not(.open) .u4b{min-height:32px;margin:0 12px 10px;width:calc(100% - 24px);font-size:12.5px;font-weight:700}
+</style>
 </body>
 </html>
