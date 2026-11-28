@@ -2158,8 +2158,41 @@ document.addEventListener("click",function(e){var t=e.target.closest&&e.target.c
  else if(a.indexOf("a:")===0){var p=+a.slice(2);if(GV==="quiz"){var ix=dq(),qi=ix[G.q.a.length],o=opts(qi,G.q.d);if(G.q.fb!==null)return;G.q.fb=p;if(p===o.c)G.q.ok++;sv()}else if(R&&R.fb===null){R.fb=p;var c=R.t==="tf"?(T[R.it[R.i]][1]?0:1):(function(f){var o=pr(f[0],f[2],f[3],false,fk(f));return o.w>o.l?0:1})(R.it[R.i]);if(p===c)R.hit++}}
  else if(a==="next"){if(GV==="quiz"){G.q.a.push(G.q.fb);G.q.fb=null;sv()}else if(R){R.i++;R.fb=null}}
  draw()},true);
+window.gmGo=function(k){if(k==="quiz")GV="quiz";else if(startR(k))GV=k;else GV="hub";setLeague("GAMES")};
+window.gmInfo=function(){var i=lvl(),nx=LV[i+1],c0=LV[i][0],d=today(),y=new Date(Date.parse(d)-864e5).toISOString().slice(0,10);return{n:LV[i][1],xp:WAL.xp,pr:nx?Math.round((WAL.xp-c0)/(nx[0]-c0)*100):100,st:(G.last===d||G.last===y)?(G.st||0):0,done:!!(G.q&&G.q.d===d&&G.q.a.length>=5)}};
 bnav();if(cur==="GAMES")list();
 }catch(err){console.error("games",err)}})();
+</script>
+<script id="hvg-js">
+(function(){try{
+var st=document.createElement("style");st.id="hvg-css";st.textContent=
+".hvg{margin:12px 0 4px;padding:12px 14px;border-radius:18px;border:1px solid var(--bd);background:linear-gradient(135deg,rgba(255,200,61,.14),rgba(34,197,94,.10)),var(--card);box-shadow:var(--sh)}"+
+".hvg-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.hvg-lv{font-weight:800;font-size:15px}.hvg-xp{font-size:13px;color:var(--mut);white-space:nowrap}.hvg-xp b{color:var(--gold);font-size:15px}"+
+".hvg-bar{height:6px;border-radius:6px;background:var(--bd);margin:9px 0 11px;overflow:hidden}.hvg-bar i{display:block;height:100%;border-radius:6px;background:var(--gold)}"+
+".hvg-a{display:flex;gap:8px}.hvg-a button{font:inherit;min-height:44px;border-radius:12px;border:1px solid var(--bd);background:var(--c2);color:var(--tx);font-weight:700;font-size:13px;cursor:pointer;padding:0 12px;touch-action:manipulation}.hvg-a button:active{transform:scale(.96)}.hvg-a .hvg-m{flex:1;background:var(--gold);border-color:var(--gold);color:#1a1405;font-weight:800;font-size:14px}.hvg-a .hvg-m.dn{background:var(--c2);color:var(--g);border-color:var(--bd)}"+
+".hv-sc .hv-hero .hv-bar{display:none}.hvg-pt{margin:8px 12px 0;font-size:12px;font-weight:700;color:#d5e8df}.hvg-pr{display:flex;gap:6px;margin:6px 12px 2px}"+
+".hvg-pk,.hvg-sk{flex:1;min-width:0;font:inherit;min-height:46px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px;touch-action:manipulation}"+
+".hvg-pk{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff}.hvg-pk small,.hvg-sk small{font-size:11px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hvg-pk small{color:#cfe6da}.hvg-pk b{font-size:15px}.hvg-pk.on{background:#ffd83d;border-color:#ffd83d;color:#1c1600}.hvg-pk.on small{color:#1c1600}"+
+".hvg-rs{display:flex;gap:6px;margin:2px 0 10px}.hvg-sk{min-height:42px;border:1px solid var(--bd);background:var(--c2);color:var(--tx)}.hvg-sk small{color:var(--mut)}.hvg-sk b{font-size:14px}.hvg-sk.on{background:var(--gold);border-color:var(--gold);color:#1a1405}.hvg-sk.on small{color:inherit}:root[data-theme=light] .hvg-sk.on{color:#fff}"+
+"#hvg-lock{position:fixed;inset-inline:0;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;gap:8px;max-width:600px;margin:0 auto;padding:0 14px}#hvg-lock[hidden]{display:none}#hvg-lock button{font:inherit;min-height:50px;border:0;border-radius:16px;background:linear-gradient(135deg,#ffd75e,#ff9f1c);color:#1a1405;font-weight:800;box-shadow:0 8px 22px rgba(0,0,0,.35);cursor:pointer;touch-action:manipulation}.hvg-lk{flex:1;font-size:16px}.hvg-ls{width:54px;font-size:20px}";
+document.head.appendChild(st);
+function card(){if(typeof window.gmInfo!=="function")return"";var g=window.gmInfo();
+return'<div class="hvg"><div class="hvg-t"><span class="hvg-lv">🎮 '+g.n+'</span><span class="hvg-xp"><b>'+g.xp+'</b> نقطة'+(g.st?' • 🔥 '+g.st+' يوم':'')+'</span></div><div class="hvg-bar"><i style="width:'+g.pr+'%"></i></div><div class="hvg-a"><button class="hvg-m'+(g.done?' dn':'')+'" data-hg="quiz">'+(g.done?'✅ خلّصت سؤال اليوم':'📅 سؤال اليوم • 5 أسئلة')+'</button><button data-hg="hl" aria-label="أعلى ولا أقل">⚖️</button><button data-hg="tf" aria-label="صح ولا غلط">✔️</button></div></div>'}
+function btns(k,f,o,c){var P=[o.w,o.d,o.l],mx=Math.max.apply(null,P);return[0,1,2].map(function(i){var l=slipLbl3(i,f),t=i===1?"تعادل":tn(f[i?3:2]);return'<button class="'+c+(slipOn(k,"نتيجة المباراة",l)?" on":"")+'" data-pk="1" data-k="'+esc(k)+'" data-m="نتيجة المباراة" data-l="'+esc(l)+'" data-q="'+P[i].toFixed(4)+'"><small>'+(P[i]===mx?"⭐ ":"")+esc(t)+'</small><b>'+Math.round(P[i]*100)+'%</b></button>'}).join("")}
+function enh(h){try{var d=document.createElement("div");d.innerHTML=h;
+[].forEach.call(d.querySelectorAll(".hv-hero[data-k]"),function(e){var k=e.getAttribute("data-k"),f=fxOf(k),o=f&&pr(f[0],f[2],f[3],false,k),go=e.querySelector(".hv-go");if(!o||!go)return;go.insertAdjacentHTML("beforebegin",'<div class="hvg-pt">🎯 اختار توقعك (⭐ = الأرجح عند النموذج)</div><div class="hvg-pr" dir="rtl">'+btns(k,f,o,"hvg-pk")+'</div>')});
+[].forEach.call(d.querySelectorAll(".hv-r[data-k]"),function(e){var k=e.getAttribute("data-k"),f=fxOf(k),o=f&&pr(f[0],f[2],f[3],false,k);if(!o)return;e.insertAdjacentHTML("afterend",'<div class="hvg-rs" dir="rtl">'+btns(k,f,o,"hvg-sk")+'</div>')});
+return d.innerHTML}catch(e){console.error("enh",e);return h}}
+var _h=window.hv6;if(typeof _h!=="function")return;
+window.hv6=function(){var s=enh(_h()),c=card();if(!c)return s;var r=/(<div class="hv-top">.*?<div class="hv-dt">.*?<\/div><\/div>)/;return r.test(s)?s.replace(r,function(m){return m+c}):c+s};
+var lb=document.createElement("div");lb.id="hvg-lock";lb.hidden=true;lb.innerHTML='<button class="hvg-lk" data-hl="lock"></button><button class="hvg-ls" data-hl="open" aria-label="بطاقتي">🎫</button>';document.body.appendChild(lb);
+function upd(){var n=0;try{n=betPick().length}catch(e){}var o=document.getElementById("slipov");lb.hidden=!n||(o&&!o.hidden)||cur==="GAMES";if(n)lb.firstChild.textContent="🎯 ثبّت توقعاتك ("+n+")"}
+var _b=bnav;bnav=function(){_b();upd()};
+lb.addEventListener("click",function(e){var t=e.target.closest("[data-hl]");if(!t)return;if(t.getAttribute("data-hl")==="open")slipOpen();else if(betDo(betPick()))upd()});
+document.addEventListener("click",function(){setTimeout(upd,80)});
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-hg]");if(b&&window.gmGo)window.gmGo(b.getAttribute("data-hg"))});
+list();upd();
+}catch(err){console.error("hvg",err)}})();
 </script>
 </body>
 </html>
