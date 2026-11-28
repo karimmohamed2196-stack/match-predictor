@@ -1929,6 +1929,49 @@ html:root #stale{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;paddi
 .hv-p.hi{background:color-mix(in srgb,var(--win) 18%,transparent)}.hv-p.hi b{color:var(--win)}
 .hv-more{display:block;width:100%;min-height:44px;border:0;border-top:1px solid var(--bd);background:none;color:var(--gold);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .hv-pick{display:block;width:100%;min-height:44px;margin:0 0 6px;border:1px dashed var(--bd);border-radius:14px;background:none;color:var(--mut);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+
+/* ==== home v7: كروت بنفس لغة الصفوف + هوية أقوى ==== */
+.hv-st{grid-template-columns:1fr 1fr 1fr}.hv-s{padding:11px 12px}.hv-s b{font-size:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hv-s:last-child b{color:var(--win)}
+.hv-hi{background:linear-gradient(90deg,var(--tx) 55%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hv-sc{gap:12px}
+.hv-sc .hv-hero{flex:0 0 86%;padding:0;overflow:hidden;color:var(--tx);background:var(--card);box-shadow:inset 0 0 0 1px var(--bd),var(--sh);animation:hxin .45s ease both}
+.hv-sc .hv-hero:nth-child(2){animation-delay:.06s}.hv-sc .hv-hero:nth-child(3){animation-delay:.12s}.hv-sc .hv-hero:nth-child(n+4){animation-delay:.18s}
+.hv-sc .hv-hero:first-child{box-shadow:inset 0 0 0 1.5px var(--gold),var(--sh)}
+.hv-sc .hv-hero:first-child .hv-hk span:first-child:after{content:"  🔥 الأبرز"}
+.hv-sc .hv-hero:active{transform:scale(.985)}
+.hv-sc .hv-hk{padding:10px 14px;background:var(--c2);color:var(--mut);align-items:center}
+.hv-sc .hv-hk span:first-child{color:var(--tx);font-weight:800;font-size:13px}
+.hv-rel{font-style:normal;padding:2px 8px;border-radius:99px;background:color-mix(in srgb,var(--gold) 16%,transparent);color:var(--gold);font-weight:800}
+.hv-hb{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:12px 14px 8px}
+.hv-hero .lg{width:26px;height:26px;margin:0;font-size:8px;flex:none}.hv-hero .lg img{width:20px;height:20px}
+.hv-sc .hv-bar{margin:0 14px;height:24px}.hv-sc .hv-bar i{background:var(--c2);color:var(--mut);border-radius:8px}
+.hv-sc .hv-bar i.mx{background:color-mix(in srgb,var(--win) 20%,transparent);color:var(--win)}
+.hv-sc .hv-go{margin:0;padding:10px;color:var(--gold)}
+.hv-h span{display:flex;align-items:center;gap:8px}.hv-h span:before{content:"";width:4px;height:16px;border-radius:2px;background:var(--gold)}
+@media(prefers-reduced-motion:reduce){.hv-sc .hv-hero{animation:none}}
+
+/* ==== home v8: شكل الملعب الأخضر + حجم أصغر ==== */
+.hv-sc{gap:10px}
+.hv-sc .hv-hero{position:relative;flex:0 0 72%;color:#f2f8f4;border-radius:18px;
+ background:radial-gradient(circle at 100% 50%,transparent 0 30px,rgba(255,255,255,.11) 30px 31px,transparent 31px),
+ repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 30px,transparent 30px 60px),linear-gradient(160deg,#0f5a46,#06231f);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 4px 14px rgba(0,0,0,.14)}
+.hv-sc .hv-hero:first-child{box-shadow:inset 0 0 0 1.5px #ffd83d,0 6px 18px rgba(0,0,0,.2)}
+.hv-sc .hv-hero>*{position:relative}
+.hv-sc .hv-hk{padding:8px 12px;background:rgba(255,255,255,.07);color:#d5e8df}
+.hv-sc .hv-hk span:first-child{color:#fff;font-size:12px}
+.hv-sc .hv-hero:first-child .hv-hk span:first-child:after{color:#ffd83d}
+.hv-rel{background:rgba(255,216,61,.18);color:#ffd83d;font-size:11px;padding:1px 7px}
+.hv-hb{padding:10px 12px 6px;gap:8px}
+.hv-hero .hv-n{gap:7px}.hv-hero .hv-m{gap:5px}.hv-hero .hv-n i{font-size:13px;color:#f2f8f4}
+.hv-hero .lg{width:22px;height:22px}.hv-hero .lg img{width:17px;height:17px}
+.hv-hero .hv-p{min-width:58px;padding:5px 7px;background:rgba(255,255,255,.1)}
+.hv-hero .hv-p b{font-size:15px;color:#fff}.hv-hero .hv-p small{max-width:74px;font-size:10.5px;color:#cfe6da}
+.hv-hero .hv-p.hi{background:rgba(255,216,61,.18)}.hv-hero .hv-p.hi b{color:#ffd83d}
+.hv-sc .hv-bar{margin:0 12px;height:20px}.hv-sc .hv-bar i{font-size:11px;border-radius:7px;background:rgba(255,255,255,.13);color:#e8f3ed}
+.hv-sc .hv-bar i.mx{background:#ffd83d;color:#1c1600}
+.hv-sc .hv-go{padding:8px;font-size:12px;color:#ffd83d}
 </style>
 <script id="ux-v6-js">
 (function(){try{
@@ -1939,9 +1982,11 @@ function upc6(){var r=[];(D._fix||[]).forEach(function(f){if(leagues().indexOf(f
 function dlab(f){var p=f[1].split(" ");return dpl(f).replace(" • ","")||(p[1]+" "+(MON[p[2]]||p[2]))}
 function row(x,d0){var f=x.f,o=x.o,m=Math.max(o.w,o.d,o.l),t=o.w===m?"فوز "+tn(f[2]):o.l===m?"فوز "+tn(f[3]):"تعادل";
  return '<div class="hv-r" role="button" tabindex="0" data-k="'+esc(fk(f))+'"><span class="hv-t">'+esc(tmx(f))+(d0&&cd(x.t)!==d0?'<small>'+esc(dlab(f))+'</small>':'')+'</span><span class="hv-m"><span class="hv-n">'+logo(f[2])+'<i>'+esc(tn(f[2]))+'</i></span><span class="hv-n">'+logo(f[3])+'<i>'+esc(tn(f[3]))+'</i></span></span><span class="hv-p'+(m>=.65?' hi':'')+'"><b>'+Math.round(m*100)+'%</b><small>'+esc(t)+'</small></span></div>'}
-function hero(x){var f=x.f,o=x.o,m=Math.max(o.w,o.d,o.l);function sg(v,l){return '<i'+(v===m?' class="mx"':'')+' style="flex:'+Math.max(v,.14).toFixed(2)+'">'+(v>=.2?l+' ':'')+Math.round(v*100)+'%</i>'}
- return '<div class="hv-hero" role="button" tabindex="0" data-k="'+esc(fk(f))+'"><div class="hv-hk"><span>'+esc(NAMES[f[0]]||f[0])+'</span><span>'+esc(dlab(f)+" • "+tmx(f))+'</span></div><div class="hv-hm"><div>'+logo(f[2])+'<b>'+esc(tn(f[2]))+'</b></div><em>×</em><div>'+logo(f[3])+'<b>'+esc(tn(f[3]))+'</b></div></div><div class="hv-bar" dir="rtl">'+sg(o.w,"م")+sg(o.d,"ت")+sg(o.l,"ض")+'</div><div class="hv-go">التحليل الكامل ‹</div></div>'}
-function groups(L,open,d0){var G={},O=[];L.forEach(function(x){var c=x.f[0];if(!G[c]){G[c]=[];O.push(c)}G[c].push(x)});O.sort(function(a,b){return lp(a)-lp(b)});
+function relT(ms){var d=ms-Date.now();if(d<=0)return"🔴 جارية";var h=Math.floor(d/36e5),m=Math.round(d%36e5/6e4);return d<36e5?"⏱ بعد "+Math.max(1,Math.round(d/6e4))+" د":d<864e5?"⏱ بعد "+h+" س"+(m?" "+m+" د":""):""}
+ function hero(x){var f=x.f,o=x.o,m=Math.max(o.w,o.d,o.l),t=o.w===m?"فوز "+tn(f[2]):o.l===m?"فوز "+tn(f[3]):"تعادل",rl=relT(x.t);
+  function sg(v,l){return '<i'+(v===m?' class="mx"':'')+' style="flex:'+Math.max(v,.14).toFixed(2)+'">'+(v>=.2?l+' ':'')+Math.round(v*100)+'%</i>'}
+  return '<div class="hv-hero" role="button" tabindex="0" data-k="'+esc(fk(f))+'"><div class="hv-hk"><span>'+esc(NAMES[f[0]]||f[0])+'</span><span>'+(rl?'<em class="hv-rel">'+rl+'</em> ':'')+esc(dlab(f)+" • "+tmx(f))+'</span></div><div class="hv-hb"><span class="hv-m"><span class="hv-n">'+logo(f[2])+'<i>'+esc(tn(f[2]))+'</i></span><span class="hv-n">'+logo(f[3])+'<i>'+esc(tn(f[3]))+'</i></span></span><span class="hv-p'+(m>=.65?' hi':'')+'"><b>'+Math.round(m*100)+'%</b><small>'+esc(t)+'</small></span></div><div class="hv-bar" dir="rtl">'+sg(o.w,"م")+sg(o.d,"ت")+sg(o.l,"ض")+'</div><div class="hv-go">التحليل الكامل ‹</div></div>'}
+ function groups(L,open,d0){var G={},O=[];L.forEach(function(x){var c=x.f[0];if(!G[c]){G[c]=[];O.push(c)}G[c].push(x)});O.sort(function(a,b){return lp(a)-lp(b)});
  return O.map(function(c,i){var a=G[c];return '<details class="hv-g"'+(i<open?' open':'')+'><summary><span>'+esc(NAMES[c]||c)+'</span><em>'+a.length+'</em></summary>'+a.slice(0,4).map(function(x){return row(x,d0)}).join("")+(a.length>4?'<button class="hv-more" data-hm="lg:'+c+'">عرض كل المباريات ('+a.length+') ‹</button>':'')+'</details>'}).join("")}
 window.hv6=function(){var U=upc6();if(!U.length)return '<p class="mut" style="padding:14px">مفيش مباريات قادمة دلوقتي. التطبيق بيتحدّث لوحده وأول ما تنزل المواعيد هتظهر هنا.</p>';
  var now=Date.now(),d0=cd(U[0].t),d1=cd(U[0].t+864e5),A=U.filter(function(x){return cd(x.t)===d0}),B=U.filter(function(x){return cd(x.t)===d1}),isT=d0===cd(now),h=12,dt="";
@@ -1950,7 +1995,7 @@ window.hv6=function(){var U=upc6();if(!U.length)return '<p class="mut" style="pa
  A.concat(B).forEach(function(x){var c=x.f[0];x.s=Math.max(0,24-lp(c))*2+(x.o.H[0]-x.o.H[1]+x.o.A[0]-x.o.A[1])*4;if(!by[c]||x.s>by[c].s)by[c]=x});
  var HS=Object.keys(by).map(function(c){return by[c]}).sort(function(a,b){return b.s-a.s}).slice(0,5),s='';
  s+='<div class="hv-top"><div class="hv-hi">'+g+'</div><div class="hv-dt">'+esc(dt)+'</div></div>';
- s+='<div class="hv-st"><button class="hv-s" data-hm="'+(isT?'lg:TODAY':'all')+'"><b>'+A.length+'</b><small>'+(isT?'مباراة اليوم ‹':'أقرب مباريات ‹')+'</small></button><div class="hv-s"><b id="hcd" dir="ltr" data-t="'+NX.t+'">'+hxFmt(NX.t-now)+'</b><small>لأقرب مباراة</small></div></div>';
+ s+='<div class="hv-st"><button class="hv-s" data-hm="'+(isT?'lg:TODAY':'all')+'"><b>'+A.length+'</b><small>'+(isT?'مباراة اليوم ‹':'أقرب مباريات ‹')+'</small></button><div class="hv-s"><b id="hcd" dir="ltr" data-t="'+NX.t+'">'+hxFmt(NX.t-now)+'</b><small>لأقرب مباراة</small></div><div class="hv-s"><b>'+Math.round(Math.max.apply(null,A.map(function(x){return Math.max(x.o.w,x.o.d,x.o.l)}))*100)+'%</b><small>أقوى توقع</small></div></div>';
  s+='<div class="hv-sc" data-noswipe>'+HS.map(hero).join("")+'</div>';
  var t=(window.u4Fol?u4Fol():[])[0];
  if(!t)s+='<button class="hv-pick" data-u4="pick">⭐ اختار فريقك وتابع مبارياته</button>';
