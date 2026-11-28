@@ -905,12 +905,16 @@ function kick(f){var p=f[1].split(" ");if(!p[3])return null;var t=p[3].split(":"
   return(b||b2).ms}
 function rel(f){var k=kick(f);if(k===null)return"";var d=k-Date.now();if(d<0){var K=fk(f),L=LIVEM[K];return d>-108e5||L?'<small class="'+lvCls(L)+'" data-lk="'+esc(K)+'">'+lvTxt(L)+'</small>':""}if(d<36e5)return'<small class="rel">بعد '+Math.max(1,Math.round(d/6e4))+'د</small>';if(d<864e5)return'<small class="rel">بعد '+Math.round(d/36e5)+'س</small>';return""}
 function past(f){var k=kick(f);return k!==null&&k<Date.now()-108e5}
+var SHOW_HIT=false; /* خليها true لما نرجّع «البرنامج صاب» */
 var LANG="ar";try{LANG=localStorage.getItem("fb_lang")||"ar"}catch(e){}
 var PN={"Al Ahly":"الأهلي","Zamalek":"الزمالك","Pyramids":"بيراميدز","Pyramids FC":"بيراميدز","Al Masry":"المصري","Al Ittihad":"الاتحاد","Ismaily":"الإسماعيلي","Ceramica Cleopatra":"سيراميكا كليوباترا","Modern Sport":"مودرن سبورت","Modern Future":"مودرن سبورت","Future FC":"فيوتشر","ENPPI":"إنبي","Enppi":"إنبي","Smouha":"سموحة","Zed":"زد","Zed FC":"زد","Al Mokawloon":"المقاولون العرب","Pharco":"فاركو","Petrojet":"بتروجت","National Bank of Egypt":"البنك الأهلي","El Gouna":"الجونة","Haras El Hodoud":"حرس الحدود","Ghazl El Mahalla":"غزل المحلة","Tala'ea El-Gaish":"طلائع الجيش","Telephonat Beni Suef":"تليفونات بني سويف","Kahrabaa Ismailia":"كهرباء الإسماعيلية","El Entag El Harby":"الإنتاج الحربي","Baladiyat El Mahalla":"بلدية المحلة","Asyut Petroleum":"بترول أسيوط","Abu Qair Semad":"سمادكو أبو قير","Canal SC":"القناة","Arsenal":"آرسنال","Aston Villa":"أستون فيلا","Bournemouth":"بورنموث","Brentford":"برينتفورد","Brighton":"برايتون","Burnley":"بيرنلي","Chelsea":"تشيلسي","Coventry":"كوفنتري","Crystal Palace":"كريستال بالاس","Everton":"إيفرتون","Fulham":"فولهام","Hull":"هال سيتي","Ipswich":"إبسويتش","Leeds":"ليدز يونايتد","Liverpool":"ليفربول","Man City":"مانشستر سيتي","Man United":"مانشستر يونايتد","Newcastle":"نيوكاسل","Nott'm Forest":"نوتنغهام فورست","Sunderland":"سندرلاند","Tottenham":"توتنهام","West Ham":"وست هام","Wolves":"وولفرهامبتون",
 "Alaves":"ألافيس","Ath Bilbao":"أتلتيك بيلباو","Ath Madrid":"أتلتيكو مدريد","Barcelona":"برشلونة","Betis":"ريال بيتيس","Celta":"سيلتا فيغو","Elche":"إلتشي","Espanol":"إسبانيول","Getafe":"خيتافي","Girona":"جيرونا","La Coruna":"ديبورتيفو لاكورونيا","Levante":"ليفانتي","Malaga":"مالقة","Mallorca":"مايوركا","Osasuna":"أوساسونا","Oviedo":"أوفييدو","Real Madrid":"ريال مدريد","Santander":"راسينغ سانتاندير","Sevilla":"إشبيلية","Sociedad":"ريال سوسيداد","Valencia":"فالنسيا","Vallecano":"رايو فايكانو","Villarreal":"فياريال",
 "Atalanta":"أتالانتا","Bologna":"بولونيا","Cagliari":"كالياري","Como":"كومو","Cremonese":"كريمونيزي","Fiorentina":"فيورنتينا","Frosinone":"فروزينوني","Genoa":"جنوى","Inter":"إنتر ميلان","Juventus":"يوفنتوس","Lazio":"لاتسيو","Lecce":"ليتشي","Milan":"ميلان","Monza":"مونزا","Napoli":"نابولي","Parma":"بارما","Pisa":"بيزا","Roma":"روما","Sassuolo":"ساسولو","Torino":"تورينو","Udinese":"أودينيزي","Venezia":"فينيسيا","Verona":"هيلاس فيرونا",
 "Augsburg":"أوغسبورغ","Bayern Munich":"بايرن ميونخ","Dortmund":"بوروسيا دورتموند","Ein Frankfurt":"أينتراخت فرانكفورت","Elversberg":"إلفرسبرغ","FC Koln":"كولن","Freiburg":"فرايبورغ","Hamburg":"هامبورغ","Heidenheim":"هايدنهايم","Hoffenheim":"هوفنهايم","Leverkusen":"باير ليفركوزن","M'gladbach":"مونشنغلادباخ","Mainz":"ماينز","Paderborn":"بادربورن","RB Leipzig":"لايبزيغ","Schalke 04":"شالكه","St Pauli":"سانت باولي","Stuttgart":"شتوتغارت","Union Berlin":"يونيون برلين","Werder Bremen":"فيردر بريمن","Wolfsburg":"فولفسبورغ",
 "Angers":"أنجيه","Auxerre":"أوكسير","Brest":"بريست","Le Havre":"لوهافر","Le Mans":"لومان","Lens":"لانس","Lille":"ليل","Lorient":"لوريان","Lyon":"ليون","Marseille":"مارسيليا","Metz":"ميتز","Monaco":"موناكو","Nantes":"نانت","Nice":"نيس","Paris FC":"باريس إف سي","Paris SG":"باريس سان جيرمان","Rennes":"رين","Strasbourg":"ستراسبورغ","Toulouse":"تولوز","Troyes":"تروا","Al Hilal":"الهلال","Al-Hilal":"الهلال","Al Nassr":"النصر","Al-Nassr":"النصر","Al Ahli":"الأهلي السعودي","Al-Ahli":"الأهلي السعودي","Al Shabab":"الشباب","Al-Shabab":"الشباب","Al Ettifaq":"الاتفاق","Al-Ettifaq":"الاتفاق","Al Fateh":"الفتح","Al-Fateh":"الفتح","Al Taawoun":"التعاون","Al-Taawoun":"التعاون","Al Fayha":"الفيحاء","Al-Fayha":"الفيحاء","Al Raed":"الرائد","Al-Raed":"الرائد","Damac":"ضمك","Al Khaleej":"الخليج","Al-Khaleej":"الخليج","Al Okhdood":"الأخدود","Al-Okhdood":"الأخدود","Al Riyadh":"الرياض","Al-Riyadh":"الرياض","Al Qadsiah":"القادسية","Al-Qadsiah":"القادسية","Al Kholood":"الخلود","Al-Kholood":"الخلود","Al Najma":"النجمة","Al-Najma":"النجمة","Neom":"نيوم","Al Orobah":"العروبة","Al-Orobah":"العروبة","Al Hazem":"الحزم","Al-Hazem":"الحزم","Abha":"أبها","Al-Ittihad":"الاتحاد","Petrol Asyut":"بترول أسيوط","Abo Qir Semad":"أبو قير للأسمدة","Al Ittehad":"الاتحاد السكندري","El Gounah":"الجونة","El Qanah":"القناة","Wadi Degla":"وادي دجلة","Al Diriyah":"الدرعية","Al Faisaly":"الفيصلي","Neom SC":"نيوم","PSV":"آيندهوفن","AEK Athens":"إيه إي كيه أثينا","LASK Linz":"لاسك لينتس","Sabah":"صباح","Fenerbahce":"فنربخشة","Slavia Prague":"سلافيا براغ","Feyenoord":"فاينورد","Bayern":"بايرن ميونخ","Viking FK":"فايكينغ","AS Roma":"روما","S Bratislava":"سلوفان براتيسلافا","Inter Milan":"إنتر ميلان","Club Brugge":"كلوب بروج","PSG":"باريس سان جيرمان","Atlético":"أتلتيكو مدريد","Man Utd":"مانشستر يونايتد","Sporting":"سبورتينغ لشبونة","Galatasaray":"غلطة سراي","FC Porto":"بورتو","Bodo/Glimt":"بودو غليمت","Shakhtar":"شاختار دونيتسك","Olympiacos":"أولمبياكوس","Lech Poznan":"ليخ بوزنان","Levski Sofia":"ليفسكي صوفيا","Celtic":"سلتيك","Ararat-Armenia":"أرارات أرمينيا","RB Salzburg":"ريد بول سالزبورغ","Ferencvaros":"فيرينكفاروش","Union SG":"يونيون سان جيلواز","Hapoel Be'er":"هابويل بئر السبع","NEC":"نايميخن","Sturm Graz":"شتورم غراتس","Besiktas":"بشكتاش","Sparta":"سبارتا براغ","Lillestrom":"ليلسترم","Jagiellonia ":"ياغيلونيا بيالستوك","Jagiellonia":"ياغيلونيا بيالستوك","Dinamo Zagreb":"دينامو زغرب","NK Celje":"سيلي","AZ Alkmaar":"إيه زد ألكمار","Torreense":"توريينسي","OFI Crete":"أو إف آي كريت","Anderlecht":"أندرلخت","Omonia":"أومونيا","Real Sociedad":"ريال سوسيداد","Celta Vigo":"سيلتا فيغو","Benfica":"بنفيكا","C Palace":"كريستال بالاس","Viktoria Plzen":"فيكتوريا بلزن"};
+Object.assign(PN,{"FK Qarabag":"قره باغ","København":"كوبنهاغن","Ajax":"أياكس","Pafos":"بافوس","Frankfurt":"أينتراخت فرانكفورت","Spurs":"توتنهام","PAOK":"باوك","Young Boys":"يونغ بويز","Go Ahead Eagles":"غو أهيد إيغلز","Haras El Hodood":"حرس الحدود","Kahrbaa Alasmalia":"كهرباء الإسماعيلية","Kairat Almaty":"كايرات ألماتي","Athletic":"أتلتيك بيلباو","SK Brann":"بران","Red Star":"النجم الأحمر","Panathinaikos":"باناثينايكوس","Nottm Forest":"نوتنغهام فورست","Braga":"براغا","Ludogorets":"لودوغوريتس","FC Basel":"بازل","Genk":"غينك","Midtjylland":"ميتيلاند","FCSB":"ستيوا بوخارست","FC Utrecht":"أوتريخت"});
+(function(X){for(var k in X)if(!PN[k])PN[k]=X[k]})({"Alanyaspor":"ألانيا سبور","Konyaspor":"قونيا سبور","Rizespor":"ريزا سبور","Kasimpasa":"قاسم باشا","Galatasaray":"غلطة سراي","Fenerbahce":"فنربخشة","Besiktas":"بشكتاش","Trabzonspor":"طرابزون سبور","Buyuksehyr":"باشاك شهير","Basaksehir":"باشاك شهير","Antalyaspor":"أنطاليا سبور","Kayserispor":"قيصري سبور","Samsunspor":"سامسون سبور","Goztep":"غوزتيبي","Goztepe":"غوزتيبي","Eyupspor":"أيوب سبور","Gaziantep":"غازي عنتاب","Genclerbirligi":"غنتشلر بيرليغي","Kocaelispor":"قوجا إيلي سبور","Karagumruk":"فاتح قره غمرك","Sivasspor":"سيواس سبور","Hatayspor":"هاتاي سبور","Bodrumspor":"بودروم","Ad. Demirspor":"أضنة ديمير سبور","Erzurum BB":"أرضروم سبور","Erzurumspor":"أرضروم سبور","Amedspor":"آمد سبور","Corum":"تشوروم","Benfica":"بنفيكا","Porto":"بورتو","Sp Lisbon":"سبورتينغ لشبونة","Sp Braga":"براغا","Guimaraes":"فيتوريا غيمارايش","Famalicao":"فاماليكاو","Gil Vicente":"جيل فيسنتي","Moreirense":"موريرينسي","Estoril":"إستوريل","Rio Ave":"ريو آفي","Santa Clara":"سانتا كلارا","Casa Pia":"كازا بيا","Arouca":"أروكا","Estrela":"إستريلا أمادورا","Nacional":"ناسيونال","AVS":"أفس","Tondela":"تونديلا","Alverca":"ألفيركا","Maritimo":"ماريتيمو","Academico Viseu":"أكاديميكو فيزيو","Ajax":"أياكس","PSV Eindhoven":"آيندهوفن","Feyenoord":"فاينورد","AZ Alkmaar":"إيه زد ألكمار","Twente":"تفينتي","Utrecht":"أوتريخت","Groningen":"خرونينغن","Heerenveen":"هيرنفين","Sparta Rotterdam":"سبارتا روتردام","Nijmegen":"نايميخن","Go Ahead Eagles":"غو أهيد إيغلز","Zwolle":"زفوله","For Sittard":"فورتونا سيتارد","Excelsior":"إكسلسيور","Telstar":"تيلستار","Volendam":"فولندام","Heracles":"هيراكليس","NAC Breda":"ناك بريدا","Den Haag":"دين هاخ","Cambuur":"كامبور","Willem II":"فيليم تو","Club Brugge":"كلوب بروج","Anderlecht":"أندرلخت","Genk":"غينك","Gent":"جنت","Antwerp":"أنتويرب","Standard":"ستاندارد لييج","St. Gilloise":"يونيون سان جيلواز","Charleroi":"شارلروا","Mechelen":"ميكيلين","Westerlo":"فيسترلو","St Truiden":"سانت ترويدن","Cercle Brugge":"سيركل بروج","Oud-Heverlee Leuven":"لوفين","Dender":"ديندر","Waregem":"زولته فاريغيم","RAAL La Louviere":"لا لوفيير","Celtic":"سلتيك","Rangers":"رينجرز","Hearts":"هارتس","Hibernian":"هيبرنيان","Aberdeen":"أبردين","Dundee":"دندي","Dundee United":"دندي يونايتد","Motherwell":"مذرويل","Kilmarnock":"كيلمارنوك","St Mirren":"سانت ميرين","Falkirk":"فالكيرك","Livingston":"ليفينغستون","St Johnstone":"سانت جونستون","Olympiakos":"أولمبياكوس","Panathinaikos":"باناثينايكوس","AEK":"إيه إي كيه أثينا","PAOK":"باوك","Aris":"أريس","OFI Crete":"أو إف آي كريت","Volos NFC":"فولوس","Atromitos":"أتروميتوس","Asteras Tripolis":"أستيراس تريبوليس","Levadeiakos":"ليفادياكوس","Panetolikos":"بانيتوليكوس","Panserraikos":"بانسيرايكوس","Kifisia":"كيفيسيا","Larisa":"لاريسا"});
+(function(X){for(var k in X)if(!PN[k])PN[k]=X[k]})({"Aldosivi":"ألدوسيفي","Argentinos Jrs":"أرجنتينوس جونيورز","Atl. Tucuman":"أتلتيكو توكومان","Banfield":"بانفيلد","Barracas Central":"باراكاس سنترال","Belgrano":"بلغرانو","Boca Juniors":"بوكا جونيورز","Central Cordoba":"سنترال كوردوبا","Defensa y Justicia":"ديفينسا إي خوستيسيا","Dep. Riestra":"ديبورتيفو ريسترا","Estudiantes L.P.":"إستوديانتس لا بلاتا","Estudiantes Rio Cuarto":"إستوديانتس ريو كوارتو","Gimnasia L.P.":"خيمناسيا لا بلاتا","Gimnasia Mendoza":"خيمناسيا مندوزا","Huracan":"هوراكان","Ind. Rivadavia":"إندبندينتي ريفادافيا","Independiente":"إندبندينتي","Instituto":"إنستيتوتو","Lanus":"لانوس","Newells Old Boys":"نيولز أولد بويز","Platense":"بلاتينسي","Racing Club":"راسينغ كلوب","River Plate":"ريفر بليت","Rosario Central":"روزاريو سنترال","San Lorenzo":"سان لورينزو","Sarmiento Junin":"سارمينتو خونين","Talleres Cordoba":"تاليريس كوردوبا","Tigre":"تيغري","Union de Santa Fe":"يونيون سانتا في","Velez Sarsfield":"فيليز سارسفيلد","Beveren":"بيفيرين","Kortrijk":"كورتريك","Lommel SK":"لوميل","Athletico-PR":"أتلتيكو بارانينسي","Atletico-MG":"أتلتيكو مينيرو","Bahia":"باهيا","Botafogo RJ":"بوتافوغو","Bragantino":"براغانتينو","Chapecoense-SC":"شابيكوينسي","Corinthians":"كورينثيانز","Coritiba":"كوريتيبا","Cruzeiro":"كروزيرو","Flamengo RJ":"فلامنغو","Fluminense":"فلومينينسي","Gremio":"غريميو","Internacional":"إنترناسيونال","Mirassol":"ميراسول","Palmeiras":"بالميراس","Remo":"ريمو","Santos":"سانتوس","Sao Paulo":"ساو باولو","Vasco":"فاسكو دا غاما","Vitoria":"فيتوريا","Iraklis":"إيراكليس","Kalamata":"كالاماتا","Atl. San Luis":"أتلتيكو سان لويس","Atlante":"أتلانتي","Atlas":"أطلس","Club America":"كلوب أمريكا","Club Leon":"ليون المكسيكي","Club Tijuana":"تيخوانا","Cruz Azul":"كروز أزول","Guadalajara Chivas":"غوادالاخارا تشيفاس","Juarez":"خواريز","Monterrey":"مونتيري","Necaxa":"نيكاكسا","Pachuca":"باتشوكا","Puebla":"بويبلا","Queretaro":"كيريتارو","Santos Laguna":"سانتوس لاغونا","Tigres UANL":"تيغريس","Toluca":"تولوكا","UNAM Pumas":"بوماس","Atlanta Utd":"أتلانتا يونايتد","Austin FC":"أوستن","CF Montreal":"مونتريال","Charlotte":"شارلوت","Chicago Fire":"شيكاغو فاير","Colorado Rapids":"كولورادو رابيدز","Columbus Crew":"كولومبوس كرو","DC United":"دي سي يونايتد","FC Cincinnati":"سينسيناتي","FC Dallas":"دالاس","Houston Dynamo":"هيوستن دينامو","Inter Miami":"إنتر ميامي","Los Angeles FC":"لوس أنجلوس إف سي","Los Angeles Galaxy":"لوس أنجلوس غالاكسي","Minnesota United":"مينيسوتا يونايتد","Nashville SC":"ناشفيل","New England Revolution":"نيو إنغلاند ريفولوشن","New York City":"نيويورك سيتي","New York Red Bulls":"نيويورك ريد بولز","Orlando City":"أورلاندو سيتي","Philadelphia Union":"فيلادلفيا يونيون","Portland Timbers":"بورتلاند تيمبرز","Real Salt Lake":"ريال سولت ليك","San Diego FC":"سان دييغو","San Jose Earthquakes":"سان خوسيه إيرثكويكس","Seattle Sounders":"سياتل ساوندرز","Sporting Kansas City":"سبورتينغ كانساس سيتي","St. Louis City":"سانت لويس سيتي","Toronto FC":"تورونتو","Vancouver Whitecaps":"فانكوفر وايتكابس"});
 function tn(n){return LANG==="ar"&&PN[n]?PN[n]:n}
 /* ---------- بحث بالعربي: أسماء الفرق وأشهر صيغها ---------- */
 var AR={"Al Ahly":"الأهلي al ahly","Zamalek":"الزمالك zamalek","Pyramids":"بيراميدز pyramids","Pyramids FC":"بيراميدز pyramids fc","Al Masry":"المصري al masry","Al Ittihad":"الاتحاد al ittihad","Ismaily":"الإسماعيلي ismaily","Ceramica Cleopatra":"سيراميكا كليوباترا ceramica cleopatra","Modern Sport":"مودرن سبورت modern sport","Modern Future":"مودرن سبورت modern future","Future FC":"فيوتشر future fc","ENPPI":"إنبي enppi","Enppi":"إنبي enppi","Smouha":"سموحة smouha","Zed":"زد zed","Zed FC":"زد zed fc","Al Mokawloon":"المقاولون العرب al mokawloon","Pharco":"فاركو pharco","Petrojet":"بتروجت petrojet","National Bank of Egypt":"البنك الأهلي national bank of egypt","El Gouna":"الجونة el gouna","Haras El Hodoud":"حرس الحدود haras el hodoud","Ghazl El Mahalla":"غزل المحلة ghazl el mahalla","Tala'ea El-Gaish":"طلائع الجيش tala'ea el-gaish","Telephonat Beni Suef":"تليفونات بني سويف telephonat beni suef","Kahrabaa Ismailia":"كهرباء الإسماعيلية kahrabaa ismailia","El Entag El Harby":"الإنتاج الحربي el entag el harby","Baladiyat El Mahalla":"بلدية المحلة baladiyat el mahalla","Asyut Petroleum":"بترول أسيوط asyut petroleum","Abu Qair Semad":"سمادكو أبو قير abu qair semad","Canal SC":"القناة canal sc","Arsenal":"ارسنال آرسنال المدفعجية","Aston Villa":"استون فيلا أستون فيلا","Bournemouth":"بورنموث","Brentford":"برينتفورد برنتفورد","Brighton":"برايتون","Burnley":"بيرنلي","Chelsea":"تشيلسي تشلسي","Coventry":"كوفنتري","Crystal Palace":"كريستال بالاس","Everton":"ايفرتون إيفرتون","Fulham":"فولهام","Hull":"هال سيتي","Ipswich":"ايبسويتش إبسويتش","Leeds":"ليدز يونايتد","Liverpool":"ليفربول","Man City":"مانشستر سيتي مان سيتي السيتي","Man United":"مانشستر يونايتد مان يونايتد اليونايتد","Newcastle":"نيوكاسل يونايتد","Nott'm Forest":"نوتنغهام فورست نوتينغهام نوتنجهام فورست","Sunderland":"سندرلاند","Tottenham":"توتنهام هوتسبير السبيرز","West Ham":"وست هام","Wolves":"وولفرهامبتون ولفرهامبتون وولفز",
@@ -952,9 +956,10 @@ var LASTL=null;
 function bnav(){var isL=leagues().indexOf(cur)>=0||cur==="ALLM";if(isL)LASTL=cur;var I=[["TODAY",IC.today,"اليوم"],["M",IC.ball,"المباريات"],["SLIP",IC.slip,"القسيمة"],["FAV",IC.star,"المفضلة"]],SN=typeof slipList==="function"?slipList().length:0;if(D._tab)I.push(["TBL",IC.tbl,"الترتيب"]);I.push(["AI",IC.ai,"توقعاتي"]);I.push(["RES",IC.res,"النتائج"]);I.push(["LOG",IC.log,"السجل"]);$("tabs").style.display=(cur==="TBL"||cur==="LOG"||cur==="RES"||cur==="AI")?"none":"";$("bn").innerHTML=I.map(function(x){var on=x[0]===cur||(x[0]==="M"&&isL);return'<button data-k="'+x[0]+'" class="'+(on?"on":"")+'"><span>'+x[1]+'</span>'+x[2]+(x[0]==="SLIP"&&SN?'<b class="bgn">'+SN+'</b>':'')+'</button>'}).join("")}
 $("bn").onclick=function(e){var b=e.target.closest("button");if(!b)return;var k=b.getAttribute("data-k");if(k==="SLIP"){var so=document.getElementById("slipov");if(so&&!so.hidden)slipClose();else slipOpen();return}if(k==="M")k=LASTL||(leagues().filter(function(l){return(D._fix||[]).some(function(f){return f[0]===l})})[0])||leagues()[0];setLeague(k)};
 function rnd1(F){var by={},ord=[],o=[];F.forEach(function(f){if(!by[f[0]]){by[f[0]]=[];ord.push(f[0])}by[f[0]].push(f)});ord.forEach(function(c){var S=by[c].slice().sort(function(x,y){return(kick(x)||0)-(kick(y)||0)}),t={},r=[],k,f;for(k=0;k<S.length;k++){f=S[k];if(t[f[2]]||t[f[3]])break;t[f[2]]=t[f[3]]=1;r.push(f)}o=o.concat(r.length?r:S)});return o.length?o:F}
+function heroes(F){var h=leagues().map(function(c){return hero(F.filter(function(f){return f[0]===c}))}).join("");return h?'<div class="day">أبرز الماتشات • اسحب للدوري التالي</div><div class="tops" data-noswipe>'+h+'</div>':""}
 function hero(F){F=rnd1(F);if(!F.length)return"";var bi=0,bq=-1e9;F.forEach(function(f,i){var o=mat(f[0],f[2],f[3]);if(!o)return;var q=o.H[0]-o.H[1]+o.A[0]-o.A[1];if(q>bq){bq=q;bi=i}});
   var f=F[bi],o=pr(f[0],f[2],f[3],false,fk(f));if(!o)return"";var p=f[1].split(" "),day=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);
-  return'<section class="hero"><div class="hk">🔥 أبرز ماتش قريب <span>'+esc(NAMES[f[0]]||f[0])+'</span></div><div class="hm"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+'</div><div class="hc"><b>'+esc(p[3]||"")+'</b><small>'+esc(day)+'</small></div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+'</div></div><div class="pb" dir="ltr">'+pbH(o)+'</div><button class="go hb" data-i="'+bi+'" data-k="'+esc(fk(f))+'">عرض التحليل الكامل ›</button></section>'}
+  return'<section class="hero"><div class="hk">🔥 أبرز ماتش <span>'+esc(NAMES[f[0]]||f[0])+'</span></div><div class="hm"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+'</div><div class="hc"><b>'+esc(p[3]||"")+'</b><small>'+esc(day)+'</small></div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+'</div></div><div class="pb" dir="ltr">'+pbH(o)+'</div><button class="go hb" data-i="'+bi+'" data-k="'+esc(fk(f))+'">عرض التحليل الكامل ›</button></section>'}
 $("list").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".hb");if(!b)return;var k=b.getAttribute("data-k")||"";
  function find(){var a=$("list").querySelectorAll(".fav");for(var i=0;i<a.length;i++){if(a[i].getAttribute("data-k")===k)return a[i].closest(".m")}return null}
  var m=find();if(!m&&k){try{setLeague(k.split("|")[0])}catch(x){}m=find()}
@@ -995,10 +1000,10 @@ function list(){
     if(TOPN){if(i===0)s+='<div class="day">⭐ أقوى توقعات اليوم</div>';if(i===TOPN){s+='<div class="day">باقي مباريات اليوم</div>';last=day}}
     if(SORT==="t"&&!TOPN&&day!==last){s+='<div class="day" data-d="'+esc(day)+'">'+esc(dpl(f)+day)+'</div>';last=day}
     var o=pr(f[0],f[2],f[3],false,k);
-    s+='<div class="m" data-i="'+i+'"><span class="fav" role="button" tabindex="0" aria-label="مفضلة" data-k="'+esc(k)+'">'+((ST[k]||{}).fav?"★":"☆")+'</span><div class="mt" role="button" tabindex="0" aria-expanded="false"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+bdn(k,"h")+'</div><div class="mid">'+esc(p[3]||"")+vsH(f)+rel(f)+'</div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+bdn(k,"a")+'</div></div>'+
+    s+='<div class="m" data-i="'+i+'"><span class="fav" role="button" tabindex="0" aria-label="مفضلة" data-k="'+esc(k)+'">'+((ST[k]||{}).fav?"★":"☆")+'</span><div class="lgn">'+esc(NAMES[f[0]]||f[0])+'</div><div class="mt" role="button" tabindex="0" aria-expanded="false"><div class="tm">'+logo(f[2])+esc(tn(f[2]))+bdn(k,"h")+'</div><div class="mid">'+esc(p[3]||"")+vsH(f)+rel(f)+'</div><div class="tm">'+logo(f[3])+esc(tn(f[3]))+bdn(k,"a")+'</div></div>'+
      '<div class="pb" dir="ltr">'+pbH(o)+'</div><div class="smw">'+smI(o,f)+'</div><div class="od">'+odH(o,k)+'</div><div class="det"></div></div>';});
   
-  if(!$("q").value&&cur==="HOME"){var hd=homeDash(HALL);s=hd.a+(window.u4Mine?u4Mine():"")+hero(HALL)+(window.u4Days?u4Days(HALL):"")+(HALL.length>3?'<button class="go" data-hm="all" style="margin:12px 0">عرض كل المباريات</button>':"")+(typeof window.homeNews==="function"?window.homeNews():"");}
+  if(!$("q").value&&cur==="HOME"){var hd=homeDash(HALL);s=hd.a+(window.u4Mine?u4Mine():"")+heroes(HALL)+(window.u4Days?u4Days(HALL):"")+(HALL.length>3?'<button class="go" data-hm="all" style="margin:12px 0">عرض كل المباريات</button>':"")+(typeof window.homeNews==="function"?window.homeNews():"");}
   if(!$("q").value&&(cur==="TODAY"||leagues().indexOf(cur)>=0))s=(F.length>1&&!TOPN?hero(F):"")+accH()+cmpH()+s;if(cur==="FAV"&&F.length&&!$("q").value)s='<button class="go remall" style="margin:0 0 12px">⏰ ذكّرني بكل المباريات المفضلة (ملف تقويم)</button>'+s;if(SORT==="t"&&!$("q").value&&F.length&&cur!=="FAV"||(SORT==="t"&&cur==="FAV"&&!$("q").value&&F.length)){var seen={},ch="";F.forEach(function(f){var p=f[1].split(" "),dd=(DAY[p[0]]||p[0])+" "+p[1]+" "+(MON[p[2]]||p[2]);if(!seen[dd]){seen[dd]=1;ch+='<button class="tab dchip" data-d="'+esc(dd)+'">'+esc((DAY[p[0]]||p[0])+" "+p[1])+'</button>'}});if(Object.keys(seen).length>1)s='<div id="ds">'+ch+'</div>'+s}$("list").innerHTML=s;$("list").F=F;want()}
 function rer(m){var f=$("list").F[+m.getAttribute("data-i")];m.querySelector(".det").innerHTML=detail(f[0],f[2],f[3],false,fk(f));var I2=injs(fk(f)),T=m.querySelectorAll(".mt .tm");m.querySelectorAll(".mt .inj").forEach(function(x){x.remove()});T[0].insertAdjacentHTML("beforeend",bdn(fk(f),"h"));T[1].insertAdjacentHTML("beforeend",bdn(fk(f),"a"));var q2=pr(f[0],f[2],f[3],false,fk(f));m.querySelector(".pb").innerHTML=pbH(q2);m.querySelector(".od").innerHTML=odH(q2,fk(f));m.querySelector(".smw").innerHTML=smI(q2,f)}
 var _qt;$("q").oninput=function(){clearTimeout(_qt);_qt=setTimeout(list,160)};
@@ -1508,7 +1513,7 @@ function newsView(){var UA=upc(),U=NL==="ALL"?UA:UA.filter(function(x){return x.
    return'<p style="margin:8px 0;line-height:1.8"><b>'+esc(tn(f[2]))+' vs '+esc(tn(f[3]))+'</b><br>'+esc(NAMES[f[0]]||f[0])+' • '+dl(f)+'<br>النموذج بيرجّح <b>'+esc(tn(fv))+'</b> بنسبة '+pc(Math.max(x.o.w,x.o.l))+(d?'، وهجومه رقم '+rk(T,fv,0,false).split(" ")[0]+' ودفاعه رقم '+rk(T,fv,1,true).split(" ")[0]:'')+(fm?'، وفورمته '+w+' فوز في آخر '+fm.length:'')+'.</p>'}).join(""))}
  var R=rows().filter(function(g){return NL==="ALL"||g.f[0]===NL}).slice(-12);
  if(R.length>=3){var ok=0,sur=null;R.forEach(function(g){var y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2,pi=g.p.indexOf(Math.max.apply(null,g.p));if(pi===y)ok++;else if(!sur||g.p[pi]>sur.q)sur={g:g,q:g.p[pi]}});
-  s+=nCard("✅","ملخص آخر النتايج","<p style=\"margin:6px 0\">النموذج أصاب نتيجة <b>"+ok+"</b> من <b>"+R.length+"</b> مباراة أخيرة."+(sur?"<br>أكبر مفاجأة: "+esc(tn(sur.g.f[2]))+" "+sur.g.r[0]+"-"+sur.g.r[1]+" "+esc(tn(sur.g.f[3]))+" (كانت توقعاتنا "+pc(sur.q)+" لنتيجة تانية).":"")+"</p>")}
+  s+=nCard("✅","ملخص آخر النتايج","<p style=\"margin:6px 0\">"+(SHOW_HIT?"النموذج أصاب نتيجة <b>"+ok+"</b> من <b>"+R.length+"</b> مباراة أخيرة.<br>":"")+(sur?"أكبر مفاجأة: "+esc(tn(sur.g.f[2]))+" "+sur.g.r[0]+"-"+sur.g.r[1]+" "+esc(tn(sur.g.f[3]))+" (كانت توقعاتنا "+pc(sur.q)+" لنتيجة تانية).":"")+"</p>")}
  var tm=[];leagues().forEach(function(k){if(NL!=="ALL"&&k!==NL)return;var T=D[k]&&D[k].teams;if(T)for(var n in T)if(T[n][2]&&String(T[n][2]).length>=4)tm.push([n,k,(String(T[n][2]).match(/W/g)||[]).length,String(T[n][2]).length])});
  tm.sort(function(a,b){return b[2]/b[3]-a[2]/a[3]||b[2]-a[2]});var hot=tm.slice(0,5);
  if(hot.length)s+=nCard("📈","أفضل فورمة دلوقتي",hot.map(function(x){return nRow(esc(tn(x[0])),esc(NAMES[x[1]]||x[1]),x[2]+" فوز من "+x[3])}).join(""));
@@ -1553,7 +1558,7 @@ newsView=function(){var UA=upc(),U=NL==="ALL"?UA:UA.filter(function(x){return x.
    return'<div class="nw-pv" role="button" tabindex="0" data-nm="'+esc(fk(f))+'"><div class="nw-rt">'+logo(f[2])+'<b>'+esc(tn(f[2]))+' vs '+esc(tn(f[3]))+'</b>'+logo(f[3])+'</div><p>النموذج بيرجّح <b>'+esc(tn(fv))+'</b> بنسبة '+pc(Math.max(x.o.w,x.o.l))+(d?'، وهجومه رقم '+rk(T,fv,0,false).split(" ")[0]+' ودفاعه رقم '+rk(T,fv,1,true).split(" ")[0]:'')+(fm?'، وفورمته '+w+' فوز في آخر '+fm.length:'')+'.</p><small>'+esc(NAMES[f[0]]||f[0])+' • '+dl(f)+'</small></div>'}).join(""))}
  var R=rows().filter(function(g){return NL==="ALL"||g.f[0]===NL}).slice(-12);
  if(R.length>=3){var ok=0,sur=null;R.forEach(function(g){var y=g.r[0]>g.r[1]?0:g.r[0]===g.r[1]?1:2,pi=g.p.indexOf(Math.max.apply(null,g.p));if(pi===y)ok++;else if(!sur||g.p[pi]>sur.q)sur={g:g,q:g.p[pi]}});
-  s+=nSec("✅","ملخص آخر النتايج","",'<div class="nw-sum"><b>'+ok+'</b><span>من '+R.length+' مباراة أخيرة أصاب فيها النموذج</span></div>'+(sur?'<p class="nw-sp">😮 أكبر مفاجأة: '+esc(tn(sur.g.f[2]))+' vs '+esc(tn(sur.g.f[3]))+' انتهت <bdi dir="ltr">'+sur.g.r[0]+'-'+sur.g.r[1]+'</bdi>.</p>':""))}
+  s+=nSec("✅","ملخص آخر النتايج","",(SHOW_HIT?'<div class="nw-sum"><b>'+ok+'</b><span>من '+R.length+' مباراة أخيرة أصاب فيها النموذج</span></div>':'')+(sur?'<p class="nw-sp">😮 أكبر مفاجأة: '+esc(tn(sur.g.f[2]))+' vs '+esc(tn(sur.g.f[3]))+' انتهت <bdi dir="ltr">'+sur.g.r[0]+'-'+sur.g.r[1]+'</bdi>.</p>':""))}
  var tm=[];leagues().forEach(function(k){if(NL!=="ALL"&&k!==NL)return;var T=D[k]&&D[k].teams;if(T)for(var n in T)if(T[n][2]&&String(T[n][2]).length>=4)tm.push([n,k,(String(T[n][2]).match(/W/g)||[]).length,String(T[n][2]).length,String(T[n][2])])});
  tm.sort(function(a,b){return b[2]/b[3]-a[2]/a[3]||b[2]-a[2]});var hot=tm.slice(0,5);
  if(hot.length)s+=nSec("📈","أفضل فورمة دلوقتي","ف = فوز • ت = تعادل • خ = خسارة",hot.map(function(x){return'<div class="nw-f"><div class="nw-ft">'+logo(x[0])+'<span><b>'+esc(tn(x[0]))+'</b><small>'+esc(NAMES[x[1]]||x[1])+'</small></span></div><div class="nw-d">'+nDots(x[4])+'</div></div>'}).join(""));
@@ -1758,7 +1763,7 @@ document.addEventListener("click",function(e){var b=e.target.closest&&e.target.c
 
 <script>(function(){var q=0,L=document.getElementById("list");if(!L)return;function up(){q=0;var ds=L.querySelector("#ds");if(!ds)return;var cur=null;[].forEach.call(L.querySelectorAll(".day"),function(x){if(x.getBoundingClientRect().top<=150)cur=x.getAttribute("data-d")});if(!cur){var f=L.querySelector(".day");cur=f&&f.getAttribute("data-d")}[].forEach.call(ds.querySelectorAll(".dchip"),function(c){var on=c.getAttribute("data-d")===cur;c.classList.toggle("on",on);if(on)c.setAttribute("aria-current","true");else c.removeAttribute("aria-current")})}function sch(){if(!q){q=1;requestAnimationFrame(up)}}window.addEventListener("scroll",sch,{passive:true});new MutationObserver(sch).observe(L,{childList:true});sch()})();</script>
 <style>
-#bn button[data-k=TBL],#bn button[data-k=AI],#bn button[data-k=RES],#bn button[data-k=LOG],#up{display:none!important}
+#bn button[data-k=TBL],#up{display:none!important}
 html body #tabs{margin-inline-end:62px!important;width:auto!important}
 .hx-r b{text-align:center;min-width:76px}.hx-r b small{display:block;font-size:10.5px;font-weight:500;color:var(--mut)}
 .hx-r b.hi{color:#15803d}.hx-r b.lo{color:var(--mut)}
@@ -1791,21 +1796,185 @@ function u4Share(k){var f=fxOf(k),o=f&&pr(f[0],f[2],f[3],false,k);if(!o)return;v
 (function(){
 var _h=hero;hero=function(F){var u=F.filter(function(f){return kick(f)>Date.now()}).sort(function(a,b){return kick(a)-kick(b)});if(u.length){var d=cd(kick(u[0]));F=u.filter(function(f){return cd(kick(f))===d})}return _h(F)};
 var _l=list;list=function(){_l();var L=$("list");if(cur==="ALLM"||leagues().indexOf(cur)>=0)L.insertAdjacentHTML("beforeend",u4Played());[].forEach.call(L.querySelectorAll(".m"),function(m){var s=m.querySelector(".fav"),pb=m.querySelector(".pb"),f=s&&fxOf(s.getAttribute("data-k"));if(!f||m.querySelector(".u4l"))return;if(pb)pb.insertAdjacentHTML("afterend",'<div class="u4l" dir="rtl"><span>'+esc(tn(f[2]))+'</span><span>تعادل</span><span>'+esc(tn(f[3]))+'</span></div>');m.querySelector(".od").insertAdjacentHTML("afterend",'<button class="u4b" data-u4="wa" data-k="'+esc(fk(f))+'">📤 شارك على واتساب</button>')})};
-var _b=bnav;bnav=function(){_b();var bn=$("bn"),q=function(k){return bn.querySelector('[data-k="'+k+'"]')};["TODAY","M","FAV","SLIP"].forEach(function(k){var e=q(k);if(e)bn.appendChild(e)});var b=document.createElement("button");b.setAttribute("data-u4","more");if(["TBL","AI","RES","LOG"].indexOf(cur)>=0)b.className="on";b.innerHTML='<span>'+IC.grid+'</span>المزيد';bn.appendChild(b)};
+
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-u4]");if(!b)return;e.stopPropagation();e.preventDefault();var a=b.getAttribute("data-u4"),k=b.getAttribute("data-k");if(a==="pick")u4Pick();else if(a==="rem")ics([k]);else if(a==="wa")u4Share(k);else{var d=u4Sheet([["AI","توقعاتي"],["RES","النتائج"],["LOG","السجل"],["TBL","الترتيب"]].filter(function(x){return $("bn").querySelector('[data-k="'+x[0]+'"]')}).map(function(x){return'<button data-go="'+x[0]+'">'+x[1]+'</button>'}).join(""));d.addEventListener("click",function(ev){var g=ev.target.getAttribute("data-go");if(g){d.remove();$("bn").querySelector('[data-k="'+g+'"]').click()}})}},true);
 bnav();list()})();
 </script>
 <script id="u5">
 function u5Last(){var R=(D._log&&D._log.recent)||[];if(cur!=="HOME")R=R.filter(function(x){return cur==="ALLM"||x.f[0]===cur});if(!R.length)return null;var top=Math.max.apply(null,R.map(function(x){return Date.parse(x.ko)}));R=R.filter(function(x){return top-Date.parse(x.ko)<3456e5});var hit=0,s=null;R.forEach(function(x){var y=x.r[0]>x.r[1]?0:x.r[0]===x.r[1]?1:2,q=x.p[y];if(x.p.indexOf(Math.max.apply(null,x.p))===y)hit++;if(!s||q<s.q)s={q:q,x:x}});return{n:R.length,hit:hit,s:s,t:cur==="HOME"||cur==="ALLM"?"كل الدوريات":NAMES[cur]||cur}}
 function u5Text(m){var x=m.s.x;return tn(x.f[2])+" "+x.r[0]+" - "+x.r[1]+" "+tn(x.f[3])}
-function u5Card(){var m=u5Last();return m?'<div class="u4c u5"><b>📋 ملخص آخر الماتشات • '+esc(m.t)+'</b><p>البرنامج صاب <b>'+m.hit+'</b> من <b>'+m.n+'</b></p><p class="mut">أكبر مفاجأة: '+esc(u5Text(m))+' (كانت فرصتها '+pc(m.s.q)+')</p><button class="u4b" data-u5="1">📤 شارك الملخص</button></div>':""}
+function u5Card(){var m=u5Last();return m?'<div class="u4c u5"><b>📋 ملخص آخر الماتشات • '+esc(m.t)+'</b>'+(SHOW_HIT?'<p>البرنامج صاب <b>'+m.hit+'</b> من <b>'+m.n+'</b></p>':'')+'<p class="mut">أكبر مفاجأة: '+esc(u5Text(m))+' (كانت فرصتها '+pc(m.s.q)+')</p><button class="u4b" data-u5="1">📤 شارك الملخص</button></div>':""}
 function u5Url(h){return/^http/.test(location.protocol)?location.origin+location.pathname+(h||""):""}
 function u5Send(c,txt){c.toBlob(function(b){var F;try{F=new File([b],"share.png",{type:"image/png"})}catch(e){}if(F&&navigator.canShare&&navigator.canShare({files:[F]}))navigator.share({files:[F],text:txt}).catch(function(){});else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="share.png";a.click();try{navigator.clipboard.writeText(txt).catch(function(){})}catch(e){}toast("الصورة اتحفظت")}})}
-function u5Share(){var m=u5Last();if(!m)return;var c=document.createElement("canvas");c.width=c.height=1080;var x=c.getContext("2d");x.fillStyle="#06231f";x.fillRect(0,0,1080,1080);x.textAlign="center";x.direction="rtl";function T(t,y,z,col){x.fillStyle=col||"#fff";x.font="bold "+z+"px sans-serif";x.fillText(t,540,y,980)}T("ملخص آخر الماتشات",150,62);T(m.t,230,40,"#a3c5b9");T(m.hit+" / "+m.n,500,220,"#ffd83d");T("توقعات صح",590,52);T("أكبر مفاجأة",750,44,"#ff6b4a");T(u5Text(m),830,56);T("كانت فرصتها "+pc(m.s.q),905,38,"#a3c5b9");T("متوقع المباريات PRO",1020,36,"#ffd83d");u5Send(c,"📋 البرنامج صاب "+m.hit+" من "+m.n+" • أكبر مفاجأة: "+u5Text(m)+"\n"+u5Url())}
+function u5Share(){var m=u5Last();if(!m)return;var c=document.createElement("canvas");c.width=c.height=1080;var x=c.getContext("2d");x.fillStyle="#06231f";x.fillRect(0,0,1080,1080);x.textAlign="center";x.direction="rtl";function T(t,y,z,col){x.fillStyle=col||"#fff";x.font="bold "+z+"px sans-serif";x.fillText(t,540,y,980)}T("ملخص آخر الماتشات",150,62);T(m.t,230,40,"#a3c5b9");if(SHOW_HIT){T(m.hit+" / "+m.n,500,220,"#ffd83d");T("توقعات صح",590,52)}T("أكبر مفاجأة",750,44,"#ff6b4a");T(u5Text(m),830,56);T("كانت فرصتها "+pc(m.s.q),905,38,"#a3c5b9");T("متوقع المباريات PRO",1020,36,"#ffd83d");u5Send(c,"📋 "+(SHOW_HIT?"البرنامج صاب "+m.hit+" من "+m.n+" • ":"")+"أكبر مفاجأة: "+u5Text(m)+"\n"+u5Url())}
 function u5Open(){if(location.hash.indexOf("#m=")!==0)return;var k;try{k=decodeURIComponent(location.hash.slice(3))}catch(e){return}var f=fxOf(k);if(!f||past(f)){toast("الماتش ده خلص أو مش متاح");return}$("q").value="";setLeague(f[0]);setTimeout(function(){var a=[].filter.call(document.querySelectorAll("#list .m .fav"),function(e){return e.getAttribute("data-k")===k})[0];if(!a)return;var m=a.closest(".m");m.querySelector(".mt").click();m.scrollIntoView({block:"start"})},400)}
-(function(){var _st=shareTxt;shareTxt=function(k){var t=_st(k);return t&&u5Url()?t+"\n"+u5Url("#m="+encodeURIComponent(k)):t};var _l=list;list=function(){_l();var L=$("list"),h=L.querySelector(".hero");if(L.querySelector(".u5"))return;if(cur==="HOME"&&!$("q").value){if(h)h.insertAdjacentHTML("afterend",u5Card());else L.insertAdjacentHTML("beforeend",u5Card())}else if(cur==="ALLM"||leagues().indexOf(cur)>=0)L.insertAdjacentHTML("beforeend",u5Card())};
+(function(){var _st=shareTxt;shareTxt=function(k){var t=_st(k);return t&&u5Url()?t+"\n"+u5Url("#m="+encodeURIComponent(k)):t};var _l=list;list=function(){_l();var L=$("list"),h=L.querySelector(".tops");if(L.querySelector(".u5"))return;if(cur==="HOME"&&!$("q").value){if(h)h.insertAdjacentHTML("afterend",u5Card());else L.insertAdjacentHTML("beforeend",u5Card())}else if(cur==="ALLM"||leagues().indexOf(cur)>=0)L.insertAdjacentHTML("beforeend",u5Card())};
 document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("[data-u5]"))u5Share()});addEventListener("hashchange",u5Open);list();u5Open()})();
 </script>
 <script id="more-leagues">(function(){var X={P1:"🇵🇹 البرتغالي",N1:"🇳🇱 الهولندي",T1:"🇹🇷 التركي",B1:"🇧🇪 البلجيكي",SC0:"🏴 الاسكتلندي",G1:"🇬🇷 اليوناني",BRA:"🇧🇷 البرازيلي",ARG:"🇦🇷 الأرجنتيني",MEX:"🇲🇽 المكسيكي",MLS:"🇺🇸 MLS"};try{for(var k in X)if(!NAMES[k])NAMES[k]=X[k]}catch(e){}})();</script>
+<style>.m .lgn{text-align:center;font-size:12px;font-weight:700;padding:10px 40px 0;opacity:.85}</style>
+<style>.tops{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none}.tops>.hero{flex:0 0 90%;min-width:0;margin:0!important;scroll-snap-align:start}</style>
+<style id="ux-final">
+/* ===== UX-FINAL: الرئيسية + الشريط السفلي (7 أيقونات) ===== */
+html:root{--ux-r:18px;--ux-pill:color-mix(in srgb,var(--gold) 16%,transparent)}
+html:root body{padding-bottom:calc(98px + env(safe-area-inset-bottom))!important}
+
+/* ---------- الشريط السفلي: 7 أعمدة متساوية ---------- */
+html:root #bn{
+  display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;align-items:stretch;
+  left:10px!important;right:10px!important;max-width:560px;margin:0 auto!important;
+  bottom:calc(8px + env(safe-area-inset-bottom))!important;
+  padding:6px 4px!important;border:0!important;border-radius:24px!important;
+  background:color-mix(in srgb,var(--card) 97%,transparent)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);
+  box-shadow:inset 0 0 0 1px var(--bd),0 12px 32px rgba(0,0,0,.4)!important;
+  overflow:visible!important;justify-content:normal!important}
+html:root #bn button{
+  position:relative;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px!important;
+  min-width:0;width:100%;min-height:54px!important;padding:2px 0!important;margin:0;
+  font-size:10px!important;line-height:1.1;font-weight:600!important;letter-spacing:0;white-space:nowrap;
+  overflow:visible!important;color:var(--mut)!important;background:none!important;border:0!important;border-radius:16px!important;
+  transition:color .18s,transform .12s}
+html:root #bn button:before,html:root #bn button:after{display:none!important;content:none!important}
+html:root #bn button span{
+  display:grid!important;place-items:center;width:44px!important;max-width:100%;height:30px!important;margin:0;
+  border-radius:15px!important;background:none!important;filter:none!important;transform:none!important;
+  transition:background .2s,color .2s,transform .15s;color:inherit!important}
+html:root #bn button span svg{width:22px!important;height:22px!important;transform:none!important;transition:transform .18s}
+html:root #bn button.on{color:var(--gold)!important;font-weight:800!important}
+html:root #bn button.on span{background:var(--ux-pill)!important}
+html:root #bn button.on span svg{transform:scale(1.08)!important}
+html:root #bn button:active span{transform:scale(.9)!important;background:var(--ux-pill)!important}
+html:root #bn .bgn{position:absolute;top:0;left:calc(50% + 4px);right:auto;min-width:16px;height:16px;padding:0 4px;
+  display:grid;place-items:center;font-size:10px;font-weight:800;line-height:1;border-radius:8px;
+  background:var(--r);color:#fff;box-shadow:0 0 0 2px var(--card)}
+@media(max-width:350px){html:root #bn button{font-size:9px!important}html:root #bn button span{width:38px!important}}
+@media(prefers-reduced-motion:reduce){html:root #bn *{transition:none!important}}
+
+/* ---------- الرئيسية ---------- */
+html:root .hx-top{margin:10px 2px 14px}
+html:root .hx-hi{font-size:26px;font-weight:800;letter-spacing:-.2px;line-height:1.25}
+html:root .hx-dt{font-size:13px;margin-top:3px;color:var(--mut)}
+
+html:root .hx-tiles{gap:10px;margin-bottom:18px}
+html:root .hx-t{position:relative;overflow:hidden;display:flex;flex-direction:column-reverse;align-items:flex-start;gap:2px;
+  padding:14px 16px 13px;text-align:start;border-radius:var(--ux-r)}
+html:root .hx-t:before{content:"";position:absolute;inset-block:16px;inset-inline-start:0;width:4px;border-radius:2px;background:var(--gold)}
+html:root .hx-t b{font-size:26px;font-weight:800;line-height:1.1;color:var(--tx)}
+html:root .hx-t:nth-child(2) b{color:var(--gold);font-size:24px}
+html:root .hx-t small{font-size:12px;font-weight:600;color:var(--mut)}
+
+html:root .u4c{padding:14px 16px;margin-bottom:12px;border:0;border-radius:var(--ux-r);box-shadow:inset 0 0 0 1px var(--bd)}
+html:root .u4c>b{display:block;font-size:14px;font-weight:800;margin-bottom:2px}
+html:root .u4c p{margin:6px 0 0;font-size:13px;line-height:1.55}
+html:root .u4c .u4b,html:root .u4b{min-height:44px;margin-top:10px;border:0;border-radius:14px;font-size:14px;font-weight:700;
+  background:var(--c2);box-shadow:inset 0 0 0 1px var(--bd);transition:transform .12s,background .15s}
+html:root .u4b:active{transform:scale(.97)}
+
+html:root .day{display:flex;align-items:center;gap:8px;margin:24px 2px 10px;font-size:14px;font-weight:800;letter-spacing:0;color:var(--tx)}
+html:root .day:before{content:"";width:4px;height:15px;border-radius:2px;background:var(--gold);flex:none}
+html:root .day:after{flex:1;height:1px;background:var(--bd)}
+
+html:root .hx-r{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:8px;border:0;border-radius:var(--ux-r);
+  background:var(--card);box-shadow:inset 0 0 0 1px var(--bd);transition:transform .12s,box-shadow .15s}
+html:root .hx-r:active{transform:scale(.985)}
+html:root .hx-r>span{flex:1;min-width:0;font-size:15px;font-weight:700;line-height:1.35}
+html:root .hx-r>span .mut{margin-top:3px;font-size:12px;font-weight:500;line-height:1.45;color:var(--mut)}
+html:root .hx-r>b{flex:none;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:68px;padding:7px 8px;
+  border-radius:14px;font-size:17px;font-weight:800;line-height:1.1;text-align:center;
+  background:color-mix(in srgb,var(--n) 18%,transparent);color:var(--tx)}
+html:root .hx-r>b small{font-size:10px;font-weight:600;color:var(--mut)}
+html:root .hx-r>b.hi{background:color-mix(in srgb,var(--win) 20%,transparent);color:var(--win)}
+html:root .hx-r>b.lo{color:var(--mut)}
+:root[data-theme=light] .hx-r>b.hi{color:#0b6b3a}
+@media(prefers-reduced-motion:reduce){html:root .hx-r,html:root .u4b{transition:none}}
+</style>
+<style id="ux-v6">
+/* شريط سفلي ثابت بـ7 أيقونات */
+html:root #bn{left:0!important;right:0!important;bottom:0!important;max-width:none!important;margin:0!important;gap:0!important;border-radius:0!important;padding:4px 2px calc(4px + env(safe-area-inset-bottom))!important;background:var(--card)!important;box-shadow:0 -1px 0 var(--bd)!important}
+html:root #bn button{font-size:11px!important;min-height:52px!important}
+html:root body{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}
+html:root #ts{bottom:calc(72px + env(safe-area-inset-bottom))!important}
+/* قشرة أخف */
+html.hvh #so{display:none}
+#tabs[style*="none"]~#lgb{display:none!important}
+html:root #stale{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:5px 12px;margin:6px 14px 0;font-size:12px;cursor:pointer}
+#hvsn{position:fixed;inset-inline:12px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:120;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-radius:14px;background:var(--tx);color:var(--bg);font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+#hvsn button{border:0;border-radius:10px;padding:8px 14px;font:inherit;font-weight:800;background:var(--gold);color:#1c1600;cursor:pointer}
+/* الرئيسية */
+.hv-top{margin:8px 2px 12px}.hv-hi{font-size:24px;font-weight:800;line-height:1.3}.hv-dt{font-size:13px;color:var(--mut)}
+.hv-st{display:grid;grid-template-columns:1fr 1fr;margin:0 0 14px;border-radius:18px;background:var(--card);box-shadow:inset 0 0 0 1px var(--bd)}
+.hv-s{display:flex;flex-direction:column;gap:2px;padding:12px 16px;font:inherit;color:inherit;text-align:start;background:none;border:0;cursor:pointer}
+.hv-s+.hv-s{border-inline-start:1px solid var(--bd)}
+.hv-s b{font-size:22px;font-weight:800;line-height:1.15}.hv-s small{font-size:12px;color:var(--mut)}
+.hv-sc{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -14px 4px;padding:0 14px 8px;scrollbar-width:none}.hv-sc::-webkit-scrollbar{display:none}
+.hv-hero{flex:0 0 88%;box-sizing:border-box;scroll-snap-align:center;padding:14px;border-radius:22px;color:#f2f8f4;cursor:pointer;background:linear-gradient(160deg,#0f5a46,#06231f);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.hv-hk{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;color:#d5e8df}
+.hv-hm{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;margin:14px 0}
+.hv-hm div{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}.hv-hm b{font-size:14px;line-height:1.3}.hv-hm em{font-style:normal;font-weight:800;color:#ffd83d}
+.hv-hm .lg{width:52px;height:52px;margin:0}.hv-hm .lg img{width:42px;height:42px}
+.hv-bar{display:flex;gap:3px;height:28px}.hv-bar i{display:grid;place-items:center;min-width:0;border-radius:9px;background:rgba(255,255,255,.13);font-style:normal;font-size:12px;font-weight:700;white-space:nowrap}.hv-bar i.mx{background:#ffd83d;color:#1c1600;font-weight:800}
+.hv-go{margin-top:12px;text-align:center;font-size:13px;font-weight:800;color:#ffd83d}
+.hv-h{display:flex;justify-content:space-between;align-items:baseline;margin:20px 2px 8px;font-size:16px;font-weight:800}.hv-h small{font-size:12px;font-weight:500;color:var(--mut)}
+.hv-g{margin:0 0 8px;overflow:hidden;border-radius:16px;background:var(--card);box-shadow:inset 0 0 0 1px var(--bd)}
+.hv-g[open]>summary{margin-bottom:0}.hv-g>summary{min-height:46px;padding:0 14px;border:0;border-radius:0;background:none;font-size:14px;font-weight:800;color:var(--tx)}
+.hv-g>summary span{flex:1}.hv-g>summary em{font-style:normal;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--c2);color:var(--mut)}
+.hv-r{display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--bd);cursor:pointer}.hv-r:active{background:var(--c2)}
+.hv-t{display:flex;flex-direction:column;font-size:13px;font-weight:800}.hv-t small{font-size:10.5px;font-weight:500;color:var(--mut)}
+.hv-m{display:flex;flex-direction:column;gap:6px;min-width:0}
+.hv-n{display:flex;align-items:center;gap:8px;min-width:0}.hv-n i{overflow:hidden;font-style:normal;font-size:14px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.hv-r .lg{width:24px;height:24px;margin:0;font-size:8px;flex:none}.hv-r .lg img{width:18px;height:18px}
+.hv-p{display:flex;flex-direction:column;align-items:center;min-width:72px;padding:6px 8px;border-radius:12px;background:var(--c2);text-align:center}.hv-p b{font-size:16px;font-weight:800;line-height:1.1}
+.hv-p small{max-width:84px;overflow:hidden;font-size:10.5px;color:var(--mut);text-overflow:ellipsis;white-space:nowrap}
+.hv-p.hi{background:color-mix(in srgb,var(--win) 18%,transparent)}.hv-p.hi b{color:var(--win)}
+.hv-more{display:block;width:100%;min-height:44px;border:0;border-top:1px solid var(--bd);background:none;color:var(--gold);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.hv-pick{display:block;width:100%;min-height:44px;margin:0 0 6px;border:1px dashed var(--bd);border-radius:14px;background:none;color:var(--mut);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+</style>
+<script id="ux-v6-js">
+(function(){try{
+var PR={EGY:0,UCL:1,UEL:2,KSA:3,E0:4,SP1:5,I1:6,D1:7,F1:8};
+function lp(c){return c in PR?PR[c]:20+leagues().indexOf(c)}
+function tmx(f){return f[1].split(" ")[3]||""}
+function upc6(){var r=[];(D._fix||[]).forEach(function(f){if(leagues().indexOf(f[0])<0||past(f)||kick(f)===null)return;var o=pr(f[0],f[2],f[3],false,fk(f));if(o)r.push({f:f,o:o,t:kick(f)})});return r.sort(function(a,b){return a.t-b.t})}
+function dlab(f){var p=f[1].split(" ");return dpl(f).replace(" • ","")||(p[1]+" "+(MON[p[2]]||p[2]))}
+function row(x,d0){var f=x.f,o=x.o,m=Math.max(o.w,o.d,o.l),t=o.w===m?"فوز "+tn(f[2]):o.l===m?"فوز "+tn(f[3]):"تعادل";
+ return '<div class="hv-r" role="button" tabindex="0" data-k="'+esc(fk(f))+'"><span class="hv-t">'+esc(tmx(f))+(d0&&cd(x.t)!==d0?'<small>'+esc(dlab(f))+'</small>':'')+'</span><span class="hv-m"><span class="hv-n">'+logo(f[2])+'<i>'+esc(tn(f[2]))+'</i></span><span class="hv-n">'+logo(f[3])+'<i>'+esc(tn(f[3]))+'</i></span></span><span class="hv-p'+(m>=.65?' hi':'')+'"><b>'+Math.round(m*100)+'%</b><small>'+esc(t)+'</small></span></div>'}
+function hero(x){var f=x.f,o=x.o,m=Math.max(o.w,o.d,o.l);function sg(v,l){return '<i'+(v===m?' class="mx"':'')+' style="flex:'+Math.max(v,.14).toFixed(2)+'">'+(v>=.2?l+' ':'')+Math.round(v*100)+'%</i>'}
+ return '<div class="hv-hero" role="button" tabindex="0" data-k="'+esc(fk(f))+'"><div class="hv-hk"><span>'+esc(NAMES[f[0]]||f[0])+'</span><span>'+esc(dlab(f)+" • "+tmx(f))+'</span></div><div class="hv-hm"><div>'+logo(f[2])+'<b>'+esc(tn(f[2]))+'</b></div><em>×</em><div>'+logo(f[3])+'<b>'+esc(tn(f[3]))+'</b></div></div><div class="hv-bar" dir="rtl">'+sg(o.w,"م")+sg(o.d,"ت")+sg(o.l,"ض")+'</div><div class="hv-go">التحليل الكامل ‹</div></div>'}
+function groups(L,open,d0){var G={},O=[];L.forEach(function(x){var c=x.f[0];if(!G[c]){G[c]=[];O.push(c)}G[c].push(x)});O.sort(function(a,b){return lp(a)-lp(b)});
+ return O.map(function(c,i){var a=G[c];return '<details class="hv-g"'+(i<open?' open':'')+'><summary><span>'+esc(NAMES[c]||c)+'</span><em>'+a.length+'</em></summary>'+a.slice(0,4).map(function(x){return row(x,d0)}).join("")+(a.length>4?'<button class="hv-more" data-hm="lg:'+c+'">عرض كل المباريات ('+a.length+') ‹</button>':'')+'</details>'}).join("")}
+window.hv6=function(){var U=upc6();if(!U.length)return '<p class="mut" style="padding:14px">مفيش مباريات قادمة دلوقتي. التطبيق بيتحدّث لوحده وأول ما تنزل المواعيد هتظهر هنا.</p>';
+ var now=Date.now(),d0=cd(U[0].t),d1=cd(U[0].t+864e5),A=U.filter(function(x){return cd(x.t)===d0}),B=U.filter(function(x){return cd(x.t)===d1}),isT=d0===cd(now),h=12,dt="";
+ try{h=+new Date().toLocaleString("en-GB",{hour:"2-digit",hour12:false,timeZone:"Africa/Cairo"});dt=new Date().toLocaleDateString("ar-EG-u-nu-latn",{weekday:"long",day:"numeric",month:"long",timeZone:"Africa/Cairo"})}catch(e){}
+ var NX=U.filter(function(x){return x.t>now})[0]||U[0],g=h>=5&&h<12?"صباح الخير":h>=12&&h<17?"نهارك سعيد":h>=17&&h<22?"مساء الخير":"سهرة حلوة",by={};
+ A.concat(B).forEach(function(x){var c=x.f[0];x.s=Math.max(0,24-lp(c))*2+(x.o.H[0]-x.o.H[1]+x.o.A[0]-x.o.A[1])*4;if(!by[c]||x.s>by[c].s)by[c]=x});
+ var HS=Object.keys(by).map(function(c){return by[c]}).sort(function(a,b){return b.s-a.s}).slice(0,5),s='';
+ s+='<div class="hv-top"><div class="hv-hi">'+g+'</div><div class="hv-dt">'+esc(dt)+'</div></div>';
+ s+='<div class="hv-st"><button class="hv-s" data-hm="'+(isT?'lg:TODAY':'all')+'"><b>'+A.length+'</b><small>'+(isT?'مباراة اليوم ‹':'أقرب مباريات ‹')+'</small></button><div class="hv-s"><b id="hcd" dir="ltr" data-t="'+NX.t+'">'+hxFmt(NX.t-now)+'</b><small>لأقرب مباراة</small></div></div>';
+ s+='<div class="hv-sc" data-noswipe>'+HS.map(hero).join("")+'</div>';
+ var t=(window.u4Fol?u4Fol():[])[0];
+ if(!t)s+='<button class="hv-pick" data-u4="pick">⭐ اختار فريقك وتابع مبارياته</button>';
+ else{var q=t.split("|"),mx=U.filter(function(x){return x.f[0]===q[0]&&(x.f[2]===q[1]||x.f[3]===q[1])})[0];s+='<div class="hv-h"><span>⭐ '+esc(tn(q[1]))+'</span></div>'+(mx?'<div class="hv-g">'+row(mx,d0).replace(' border-top','')+'</div>':'<p class="mut">مفيش مباراة جاية له دلوقتي.</p>')}
+ s+='<div class="hv-h"><span>'+(isT?'مباريات اليوم':'أقرب مباريات')+'</span><small>'+A.length+' مباراة</small></div>'+groups(A,2,d0);
+ if(B.length)s+='<div class="hv-h"><span>بكرة</span><small>'+B.length+' مباراة</small></div>'+groups(B,0,d0);
+ if(window.u5Card){var c5=u5Card();if(c5)s+='<div class="hv-h"><span>آخر النتائج</span></div>'+c5}
+ if(typeof window.homeNews==="function")s+='<details class="hv-g" style="margin-top:14px"><summary><span>📰 الأخبار</span></summary><div style="padding:0 12px 12px">'+window.homeNews()+'</div></details>';
+ return s};
+/* الشريط: الرئيسية بدل «اليوم» وبدون الترتيب = 7 أيقونات */
+var HIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>';
+var _b6=bnav;bnav=function(){_b6();var b=$("bn"),t=b.querySelector('[data-k="TODAY"]'),x=b.querySelector('[data-k="TBL"]');if(x)x.remove();if(t){t.setAttribute("data-k","HOME");t.className=cur==="HOME"?"on":"";t.innerHTML='<span>'+HIC+'</span>الرئيسية'}};
+/* الرئيسية الجديدة */
+var _l6=list;list=function(){_l6();var H=cur==="HOME"&&!$("q").value;document.documentElement.classList.toggle("hvh",H);if(H){try{$("list").innerHTML=hv6()}catch(e){console.error("hv6",e)}}};
+/* بدون خطف تلقائي لتبويب النتائج */
+function snack(t,b,fn){var e=document.getElementById("hvsn");if(e)e.remove();e=document.createElement("div");e.id="hvsn";e.innerHTML='<span>'+t+'</span><button>'+b+'</button>';e.querySelector("button").onclick=function(){e.remove();fn()};document.body.appendChild(e);setTimeout(function(){if(e.parentNode)e.remove()},9000)}
+var _rc=rsCheck;rsCheck=function(){var s0=setLeague;setLeague=function(k){if(k==="RES"&&cur!=="RES"){snack("نزلت نتائج جديدة","عرض",function(){s0("RES")});return}return s0.apply(this,arguments)};try{_rc()}finally{setLeague=s0}};
+/* تنبيه البيانات القديمة: سطر واحد وقابل للضغط */
+stl=function(){var e=$("stale");if(!e)return;var t=D._ts,hh=t?Math.round((Date.now()-Date.parse(t))/36e5):0,al=D._fix||[],ap=al.length&&al.every(past);if((t&&hh>12)||ap){e.hidden=false;e.textContent="⚠️ "+(ap?"المباريات المحفوظة انتهت":"آخر تحديث منذ "+hh+" ساعة")+" • اضغط للتحديث"}else e.hidden=true};
+$("stale").onclick=function(){ld(true)};
+$("list").addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".hv-r,.hv-hero");if(!b)return;var k=b.getAttribute("data-k");function find(){var a=$("list").querySelectorAll(".fav");for(var i=0;i<a.length;i++)if(a[i].getAttribute("data-k")===k)return a[i].closest(".m");return null}var m=find();if(!m&&k){setLeague(k.split("|")[0]);m=find()}if(!m){toast("تعذّر فتح التحليل، جرّب من تبويب المباريات");return}if(!m.classList.contains("open"))m.querySelector(".mt").click()});
+stl();bnav();list();
+}catch(err){console.error("ux-v6",err)}})();
+</script>
+
 </body>
 </html>
